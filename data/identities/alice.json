@@ -1,0 +1,8 @@
+﻿{
+  "identity_id": "alice",
+  "owner_id": "alice",
+  "role": "operator",
+  "expires_at": "2030-01-01T00:00:00",
+  "key_type": "ed25519",
+  "public_key_b64": "PLACEHOLDER"
+}
