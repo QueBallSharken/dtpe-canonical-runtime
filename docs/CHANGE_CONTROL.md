@@ -89,8 +89,8 @@ DEFAULT DECISION RULE
 
 If uncertainty exists:
 
-prefer refusal over silent acceptance  
-prefer recomputation over trust  
+prefer refusal over silent acceptance
+prefer recomputation over trust
 prefer explicit proof over assumed correctness
 
 ------------------------------------------------
