@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+proof/
+exports/
+share/
+data/runtime/
+data/ledger/
+data/keys/
