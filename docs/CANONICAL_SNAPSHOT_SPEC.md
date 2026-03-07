@@ -2,6 +2,7 @@
 
 Policy snapshot fields
 - policy_version
+- crypto_profile
 - policy_canonical
 - policy_state_hash
 
@@ -13,6 +14,7 @@ Authority snapshot fields
 - expires_at
 - policy_version
 - policy_state_hash
+- crypto_profile
 - authority_canonical
 - authority_hash
 
@@ -21,8 +23,18 @@ Phase-4 execution envelope fields
 - crypto_profile
 - snapshot_hash
 
+Receipt fields
+- execution_state
+- reason
+- authority_hash
+- policy_state_hash
+- crypto_profile
+- receipt_canonical
+- receipt_hash
+
 Rules
 - JSON must use sort_keys=True
 - JSON separators must be comma and colon with no extra spaces
 - UTF-8 encoding
 - SHA-256 for hashes unless explicitly versioned otherwise
+- crypto_profile is mandatory in policy snapshot, authority snapshot, receipt, and replayable evidence

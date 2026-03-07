@@ -9,93 +9,76 @@ or analysis thread can continue work without relying on prior conversation conte
 
 CURRENT STATE
 
-This repository is a clean canonical rebuild of the DTPE runtime.
-
-The following components are already defined:
+This repository now contains a working DTPE runtime skeleton with:
 
 • canonical hashing primitives
 • canonical serialization rules
-• identity model specification
-• system invariants
-• governance guardrails
-• change control policy
+• identity generation and invariant verification
+• canonical policy snapshot loader
+• canonical authority snapshot builder
+• phase-4 admissibility decision engine
+• deterministic receipt generation
+• deterministic ledger append
+• execution pipeline
+• crypto_profile bound through policy, authority, decision preconditions, receipt, and replayable ledger evidence
 
-These documents define the architecture before runtime code is written.
+The runtime is now beyond the initial identity milestone.
 
 ------------------------------------------------
 
 NEXT IMPLEMENTATION TARGET
 
-Step 1 — Identity Key Generator
+Step 2 — Crypto-Profile Enforcement Expansion
 
 Goal
 
-Create an identity generation tool that establishes the canonical
-source of identity authority.
+Strengthen the runtime from crypto-profile-aware structure to stronger
+crypto-profile-aware enforcement.
 
-The generator must:
+The next implementation must:
 
-1 generate an Ed25519 private key
-2 derive the public key from the private key
-3 compute a SHA-256 fingerprint of the public key
-4 write the private key to data/keys/
-5 write data/identities/<identity>.json with the derived public key and fingerprint
-6 verify the identity invariant before exiting
+1 define accepted crypto profile rules explicitly
+2 refuse unsupported crypto profiles
+3 refuse missing crypto profile where required
+4 prepare decision semantics for profile mismatch handling
+5 keep receipt and ledger evidence profile-driven
+6 preserve deterministic replay behavior
 
-Invariant
-
-derived_public_key(private_key)
-=
-stored_public_key(identity_registry)
-
-derived_fingerprint(public_key)
-=
-stored_fingerprint(identity_registry)
-
-If either invariant fails, the program must abort.
+Current minimum supported profile
+ed25519+sha256+canonical_json_v1
 
 ------------------------------------------------
 
-WHY THIS IS FIRST
+WHY THIS IS NEXT
 
-Identity is the root of all authority in DTPE.
+The repository now carries crypto_profile through core runtime artifacts,
+but decision semantics are not yet fully profile-enforcing.
 
-All later components depend on a correct identity model.
-
-Without correct identity generation, identity drift can occur.
+To move honestly from PQC-aware toward PQC-capable, the runtime must
+enforce crypto-profile rules, not just record them.
 
 ------------------------------------------------
 
 EXPECTED OUTPUT
 
-Running the generator should produce:
+The next completed step should produce:
 
-data/keys/<identity>.ed25519.key
-data/identities/<identity>.json
-
-The identity record must contain:
-
-identity_id
-owner_id
-role
-expires_at
-key_type
-public_key_b64
-public_key_fingerprint_sha256
+• deterministic refusal for missing crypto_profile
+• deterministic refusal for unsupported crypto_profile
+• receipt evidence carrying crypto_profile
+• replayable ledger evidence carrying crypto_profile
+• docs aligned with runtime semantics
 
 ------------------------------------------------
 
 AFTER THIS STEP
 
-Once identity generation is complete, the next components are:
+Once crypto-profile enforcement is expanded, the next components are:
 
-2 policy snapshot loader
-3 authority snapshot recomputation
-4 phase-4 decision engine
-5 execution boundary
-6 receipt generation
-7 ledger append
-8 offline verifier
+3 stronger policy semantics for permitted profiles
+4 profile mismatch and migration-window rules
+5 offline verifier profile selection logic
+6 deterministic mixed-profile replay tests
 
 ------------------------------------------------
 
