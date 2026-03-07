@@ -26,20 +26,20 @@ These documents define the architecture before runtime code is written.
 
 NEXT IMPLEMENTATION TARGET
 
-Step 1 — Deterministic Identity Key Generator
+Step 1 — Identity Key Generator
 
 Goal
 
-Create a deterministic identity generation tool that establishes the canonical
+Create an identity generation tool that establishes the canonical
 source of identity authority.
 
 The generator must:
 
 1 generate an Ed25519 private key
 2 derive the public key from the private key
-3 compute a fingerprint of the public key
+3 compute a SHA-256 fingerprint of the public key
 4 write the private key to data/keys/
-5 update identities.json with the derived public key
+5 write data/identities/<identity>.json with the derived public key and fingerprint
 6 verify the identity invariant before exiting
 
 Invariant
@@ -48,7 +48,11 @@ derived_public_key(private_key)
 =
 stored_public_key(identity_registry)
 
-If the invariant fails, the program must abort.
+derived_fingerprint(public_key)
+=
+stored_fingerprint(identity_registry)
+
+If either invariant fails, the program must abort.
 
 ------------------------------------------------
 
@@ -58,7 +62,7 @@ Identity is the root of all authority in DTPE.
 
 All later components depend on a correct identity model.
 
-Without deterministic identity generation, identity drift can occur.
+Without correct identity generation, identity drift can occur.
 
 ------------------------------------------------
 
@@ -67,14 +71,17 @@ EXPECTED OUTPUT
 Running the generator should produce:
 
 data/keys/<identity>.ed25519.key
-data/identities.json entry for the identity
+data/identities/<identity>.json
 
-The registry entry must contain:
+The identity record must contain:
 
 identity_id
 owner_id
+role
+expires_at
+key_type
 public_key_b64
-fingerprint
+public_key_fingerprint_sha256
 
 ------------------------------------------------
 
