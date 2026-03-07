@@ -22,4 +22,27 @@ Invariant 7
 Offline verification must validate signatures and receipt hashes from exported artifacts alone.
 
 Invariant 8
-If any equality check fails, execution state must be REFUSED_NON_BINDING.
+If any equality check fails, execution state must be REFUSED\_NON\_BINDING.
+
+Execution and Authorization Invariants
+
+
+
+Authority must be recomputed at the execution boundary.
+
+
+
+Authority cannot be inherited across requests, processes, or system layers.
+
+
+
+Canonical serialization used for hashing must be deterministic and reproducible across environments.
+
+
+
+Refusal decisions must not mutate ledger state.
+
+
+
+An offline verifier must be able to reproduce authorization decisions deterministically from stored artifacts.
+
