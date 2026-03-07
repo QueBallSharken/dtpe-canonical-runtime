@@ -10,6 +10,7 @@ SUPPORTED_CRYPTO_PROFILES = {
 def decide_phase4(
     *,
     authority_snapshot: Dict[str, str],
+    expected_crypto_profile: str,
 ) -> Dict[str, str]:
 
     crypto_profile = authority_snapshot.get("crypto_profile")
@@ -17,6 +18,18 @@ def decide_phase4(
         return {
             "execution_state": "REFUSED_NON_BINDING",
             "reason": "missing_crypto_profile",
+        }
+
+    if not isinstance(expected_crypto_profile, str) or not expected_crypto_profile.strip():
+        return {
+            "execution_state": "REFUSED_NON_BINDING",
+            "reason": "missing_expected_crypto_profile",
+        }
+
+    if crypto_profile != expected_crypto_profile:
+        return {
+            "execution_state": "REFUSED_NON_BINDING",
+            "reason": "crypto_profile_mismatch",
         }
 
     if crypto_profile not in SUPPORTED_CRYPTO_PROFILES:
