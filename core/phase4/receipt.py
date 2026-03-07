@@ -9,6 +9,7 @@ def build_receipt(
     decision: Dict[str, str],
     authority_hash: str,
     policy_state_hash: str,
+    crypto_profile: str,
 ) -> Dict[str, str]:
 
     receipt_material = {
@@ -16,6 +17,7 @@ def build_receipt(
         "reason": decision.get("reason"),
         "authority_hash": authority_hash,
         "policy_state_hash": policy_state_hash,
+        "crypto_profile": crypto_profile,
     }
 
     receipt_canonical = canonical_json(receipt_material)
@@ -26,6 +28,7 @@ def build_receipt(
         "reason": receipt_material["reason"],
         "authority_hash": authority_hash,
         "policy_state_hash": policy_state_hash,
+        "crypto_profile": crypto_profile,
         "receipt_canonical": receipt_canonical,
         "receipt_hash": receipt_hash,
     }

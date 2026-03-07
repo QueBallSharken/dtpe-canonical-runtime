@@ -27,6 +27,7 @@ def execute_request(
         expires_at=expires_at,
         policy_version=policy_snapshot["policy_version"],
         policy_state_hash=policy_snapshot["policy_state_hash"],
+        crypto_profile=policy_snapshot["crypto_profile"],
     )
 
     decision = decide_phase4(
@@ -37,6 +38,7 @@ def execute_request(
         decision=decision,
         authority_hash=authority_snapshot["authority_hash"],
         policy_state_hash=policy_snapshot["policy_state_hash"],
+        crypto_profile=policy_snapshot["crypto_profile"],
     )
 
     append_ledger_record(receipt)

@@ -7,6 +7,13 @@ def decide_phase4(
     authority_snapshot: Dict[str, str],
 ) -> Dict[str, str]:
 
+    crypto_profile = authority_snapshot.get("crypto_profile")
+    if not isinstance(crypto_profile, str) or not crypto_profile.strip():
+        return {
+            "execution_state": "REFUSED_NON_BINDING",
+            "reason": "missing_crypto_profile",
+        }
+
     expires_at = authority_snapshot.get("expires_at")
 
     if not isinstance(expires_at, str):

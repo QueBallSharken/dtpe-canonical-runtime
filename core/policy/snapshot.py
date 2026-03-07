@@ -21,6 +21,10 @@ def load_policy_file(path: Path) -> Dict[str, Any]:
     if not isinstance(policy_version, str) or not policy_version.strip():
         raise RuntimeError("Policy file must contain non-empty policy_version")
 
+    crypto_profile = obj.get("crypto_profile")
+    if not isinstance(crypto_profile, str) or not crypto_profile.strip():
+        raise RuntimeError("Policy file must contain non-empty crypto_profile")
+
     return obj
 
 
@@ -29,11 +33,16 @@ def build_policy_snapshot(policy_obj: Dict[str, Any]) -> Dict[str, str]:
     if not isinstance(policy_version, str) or not policy_version.strip():
         raise RuntimeError("Policy object must contain non-empty policy_version")
 
+    crypto_profile = policy_obj.get("crypto_profile")
+    if not isinstance(crypto_profile, str) or not crypto_profile.strip():
+        raise RuntimeError("Policy object must contain non-empty crypto_profile")
+
     policy_canonical = canonical_json(policy_obj)
     policy_state_hash = sha256_hex_str(policy_canonical)
 
     return {
         "policy_version": policy_version,
+        "crypto_profile": crypto_profile,
         "policy_canonical": policy_canonical,
         "policy_state_hash": policy_state_hash,
     }
