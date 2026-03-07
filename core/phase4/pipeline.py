@@ -4,6 +4,7 @@ from core.policy.snapshot import load_policy_snapshot
 from core.authority.snapshot import build_authority_snapshot
 from core.phase4.decision import decide_phase4
 from core.phase4.receipt import build_receipt
+from core.ledger.append import append_ledger_record
 
 
 def execute_request(
@@ -37,5 +38,7 @@ def execute_request(
         authority_hash=authority_snapshot["authority_hash"],
         policy_state_hash=policy_snapshot["policy_state_hash"],
     )
+
+    append_ledger_record(receipt)
 
     return receipt
