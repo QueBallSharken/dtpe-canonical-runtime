@@ -2,6 +2,11 @@
 from typing import Dict
 
 
+SUPPORTED_CRYPTO_PROFILES = {
+    "ed25519+sha256+canonical_json_v1",
+}
+
+
 def decide_phase4(
     *,
     authority_snapshot: Dict[str, str],
@@ -12,6 +17,12 @@ def decide_phase4(
         return {
             "execution_state": "REFUSED_NON_BINDING",
             "reason": "missing_crypto_profile",
+        }
+
+    if crypto_profile not in SUPPORTED_CRYPTO_PROFILES:
+        return {
+            "execution_state": "REFUSED_NON_BINDING",
+            "reason": "unsupported_crypto_profile",
         }
 
     expires_at = authority_snapshot.get("expires_at")
