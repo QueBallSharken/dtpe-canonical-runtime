@@ -23,11 +23,54 @@ def _normalize_permitted_crypto_profiles(value: object) -> Optional[List[str]]:
     return normalized
 
 
+def _migration_window_allows_mismatch(
+    *,
+    crypto_profile: str,
+    expected_crypto_profile: str,
+    migration_window: object,
+    now: datetime,
+) -> bool:
+    if not isinstance(migration_window, dict):
+        return False
+
+    from_crypto_profile = migration_window.get("from_crypto_profile")
+    to_crypto_profile = migration_window.get("to_crypto_profile")
+    not_before = migration_window.get("not_before")
+    not_after = migration_window.get("not_after")
+
+    if not isinstance(from_crypto_profile, str) or not from_crypto_profile.strip():
+        return False
+
+    if not isinstance(to_crypto_profile, str) or not to_crypto_profile.strip():
+        return False
+
+    if not isinstance(not_before, str) or not not_before.strip():
+        return False
+
+    if not isinstance(not_after, str) or not not_after.strip():
+        return False
+
+    try:
+        not_before_dt = datetime.fromisoformat(not_before)
+        not_after_dt = datetime.fromisoformat(not_after)
+    except ValueError:
+        return False
+
+    if crypto_profile != from_crypto_profile:
+        return False
+
+    if expected_crypto_profile != to_crypto_profile:
+        return False
+
+    return not_before_dt <= now <= not_after_dt
+
+
 def decide_phase4(
     *,
     authority_snapshot: Dict[str, str],
     expected_crypto_profile: str,
     permitted_crypto_profiles: Optional[List[str]] = None,
+    migration_window: object = None,
 ) -> Dict[str, str]:
 
     crypto_profile = authority_snapshot.get("crypto_profile")
@@ -58,11 +101,22 @@ def decide_phase4(
                 "reason": "crypto_profile_not_permitted_by_policy",
             }
 
+    now = datetime.utcnow()
+    mismatch_allowed_by_migration = False
+
     if crypto_profile != expected_crypto_profile:
-        return {
-            "execution_state": "REFUSED_NON_BINDING",
-            "reason": "crypto_profile_mismatch",
-        }
+        mismatch_allowed_by_migration = _migration_window_allows_mismatch(
+            crypto_profile=crypto_profile,
+            expected_crypto_profile=expected_crypto_profile,
+            migration_window=migration_window,
+            now=now,
+        )
+
+        if not mismatch_allowed_by_migration:
+            return {
+                "execution_state": "REFUSED_NON_BINDING",
+                "reason": "crypto_profile_mismatch",
+            }
 
     if crypto_profile not in SUPPORTED_CRYPTO_PROFILES:
         return {
@@ -86,12 +140,16 @@ def decide_phase4(
             "reason": "invalid_expiry_format",
         }
 
-    now = datetime.utcnow()
-
     if now >= expiry:
         return {
             "execution_state": "REFUSED_NON_BINDING",
             "reason": "identity_expired",
+        }
+
+    if mismatch_allowed_by_migration:
+        return {
+            "execution_state": "ALLOW",
+            "reason": "admissible_during_migration_window",
         }
 
     return {
