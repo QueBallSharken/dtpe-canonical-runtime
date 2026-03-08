@@ -36,5 +36,8 @@ def initialize_builtin_registry() -> None:
     def _not_implemented(*args, **kwargs):
         raise NotImplementedError("crypto backend not implemented")
 
-    register_crypto_profile(ED25519_SHA256_CANONICAL_JSON_V1, _not_implemented)
-    register_crypto_profile(ML_DSA_65_SHA384_CANONICAL_JSON_V1, _not_implemented)
+    if ED25519_SHA256_CANONICAL_JSON_V1 not in _CRYPTO_REGISTRY:
+        register_crypto_profile(ED25519_SHA256_CANONICAL_JSON_V1, _not_implemented)
+
+    if ML_DSA_65_SHA384_CANONICAL_JSON_V1 not in _CRYPTO_REGISTRY:
+        register_crypto_profile(ML_DSA_65_SHA384_CANONICAL_JSON_V1, _not_implemented)
