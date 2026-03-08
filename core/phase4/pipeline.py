@@ -34,6 +34,7 @@ def execute_request(
         authority_snapshot=authority_snapshot,
         expected_crypto_profile=policy_snapshot["crypto_profile"],
         permitted_crypto_profiles=policy_snapshot["permitted_crypto_profiles"],
+        migration_window=policy_snapshot["migration_window"],
     )
 
     receipt = build_receipt(
