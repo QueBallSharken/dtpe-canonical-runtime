@@ -23,6 +23,7 @@ Core architecture components implemented:
 • Phase4 execution pipeline
 • receipt construction
 • deterministic ledger append
+• offline ledger and receipt verifier
 
 ------------------------------------------------
 
@@ -61,6 +62,56 @@ core/phase4/pipeline.py
 
 ------------------------------------------------
 
+CURRENT CRYPTO SUPPORT
+
+The runtime currently supports these operational profile identifiers:
+
+• ed25519+sha256+canonical_json_v1
+• ml_dsa_65+sha384+canonical_json_v1
+
+Current actual signing / verification implementation exists only for:
+
+• ed25519+sha256+canonical_json_v1
+
+ML-DSA is currently supported at the runtime policy / profile layer,
+but does not yet have a real signing or verification backend.
+
+------------------------------------------------
+
+AUTHORITY BINDING STATE
+
+The runtime now includes an initial Ed25519 authority-binding path.
+
+Implemented components:
+
+• core/authority/signing.py
+• core/authority/verification.py
+• repaired alice identity registry record
+• deterministic authority signing test
+
+Current authority flow for Ed25519:
+
+1 build authority snapshot
+2 sign authority_canonical
+3 include authority_signature_b64 in receipt
+4 include authority_canonical in receipt
+5 verify signature offline from ledger evidence
+
+Offline verifier currently validates:
+
+• ledger previous_hash chain
+• ledger record canonicalization
+• ledger record hash
+• receipt canonicalization
+• receipt hash
+• Ed25519 authority signature when present
+
+Verifier entry point:
+
+tools/verify_ledger.py
+
+------------------------------------------------
+
 TEST COVERAGE
 
 Deterministic tests exist for:
@@ -68,46 +119,41 @@ Deterministic tests exist for:
 • phase4 decision crypto profile enforcement
 • phase4 pipeline crypto profile path
 • policy snapshot migration window validation
-• pipeline execution with migration-window policy
+• phase4 pipeline migration-window policy path
+• crypto registry initialization
+• authority signing and verification
 
-These tests confirm:
-
-• policy snapshot validation
-• migration window semantics
-• runtime decision behavior
-• deterministic ledger evidence
-
-------------------------------------------------
-
-CURRENT CRYPTO SUPPORT
-
-The runtime currently supports one operational crypto profile:
-
-ed25519+sha256+canonical_json_v1
-
-Additional profiles may appear in policy files but will be refused
-until they are added to SUPPORTED_CRYPTO_PROFILES.
+These tests currently pass.
 
 ------------------------------------------------
 
 NEXT IMPLEMENTATION TARGET
 
-Add operational support for additional crypto profiles.
+Add crypto-profile-aware backend dispatch for real signature verification.
 
 Goal
 
-Allow the runtime to execute under multiple supported crypto profiles.
+Move from profile identifiers and Ed25519-only helpers to a
+runtime-dispatched cryptographic backend layer.
 
 This includes:
 
-1 expanding SUPPORTED_CRYPTO_PROFILES
-2 implementing the cryptographic primitives required for those profiles
-3 verifying signature validation and hashing paths remain deterministic
-4 ensuring pipeline and receipt logic remain profile-agnostic
+1 defining backend dispatch from crypto_profile
+2 adding an Ed25519 backend module
+3 preparing an ML-DSA backend module scaffold
+4 removing profile-specific signing assumptions from pipeline code
+5 making offline verification dispatch through crypto profile rules
 
-Example target profile:
+------------------------------------------------
 
-ml_dsa_65+sha384+canonical_json_v1
+IMPORTANT CURRENT LIMITATION
+
+Authority signature verification in the offline verifier is currently
+hardcoded to identity_id = "alice" for the Ed25519 path.
+
+That is acceptable only as the current single-identity scaffold.
+
+The next implementation stage must remove that assumption.
 
 ------------------------------------------------
 
@@ -122,6 +168,8 @@ All runtime behavior must remain:
 
 Policy must remain the authority controlling which crypto
 profiles are permitted at execution time.
+
+No runtime layer may assume one permanent signature scheme.
 
 ------------------------------------------------
 
