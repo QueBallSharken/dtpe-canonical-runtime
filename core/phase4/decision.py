@@ -1,5 +1,5 @@
 ﻿from datetime import datetime
-from typing import Dict
+from typing import Dict, List, Optional, Set
 
 
 SUPPORTED_CRYPTO_PROFILES = {
@@ -7,10 +7,27 @@ SUPPORTED_CRYPTO_PROFILES = {
 }
 
 
+def _normalize_permitted_crypto_profiles(value: object) -> Optional[List[str]]:
+    if value is None:
+        return None
+
+    if not isinstance(value, list) or not value:
+        return []
+
+    normalized: List[str] = []
+    for item in value:
+        if not isinstance(item, str) or not item.strip():
+            return []
+        normalized.append(item)
+
+    return normalized
+
+
 def decide_phase4(
     *,
     authority_snapshot: Dict[str, str],
     expected_crypto_profile: str,
+    permitted_crypto_profiles: Optional[List[str]] = None,
 ) -> Dict[str, str]:
 
     crypto_profile = authority_snapshot.get("crypto_profile")
@@ -25,6 +42,21 @@ def decide_phase4(
             "execution_state": "REFUSED_NON_BINDING",
             "reason": "missing_expected_crypto_profile",
         }
+
+    normalized_permitted = _normalize_permitted_crypto_profiles(permitted_crypto_profiles)
+    if normalized_permitted is not None:
+        if not normalized_permitted:
+            return {
+                "execution_state": "REFUSED_NON_BINDING",
+                "reason": "missing_permitted_crypto_profiles",
+            }
+
+        permitted_set: Set[str] = set(normalized_permitted)
+        if crypto_profile not in permitted_set:
+            return {
+                "execution_state": "REFUSED_NON_BINDING",
+                "reason": "crypto_profile_not_permitted_by_policy",
+            }
 
     if crypto_profile != expected_crypto_profile:
         return {

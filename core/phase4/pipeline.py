@@ -33,6 +33,7 @@ def execute_request(
     decision = decide_phase4(
         authority_snapshot=authority_snapshot,
         expected_crypto_profile=policy_snapshot["crypto_profile"],
+        permitted_crypto_profiles=policy_snapshot["permitted_crypto_profiles"],
     )
 
     receipt = build_receipt(

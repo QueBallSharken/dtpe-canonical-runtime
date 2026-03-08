@@ -19,6 +19,7 @@ def main() -> int:
             "crypto_profile": "ed25519+sha256+canonical_json_v1",
         },
         expected_crypto_profile="ed25519+sha256+canonical_json_v1",
+        permitted_crypto_profiles=["ed25519+sha256+canonical_json_v1"],
     )
     assert_equal(supported["execution_state"], "ALLOW", "supported.execution_state")
     assert_equal(supported["reason"], "admissible", "supported.reason")
@@ -34,6 +35,7 @@ def main() -> int:
             "policy_state_hash": "abc123",
         },
         expected_crypto_profile="ed25519+sha256+canonical_json_v1",
+        permitted_crypto_profiles=["ed25519+sha256+canonical_json_v1"],
     )
     assert_equal(missing["execution_state"], "REFUSED_NON_BINDING", "missing.execution_state")
     assert_equal(missing["reason"], "missing_crypto_profile", "missing.reason")
@@ -50,6 +52,7 @@ def main() -> int:
             "crypto_profile": "ml_dsa_65+sha384+canonical_json_v1",
         },
         expected_crypto_profile="ml_dsa_65+sha384+canonical_json_v1",
+        permitted_crypto_profiles=["ml_dsa_65+sha384+canonical_json_v1"],
     )
     assert_equal(unsupported["execution_state"], "REFUSED_NON_BINDING", "unsupported.execution_state")
     assert_equal(unsupported["reason"], "unsupported_crypto_profile", "unsupported.reason")
@@ -66,9 +69,38 @@ def main() -> int:
             "crypto_profile": "ed25519+sha256+canonical_json_v1",
         },
         expected_crypto_profile="ml_dsa_65+sha384+canonical_json_v1",
+        permitted_crypto_profiles=[
+            "ed25519+sha256+canonical_json_v1",
+            "ml_dsa_65+sha384+canonical_json_v1",
+        ],
     )
     assert_equal(mismatch["execution_state"], "REFUSED_NON_BINDING", "mismatch.execution_state")
     assert_equal(mismatch["reason"], "crypto_profile_mismatch", "mismatch.reason")
+
+    not_permitted = decide_phase4(
+        authority_snapshot={
+            "identity_id": "alice",
+            "owner_id": "alice",
+            "intent": "demo.intent",
+            "action": "execute",
+            "expires_at": "2030-01-01T00:00:00",
+            "policy_version": "v1",
+            "policy_state_hash": "abc123",
+            "crypto_profile": "ed25519+sha256+canonical_json_v1",
+        },
+        expected_crypto_profile="ed25519+sha256+canonical_json_v1",
+        permitted_crypto_profiles=["ml_dsa_65+sha384+canonical_json_v1"],
+    )
+    assert_equal(
+        not_permitted["execution_state"],
+        "REFUSED_NON_BINDING",
+        "not_permitted.execution_state",
+    )
+    assert_equal(
+        not_permitted["reason"],
+        "crypto_profile_not_permitted_by_policy",
+        "not_permitted.reason",
+    )
 
     print("PASS: phase4 crypto profile enforcement decision paths verified")
     return 0
