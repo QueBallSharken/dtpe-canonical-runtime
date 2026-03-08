@@ -1,4 +1,4 @@
-﻿from datetime import datetime, timedelta
+﻿from datetime import UTC, datetime, timedelta
 
 from core.phase4.decision import decide_phase4
 
@@ -104,7 +104,7 @@ def main() -> int:
         "not_permitted.reason",
     )
 
-    now = datetime.utcnow()
+    now = datetime.now(UTC).replace(tzinfo=None)
     active_not_before = (now - timedelta(minutes=5)).isoformat()
     active_not_after = (now + timedelta(minutes=5)).isoformat()
     inactive_not_before = (now + timedelta(minutes=10)).isoformat()
