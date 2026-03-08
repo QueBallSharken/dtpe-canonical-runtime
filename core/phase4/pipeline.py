@@ -3,6 +3,7 @@
 from core.crypto.registry import initialize_builtin_registry
 from core.policy.snapshot import load_policy_snapshot
 from core.authority.snapshot import build_authority_snapshot
+from core.authority.signing import sign_authority_canonical_ed25519
 from core.phase4.decision import decide_phase4
 from core.phase4.receipt import build_receipt
 from core.ledger.append import append_ledger_record
@@ -33,6 +34,13 @@ def execute_request(
         crypto_profile=policy_snapshot["crypto_profile"],
     )
 
+    authority_signature_b64 = None
+    if policy_snapshot["crypto_profile"] == "ed25519+sha256+canonical_json_v1":
+        authority_signature_b64 = sign_authority_canonical_ed25519(
+            identity_id=identity_id,
+            authority_canonical=authority_snapshot["authority_canonical"],
+        )
+
     decision = decide_phase4(
         authority_snapshot=authority_snapshot,
         expected_crypto_profile=policy_snapshot["crypto_profile"],
@@ -45,6 +53,8 @@ def execute_request(
         authority_hash=authority_snapshot["authority_hash"],
         policy_state_hash=policy_snapshot["policy_state_hash"],
         crypto_profile=policy_snapshot["crypto_profile"],
+        authority_signature_b64=authority_signature_b64,
+        authority_canonical=authority_snapshot["authority_canonical"],
     )
 
     append_ledger_record(receipt)

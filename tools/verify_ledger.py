@@ -2,6 +2,7 @@
 from pathlib import Path
 from typing import Any, Dict, List
 
+from core.authority.verification import verify_authority_signature_ed25519
 from core.canonical import canonical_json
 from core.hashing import sha256_hex_str
 from core.paths import DATA_DIR
@@ -40,6 +41,14 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         "crypto_profile": payload.get("crypto_profile"),
     }
 
+    authority_signature_b64 = payload.get("authority_signature_b64")
+    if authority_signature_b64 is not None:
+        receipt_material["authority_signature_b64"] = authority_signature_b64
+
+    authority_canonical = payload.get("authority_canonical")
+    if authority_canonical is not None:
+        receipt_material["authority_canonical"] = authority_canonical
+
     expected_receipt_canonical = canonical_json(receipt_material)
     if payload["receipt_canonical"] != expected_receipt_canonical:
         raise RuntimeError(f"Ledger record {index}: receipt_canonical mismatch")
@@ -47,6 +56,34 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
     expected_receipt_hash = sha256_hex_str(expected_receipt_canonical)
     if payload["receipt_hash"] != expected_receipt_hash:
         raise RuntimeError(f"Ledger record {index}: receipt_hash mismatch")
+
+
+def _verify_authority_signature_if_present(payload: Dict[str, Any], index: int) -> None:
+    authority_signature_b64 = payload.get("authority_signature_b64")
+    if authority_signature_b64 is None:
+        return
+
+    authority_canonical = payload.get("authority_canonical")
+    if not isinstance(authority_canonical, str) or not authority_canonical:
+        raise RuntimeError(
+            f"Ledger record {index}: authority signature present but authority_canonical "
+            f"is missing or invalid"
+        )
+
+    crypto_profile = payload.get("crypto_profile")
+    if crypto_profile != "ed25519+sha256+canonical_json_v1":
+        raise RuntimeError(
+            f"Ledger record {index}: authority signature verification not implemented for "
+            f"crypto_profile {crypto_profile!r}"
+        )
+
+    verified = verify_authority_signature_ed25519(
+        identity_id="alice",
+        authority_canonical=authority_canonical,
+        signature_b64=authority_signature_b64,
+    )
+    if not verified:
+        raise RuntimeError(f"Ledger record {index}: authority signature verification failed")
 
 
 def verify_ledger(path: Path) -> int:
@@ -97,6 +134,7 @@ def verify_ledger(path: Path) -> int:
             raise RuntimeError(f"Ledger record {index}: record_hash mismatch")
 
         _verify_receipt_payload(payload, index)
+        _verify_authority_signature_if_present(payload, index)
 
         expected_previous_hash = record_hash
 
