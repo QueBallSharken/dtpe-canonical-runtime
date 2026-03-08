@@ -1,8 +1,9 @@
-﻿{
+{
   "identity_id": "alice",
   "owner_id": "alice",
   "role": "operator",
   "expires_at": "2030-01-01T00:00:00",
   "key_type": "ed25519",
-  "public_key_b64": "PLACEHOLDER"
+  "public_key_b64": "vrDeYpATpElroDAbOysn/Mphpxs3CJLC2B+IwQVlWM0=",
+  "public_key_fingerprint_sha256": "b07e56eb2244d77009034e1ec12a533204a32d87803ffdd72e11b97b5ff311b5"
 }
