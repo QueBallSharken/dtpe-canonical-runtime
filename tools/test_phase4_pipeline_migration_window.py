@@ -61,8 +61,8 @@ def main() -> int:
             expires_at="2030-01-01T00:00:00",
         )
 
-        assert_equal(receipt["execution_state"], "REFUSED_NON_BINDING", "receipt.execution_state")
-        assert_equal(receipt["reason"], "unsupported_crypto_profile", "receipt.reason")
+        assert_equal(receipt["execution_state"], "ALLOW", "receipt.execution_state")
+        assert_equal(receipt["reason"], "admissible", "receipt.reason")
         assert_equal(
             receipt["crypto_profile"],
             "ml_dsa_65+sha384+canonical_json_v1",
@@ -81,8 +81,8 @@ def main() -> int:
         if not isinstance(payload, dict):
             raise RuntimeError("ledger payload missing or invalid")
 
-        assert_equal(payload["execution_state"], "REFUSED_NON_BINDING", "payload.execution_state")
-        assert_equal(payload["reason"], "unsupported_crypto_profile", "payload.reason")
+        assert_equal(payload["execution_state"], "ALLOW", "payload.execution_state")
+        assert_equal(payload["reason"], "admissible", "payload.reason")
         assert_equal(
             payload["crypto_profile"],
             "ml_dsa_65+sha384+canonical_json_v1",

@@ -42,7 +42,7 @@ def main() -> int:
     assert_equal(missing["execution_state"], "REFUSED_NON_BINDING", "missing.execution_state")
     assert_equal(missing["reason"], "missing_crypto_profile", "missing.reason")
 
-    unsupported = decide_phase4(
+    supported_ml_dsa = decide_phase4(
         authority_snapshot={
             "identity_id": "alice",
             "owner_id": "alice",
@@ -56,8 +56,8 @@ def main() -> int:
         expected_crypto_profile="ml_dsa_65+sha384+canonical_json_v1",
         permitted_crypto_profiles=["ml_dsa_65+sha384+canonical_json_v1"],
     )
-    assert_equal(unsupported["execution_state"], "REFUSED_NON_BINDING", "unsupported.execution_state")
-    assert_equal(unsupported["reason"], "unsupported_crypto_profile", "unsupported.reason")
+    assert_equal(supported_ml_dsa["execution_state"], "ALLOW", "supported_ml_dsa.execution_state")
+    assert_equal(supported_ml_dsa["reason"], "admissible", "supported_ml_dsa.reason")
 
     mismatch = decide_phase4(
         authority_snapshot={
