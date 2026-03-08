@@ -1,8 +1,11 @@
 ﻿import base64
-from pathlib import Path
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
+from core.crypto.profiles import (
+    ED25519_SHA256_CANONICAL_JSON_V1,
+    ML_DSA_65_SHA384_CANONICAL_JSON_V1,
+)
 from core.paths import KEYS_DIR
 
 
@@ -30,3 +33,24 @@ def sign_authority_canonical_ed25519(*, identity_id: str, authority_canonical: s
     private_key = _load_ed25519_private_key(identity_id)
     signature = private_key.sign(authority_canonical.encode("utf-8"))
     return base64.b64encode(signature).decode("ascii")
+
+
+def sign_authority_canonical(
+    *,
+    crypto_profile: str,
+    identity_id: str,
+    authority_canonical: str,
+) -> str | None:
+    if not isinstance(crypto_profile, str) or not crypto_profile.strip():
+        raise RuntimeError("crypto_profile must be a non-empty string")
+
+    if crypto_profile == ED25519_SHA256_CANONICAL_JSON_V1:
+        return sign_authority_canonical_ed25519(
+            identity_id=identity_id,
+            authority_canonical=authority_canonical,
+        )
+
+    if crypto_profile == ML_DSA_65_SHA384_CANONICAL_JSON_V1:
+        raise NotImplementedError("ML-DSA authority signing backend not implemented")
+
+    raise RuntimeError(f"Unsupported crypto profile for authority signing: {crypto_profile!r}")
