@@ -1,5 +1,6 @@
 ﻿from typing import Dict
 
+from core.crypto.registry import initialize_builtin_registry
 from core.policy.snapshot import load_policy_snapshot
 from core.authority.snapshot import build_authority_snapshot
 from core.phase4.decision import decide_phase4
@@ -16,6 +17,8 @@ def execute_request(
     action: str,
     expires_at: str,
 ) -> Dict[str, str]:
+
+    initialize_builtin_registry()
 
     policy_snapshot = load_policy_snapshot(policy_filename)
 
