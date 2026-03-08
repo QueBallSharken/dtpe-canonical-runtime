@@ -3,6 +3,7 @@
 Policy snapshot fields
 - policy_version
 - crypto_profile
+- permitted_crypto_profiles
 - policy_canonical
 - policy_state_hash
 
@@ -38,3 +39,8 @@ Rules
 - UTF-8 encoding
 - SHA-256 for hashes unless explicitly versioned otherwise
 - crypto_profile is mandatory in policy snapshot, authority snapshot, receipt, and replayable evidence
+- permitted_crypto_profiles is mandatory in policy snapshot
+- permitted_crypto_profiles must be a non-empty array of non-empty strings
+- permitted_crypto_profiles must be deterministically ordered
+- policy snapshot crypto_profile must be a member of permitted_crypto_profiles
+- if runtime-enforced crypto_profile is not permitted by policy, execution state must be REFUSED_NON_BINDING
