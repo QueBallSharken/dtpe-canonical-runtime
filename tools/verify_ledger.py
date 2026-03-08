@@ -70,6 +70,24 @@ def _verify_authority_signature_if_present(payload: Dict[str, Any], index: int) 
             f"is missing or invalid"
         )
 
+    try:
+        authority_obj = json.loads(authority_canonical)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            f"Ledger record {index}: authority_canonical is not valid JSON: {exc}"
+        ) from None
+
+    if not isinstance(authority_obj, dict):
+        raise RuntimeError(
+            f"Ledger record {index}: authority_canonical must decode to a JSON object"
+        )
+
+    identity_id = authority_obj.get("identity_id")
+    if not isinstance(identity_id, str) or not identity_id.strip():
+        raise RuntimeError(
+            f"Ledger record {index}: authority_canonical missing non-empty identity_id"
+        )
+
     crypto_profile = payload.get("crypto_profile")
     if crypto_profile != "ed25519+sha256+canonical_json_v1":
         raise RuntimeError(
@@ -78,7 +96,7 @@ def _verify_authority_signature_if_present(payload: Dict[str, Any], index: int) 
         )
 
     verified = verify_authority_signature_ed25519(
-        identity_id="alice",
+        identity_id=identity_id,
         authority_canonical=authority_canonical,
         signature_b64=authority_signature_b64,
     )
