@@ -1,10 +1,12 @@
-﻿import json
+﻿import base64
+import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-from core.authority.verification import verify_authority_signature_ed25519
 from core.canonical import canonical_json
+from core.crypto.registry import get_crypto_verifier, initialize_builtin_registry
 from core.hashing import sha256_hex_str
+from core.identity.identity_registry import load_identity
 from core.paths import DATA_DIR
 
 
@@ -89,22 +91,29 @@ def _verify_authority_signature_if_present(payload: Dict[str, Any], index: int) 
         )
 
     crypto_profile = payload.get("crypto_profile")
-    if crypto_profile != "ed25519+sha256+canonical_json_v1":
-        raise RuntimeError(
-            f"Ledger record {index}: authority signature verification not implemented for "
-            f"crypto_profile {crypto_profile!r}"
-        )
+    if not isinstance(crypto_profile, str) or not crypto_profile.strip():
+        raise RuntimeError(f"Ledger record {index}: crypto_profile missing or invalid")
 
-    verified = verify_authority_signature_ed25519(
-        identity_id=identity_id,
-        authority_canonical=authority_canonical,
-        signature_b64=authority_signature_b64,
-    )
+    identity = load_identity(identity_id)
+
+    public_key_b64 = identity.get("public_key_b64")
+    if not isinstance(public_key_b64, str) or not public_key_b64.strip():
+        raise RuntimeError(f"Ledger record {index}: identity missing public_key_b64")
+
+    public_key_bytes = base64.b64decode(public_key_b64, validate=True)
+    signature_bytes = base64.b64decode(authority_signature_b64, validate=True)
+    message_bytes = authority_canonical.encode("utf-8")
+
+    verifier = get_crypto_verifier(crypto_profile)
+    verified = verifier(public_key_bytes, message_bytes, signature_bytes)
+
     if not verified:
         raise RuntimeError(f"Ledger record {index}: authority signature verification failed")
 
 
 def verify_ledger(path: Path) -> int:
+    initialize_builtin_registry()
+
     lines = _load_lines(path)
 
     expected_previous_hash = "GENESIS"
