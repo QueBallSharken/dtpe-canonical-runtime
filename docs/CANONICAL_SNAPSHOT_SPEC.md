@@ -4,6 +4,7 @@ Policy snapshot fields
 - policy_version
 - crypto_profile
 - permitted_crypto_profiles
+- migration_window
 - policy_canonical
 - policy_state_hash
 
@@ -44,3 +45,16 @@ Rules
 - permitted_crypto_profiles must be deterministically ordered
 - policy snapshot crypto_profile must be a member of permitted_crypto_profiles
 - if runtime-enforced crypto_profile is not permitted by policy, execution state must be REFUSED_NON_BINDING
+- migration_window is optional in policy snapshot
+- if present, migration_window must be a JSON object
+- migration_window must contain:
+  - from_crypto_profile
+  - to_crypto_profile
+  - not_before
+  - not_after
+- from_crypto_profile and to_crypto_profile must be non-empty strings
+- not_before and not_after must be ISO-8601 datetime strings
+- not_before must be earlier than not_after
+- from_crypto_profile and to_crypto_profile must both be members of permitted_crypto_profiles
+- migration rules must be deterministic and replayable from policy snapshot content alone
+- outside an active migration window, crypto_profile mismatch remains REFUSED_NON_BINDING

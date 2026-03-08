@@ -25,29 +25,31 @@ This repository now contains a working DTPE runtime skeleton with:
 • deterministic refusal for unsupported crypto_profile
 • deterministic refusal for crypto_profile mismatch
 • replayable ledger evidence carrying crypto_profile
+• policy snapshot support for permitted_crypto_profiles
+• deterministic refusal when crypto_profile is not permitted by policy
 
-The runtime is now beyond the initial identity milestone and beyond
-basic crypto-profile enforcement expansion.
+The runtime is now beyond basic crypto-profile enforcement and beyond
+policy-level permitted profile enforcement.
 
 ------------------------------------------------
 
 NEXT IMPLEMENTATION TARGET
 
-Step 3 — Policy-Level Permitted Crypto Profiles
+Step 4 — Profile Mismatch and Migration Window Rules
 
 Goal
 
-Strengthen runtime policy semantics so crypto-profile admissibility is not
-limited to a single bound profile string.
+Introduce deterministic policy-defined migration semantics so a profile
+transition can be evaluated without weakening replayability.
 
 The next implementation must:
 
-1 define policy-level permitted crypto profiles canonically
-2 require permitted_crypto_profiles in the policy snapshot
-3 require policy snapshot crypto_profile to be a member of permitted_crypto_profiles
-4 refuse execution when the runtime-enforced crypto_profile is not permitted by policy
+1 define canonical migration_window policy fields
+2 validate migration_window structure in the policy snapshot
+3 preserve strict mismatch refusal outside an active migration window
+4 prepare decision semantics for policy-defined migration handling
 5 preserve deterministic replay behavior
-6 keep receipts and replayable ledger evidence policy-semantics aware
+6 keep receipt and replayable evidence policy-driven
 
 Current minimum supported profile
 ed25519+sha256+canonical_json_v1
@@ -56,11 +58,12 @@ ed25519+sha256+canonical_json_v1
 
 WHY THIS IS NEXT
 
-The runtime now enforces missing, unsupported, and mismatch profile cases,
-but policy semantics still model only a single bound crypto_profile.
+The runtime now supports permitted crypto profile sets, but still treats all
+profile mismatch as immediate refusal.
 
-To move honestly toward profile-aware migration and future PQC-capable
-operation, policy must explicitly define which crypto profiles are permitted.
+To move honestly toward profile migration and future PQC-capable operation,
+policy must define a deterministic migration window structure before runtime
+decision logic expands.
 
 ------------------------------------------------
 
@@ -68,20 +71,20 @@ EXPECTED OUTPUT
 
 The next completed step should produce:
 
-• policy snapshot support for permitted_crypto_profiles
-• deterministic refusal when crypto_profile is not permitted by policy
+• canonical policy support for migration_window
+• validation rules for migration window structure
 • docs aligned with runtime semantics
-• replayable evidence that remains deterministic under policy profile rules
+• deterministic groundwork for migration-aware mismatch handling
 
 ------------------------------------------------
 
 AFTER THIS STEP
 
-Once policy-level permitted profile semantics are implemented, the next components are:
+Once migration-window policy structure is implemented, the next components are:
 
-4 profile mismatch and migration-window rules
-5 offline verifier profile selection logic
-6 deterministic mixed-profile replay tests
+5 migration-aware decision enforcement
+6 offline verifier profile selection logic
+7 deterministic mixed-profile replay tests
 
 ------------------------------------------------
 
