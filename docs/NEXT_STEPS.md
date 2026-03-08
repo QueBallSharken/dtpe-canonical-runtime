@@ -9,83 +9,120 @@ or analysis thread can continue work without relying on prior conversation conte
 
 CURRENT STATE
 
-This repository now contains a working DTPE runtime skeleton with:
+This repository is a clean canonical rebuild of the DTPE runtime.
+
+Core architecture components implemented:
 
 • canonical hashing primitives
-• canonical serialization rules
-• identity generation and invariant verification
-• canonical policy snapshot loader
-• canonical authority snapshot builder
-• phase-4 admissibility decision engine
-• deterministic receipt generation
+• canonical JSON serialization
+• deterministic project path handling
+• identity generation and registry
+• authority snapshot construction
+• policy snapshot construction
+• Phase4 decision engine
+• Phase4 execution pipeline
+• receipt construction
 • deterministic ledger append
-• execution pipeline
-• crypto_profile bound through policy, authority, decision preconditions, receipt, and replayable ledger evidence
-• deterministic refusal for missing crypto_profile
-• deterministic refusal for unsupported crypto_profile
-• deterministic refusal for crypto_profile mismatch
-• replayable ledger evidence carrying crypto_profile
-• policy snapshot support for permitted_crypto_profiles
-• deterministic refusal when crypto_profile is not permitted by policy
 
-The runtime is now beyond basic crypto-profile enforcement and beyond
-policy-level permitted profile enforcement.
+------------------------------------------------
+
+CRYPTO POLICY GOVERNANCE
+
+The runtime now supports policy-governed crypto enforcement.
+
+Policy files define:
+
+• crypto_profile
+• permitted_crypto_profiles
+• optional migration_window
+
+Migration window structure:
+
+{
+  "from_crypto_profile": "...",
+  "to_crypto_profile": "...",
+  "not_before": "...",
+  "not_after": "..."
+}
+
+Runtime behavior:
+
+• execution crypto profile must match policy crypto_profile
+• unless a migration window is active
+• and the request matches the allowed transition
+
+Migration enforcement occurs inside:
+
+core/phase4/decision.py
+
+The execution pipeline wires this through:
+
+core/phase4/pipeline.py
+
+------------------------------------------------
+
+TEST COVERAGE
+
+Deterministic tests exist for:
+
+• phase4 decision crypto profile enforcement
+• phase4 pipeline crypto profile path
+• policy snapshot migration window validation
+• pipeline execution with migration-window policy
+
+These tests confirm:
+
+• policy snapshot validation
+• migration window semantics
+• runtime decision behavior
+• deterministic ledger evidence
+
+------------------------------------------------
+
+CURRENT CRYPTO SUPPORT
+
+The runtime currently supports one operational crypto profile:
+
+ed25519+sha256+canonical_json_v1
+
+Additional profiles may appear in policy files but will be refused
+until they are added to SUPPORTED_CRYPTO_PROFILES.
 
 ------------------------------------------------
 
 NEXT IMPLEMENTATION TARGET
 
-Step 4 — Profile Mismatch and Migration Window Rules
+Add operational support for additional crypto profiles.
 
 Goal
 
-Introduce deterministic policy-defined migration semantics so a profile
-transition can be evaluated without weakening replayability.
+Allow the runtime to execute under multiple supported crypto profiles.
 
-The next implementation must:
+This includes:
 
-1 define canonical migration_window policy fields
-2 validate migration_window structure in the policy snapshot
-3 preserve strict mismatch refusal outside an active migration window
-4 prepare decision semantics for policy-defined migration handling
-5 preserve deterministic replay behavior
-6 keep receipt and replayable evidence policy-driven
+1 expanding SUPPORTED_CRYPTO_PROFILES
+2 implementing the cryptographic primitives required for those profiles
+3 verifying signature validation and hashing paths remain deterministic
+4 ensuring pipeline and receipt logic remain profile-agnostic
 
-Current minimum supported profile
-ed25519+sha256+canonical_json_v1
+Example target profile:
+
+ml_dsa_65+sha384+canonical_json_v1
 
 ------------------------------------------------
 
-WHY THIS IS NEXT
+IMPLEMENTATION CONSTRAINTS
 
-The runtime now supports permitted crypto profile sets, but still treats all
-profile mismatch as immediate refusal.
+All runtime behavior must remain:
 
-To move honestly toward profile migration and future PQC-capable operation,
-policy must define a deterministic migration window structure before runtime
-decision logic expands.
+• deterministic
+• canonicalized
+• replay-verifiable
+• ledger-evidenced
 
-------------------------------------------------
-
-EXPECTED OUTPUT
-
-The next completed step should produce:
-
-• canonical policy support for migration_window
-• validation rules for migration window structure
-• docs aligned with runtime semantics
-• deterministic groundwork for migration-aware mismatch handling
+Policy must remain the authority controlling which crypto
+profiles are permitted at execution time.
 
 ------------------------------------------------
 
-AFTER THIS STEP
-
-Once migration-window policy structure is implemented, the next components are:
-
-5 migration-aware decision enforcement
-6 offline verifier profile selection logic
-7 deterministic mixed-profile replay tests
-
-------------------------------------------------
-
-END
+END OF FILE
