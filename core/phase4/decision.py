@@ -4,6 +4,7 @@ from typing import Dict, List, Optional, Set
 
 SUPPORTED_CRYPTO_PROFILES = {
     "ed25519+sha256+canonical_json_v1",
+    "ml_dsa_65+sha384+canonical_json_v1",
 }
 
 
