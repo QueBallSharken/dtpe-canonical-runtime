@@ -190,3 +190,25 @@ profile support.
 ## License
 
 License information will be added prior to broader public release.
+
+---
+
+## Running the Demonstration
+
+A minimal runtime demonstration is documented in:
+
+docs/DEMO.md
+
+The demonstration shows how to:
+
+- execute a deterministic request
+- generate a governance receipt
+- append a ledger record
+- verify the ledger evidence offline
+
+The expected verification result is:
+
+PASS: verified 1 ledger record(s)
+
+This confirms that the runtime produced deterministic, verifiable governance evidence.
+
