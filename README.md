@@ -1,5 +1,21 @@
 ﻿# DTPE Canonical Runtime
 
+> **DTPE in one sentence:**  
+> A deterministic runtime that produces cryptographic evidence proving an automated decision followed policy.
+
+Example workflow:
+
+request → policy snapshot → authority snapshot → decision → receipt → ledger → offline verification
+
+Run the demo:
+
+```bash
+python -m tools.run_demo
+```
+
+Expected output:
+
+PASS: verified 1 ledger record(s)
 
 ---
 
@@ -27,20 +43,19 @@ PASS: verified ledger record(s)
 This confirms that the decision evidence can be reproduced and validated
 without trusting the runtime that generated it.
 
-
 ---
 
 ## DTPE / IAL / SPECTRE Architecture
 
 DTPE / IAL / SPECTRE defines a deterministic governance architecture for automated systems.
 
-DTPE  
+**DTPE**  
 Delegated Task Provenance Engine
 
-IAL  
+**IAL**  
 Identity Accountability Layer
 
-SPECTRE  
+**SPECTRE**  
 Systemic Policy Enforcement, Containment, and Traceability Runtime Engine
 
 Reference implementation:
@@ -62,6 +77,8 @@ Identity
 → Canonical Receipt  
 → Ledger Evidence  
 → Independent Verification
+
+---
 
 ## Overview
 
@@ -115,8 +132,6 @@ decisions were executed according to policy.
 
 ---
 
----
-
 ## Execution Architecture
 
 ```mermaid
@@ -129,20 +144,13 @@ D --> E[Canonical Receipt]
 E --> F[Ledger Append]
 F --> G[Offline Verification]
 G --> H[Independent Trust]
+```
+
+This pipeline produces deterministic governance artifacts that can be
+verified independently from the runtime that generated them.
+
 ---
 
-## Execution Architecture
-
-```mermaid
-flowchart TD
-
-A[Request] --> B[Policy Snapshot]
-B --> C[Authority Snapshot]
-C --> D[Execution Decision]
-D --> E[Canonical Receipt]
-E --> F[Ledger Append]
-F --> G[Offline Verification]
-G --> H[Independent Trust]
 ## Architecture
 
 The runtime enforces governance through a deterministic pipeline.
@@ -229,7 +237,7 @@ the ledger evidence.
 
 Expected result:
 
-PASS: verified ledger record(s)
+PASS: verified 1 ledger record(s)
 
 ---
 
@@ -280,7 +288,7 @@ profile support.
 
 ## License
 
-License information will be added prior to broader public release.
+This repository is released under the Apache 2.0 License.
 
 ---
 
@@ -302,7 +310,3 @@ The expected verification result is:
 PASS: verified 1 ledger record(s)
 
 This confirms that the runtime produced deterministic, verifiable governance evidence.
-
-
-
-
