@@ -1,5 +1,32 @@
 ﻿# DTPE Canonical Runtime
 
+
+---
+
+## What This Demonstrates
+
+DTPE demonstrates that automated decisions can produce **cryptographic
+evidence showing they complied with governing policy**.
+
+The runtime produces:
+
+- deterministic execution decisions
+- canonical receipts
+- signed authority records
+- append-only ledger evidence
+- independent offline verification
+
+The included demo executes a request through the runtime, produces a
+governance receipt, appends a ledger record, and verifies the evidence
+independently.
+
+If verification succeeds, the system prints:
+
+PASS: verified ledger record(s)
+
+This confirms that the decision evidence can be reproduced and validated
+without trusting the runtime that generated it.
+
 ## Overview
 
 DTPE is a deterministic governance runtime that produces cryptographic evidence
@@ -211,4 +238,5 @@ The expected verification result is:
 PASS: verified 1 ledger record(s)
 
 This confirms that the runtime produced deterministic, verifiable governance evidence.
+
 
