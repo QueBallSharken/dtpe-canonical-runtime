@@ -1,7 +1,9 @@
 ﻿from typing import Dict
 
+from core.crypto.registry import initialize_builtin_registry
 from core.policy.snapshot import load_policy_snapshot
 from core.authority.snapshot import build_authority_snapshot
+from core.authority.signing import sign_authority_canonical
 from core.phase4.decision import decide_phase4
 from core.phase4.receipt import build_receipt
 from core.ledger.append import append_ledger_record
@@ -17,6 +19,8 @@ def execute_request(
     expires_at: str,
 ) -> Dict[str, str]:
 
+    initialize_builtin_registry()
+
     policy_snapshot = load_policy_snapshot(policy_filename)
 
     authority_snapshot = build_authority_snapshot(
@@ -27,16 +31,29 @@ def execute_request(
         expires_at=expires_at,
         policy_version=policy_snapshot["policy_version"],
         policy_state_hash=policy_snapshot["policy_state_hash"],
+        crypto_profile=policy_snapshot["crypto_profile"],
+    )
+
+    authority_signature_b64 = sign_authority_canonical(
+        crypto_profile=policy_snapshot["crypto_profile"],
+        identity_id=identity_id,
+        authority_canonical=authority_snapshot["authority_canonical"],
     )
 
     decision = decide_phase4(
-        authority_snapshot=authority_snapshot
+        authority_snapshot=authority_snapshot,
+        expected_crypto_profile=policy_snapshot["crypto_profile"],
+        permitted_crypto_profiles=policy_snapshot["permitted_crypto_profiles"],
+        migration_window=policy_snapshot["migration_window"],
     )
 
     receipt = build_receipt(
         decision=decision,
         authority_hash=authority_snapshot["authority_hash"],
         policy_state_hash=policy_snapshot["policy_state_hash"],
+        crypto_profile=policy_snapshot["crypto_profile"],
+        authority_signature_b64=authority_signature_b64,
+        authority_canonical=authority_snapshot["authority_canonical"],
     )
 
     append_ledger_record(receipt)
