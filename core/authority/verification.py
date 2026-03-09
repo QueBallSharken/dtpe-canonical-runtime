@@ -3,7 +3,7 @@
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
-from core.identity.identity_registry import load_identity
+from core.identity.identity_registry import load_identity, resolve_identity_key_record
 
 
 def verify_authority_signature_ed25519(
@@ -22,11 +22,12 @@ def verify_authority_signature_ed25519(
         raise RuntimeError("signature_b64 must be a non-empty string")
 
     identity = load_identity(identity_id)
+    key_record = resolve_identity_key_record(
+        identity,
+        "ed25519+sha256+canonical_json_v1",
+    )
 
-    public_key_b64 = identity.get("public_key_b64")
-    if not isinstance(public_key_b64, str) or not public_key_b64.strip():
-        raise RuntimeError("Identity missing public_key_b64")
-
+    public_key_b64 = key_record["public_key_b64"]
     public_key_bytes = base64.b64decode(public_key_b64, validate=True)
     signature_bytes = base64.b64decode(signature_b64, validate=True)
 
