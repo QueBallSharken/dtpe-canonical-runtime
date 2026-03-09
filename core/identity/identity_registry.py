@@ -23,6 +23,54 @@ def load_identity(identity_id: str) -> Dict[str, Any]:
     return obj
 
 
+def resolve_identity_key_record(identity: Dict[str, Any], crypto_profile: str) -> Dict[str, str]:
+    if not isinstance(identity, dict):
+        raise RuntimeError("identity must be a JSON object")
+
+    if not isinstance(crypto_profile, str) or not crypto_profile.strip():
+        raise RuntimeError("crypto_profile must be a non-empty string")
+
+    keys = identity.get("keys")
+    if isinstance(keys, dict):
+        key_record = keys.get(crypto_profile)
+        if not isinstance(key_record, dict):
+            raise RuntimeError(
+                f"Identity missing key record for crypto_profile {crypto_profile!r}"
+            )
+
+        public_key_b64 = key_record.get("public_key_b64")
+        if not isinstance(public_key_b64, str) or not public_key_b64.strip():
+            raise RuntimeError("Identity key record missing public_key_b64")
+
+        public_key_fingerprint_sha256 = key_record.get("public_key_fingerprint_sha256")
+        if (
+            not isinstance(public_key_fingerprint_sha256, str)
+            or not public_key_fingerprint_sha256.strip()
+        ):
+            raise RuntimeError("Identity key record missing public_key_fingerprint_sha256")
+
+        return {
+            "public_key_b64": public_key_b64,
+            "public_key_fingerprint_sha256": public_key_fingerprint_sha256,
+        }
+
+    public_key_b64 = identity.get("public_key_b64")
+    if not isinstance(public_key_b64, str) or not public_key_b64.strip():
+        raise RuntimeError("Identity missing public_key_b64")
+
+    public_key_fingerprint_sha256 = identity.get("public_key_fingerprint_sha256")
+    if (
+        not isinstance(public_key_fingerprint_sha256, str)
+        or not public_key_fingerprint_sha256.strip()
+    ):
+        raise RuntimeError("Identity missing public_key_fingerprint_sha256")
+
+    return {
+        "public_key_b64": public_key_b64,
+        "public_key_fingerprint_sha256": public_key_fingerprint_sha256,
+    }
+
+
 def _load_private_key_bytes(private_key_path: Path) -> bytes:
     priv_b64 = private_key_path.read_text(encoding="utf-8").strip()
     priv_bytes = base64.b64decode(priv_b64, validate=True)
