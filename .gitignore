@@ -1,9 +1,17 @@
-.venv/
+﻿
+# runtime artifacts
+data/ledger.log
+
+# private keys
+data/keys/
+
+# proof artifacts
+proof/
+
+# python cache
 __pycache__/
 *.pyc
-proof/
-exports/
-share/
-data/runtime/
-data/ledger/
-data/keys/
+
+# virtual environments
+.venv/
+
