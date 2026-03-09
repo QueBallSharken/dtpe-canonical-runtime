@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 from core.canonical import canonical_json
 from core.crypto.registry import get_crypto_verifier, initialize_builtin_registry
 from core.hashing import sha256_hex_str
-from core.identity.identity_registry import load_identity
+from core.identity.identity_registry import load_identity, resolve_identity_key_record
 from core.paths import DATA_DIR
 
 
@@ -95,11 +95,9 @@ def _verify_authority_signature_if_present(payload: Dict[str, Any], index: int) 
         raise RuntimeError(f"Ledger record {index}: crypto_profile missing or invalid")
 
     identity = load_identity(identity_id)
+    key_record = resolve_identity_key_record(identity, crypto_profile)
 
-    public_key_b64 = identity.get("public_key_b64")
-    if not isinstance(public_key_b64, str) or not public_key_b64.strip():
-        raise RuntimeError(f"Ledger record {index}: identity missing public_key_b64")
-
+    public_key_b64 = key_record["public_key_b64"]
     public_key_bytes = base64.b64decode(public_key_b64, validate=True)
     signature_bytes = base64.b64decode(authority_signature_b64, validate=True)
     message_bytes = authority_canonical.encode("utf-8")
