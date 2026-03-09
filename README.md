@@ -79,6 +79,34 @@ decisions were executed according to policy.
 
 ---
 
+---
+
+## Execution Architecture
+
+```mermaid
+flowchart TD
+
+A[Request] --> B[Policy Snapshot]
+B --> C[Authority Snapshot]
+C --> D[Execution Decision]
+D --> E[Canonical Receipt]
+E --> F[Ledger Append]
+F --> G[Offline Verification]
+G --> H[Independent Trust]
+---
+
+## Execution Architecture
+
+```mermaid
+flowchart TD
+
+A[Request] --> B[Policy Snapshot]
+B --> C[Authority Snapshot]
+C --> D[Execution Decision]
+D --> E[Canonical Receipt]
+E --> F[Ledger Append]
+F --> G[Offline Verification]
+G --> H[Independent Trust]
 ## Architecture
 
 The runtime enforces governance through a deterministic pipeline.
@@ -238,5 +266,6 @@ The expected verification result is:
 PASS: verified 1 ledger record(s)
 
 This confirms that the runtime produced deterministic, verifiable governance evidence.
+
 
 
