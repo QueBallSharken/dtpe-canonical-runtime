@@ -27,6 +27,42 @@ PASS: verified ledger record(s)
 This confirms that the decision evidence can be reproduced and validated
 without trusting the runtime that generated it.
 
+
+---
+
+## DTPE / IAL / SPECTRE Architecture
+
+DTPE / IAL / SPECTRE defines a deterministic governance architecture for automated systems.
+
+DTPE  
+Delegated Task Provenance Engine
+
+IAL  
+Identity Accountability Layer
+
+SPECTRE  
+Systemic Policy Enforcement, Containment, and Traceability Runtime Engine
+
+Reference implementation:
+
+DTPE / IAL / SPECTRE-001
+
+The architecture separates three responsibilities:
+
+Identity and task provenance (DTPE)  
+Accountability binding and intent verification (IAL)  
+Policy enforcement and cryptographic traceability (SPECTRE)
+
+Conceptual flow:
+
+Identity  
+→ Delegated Task Provenance (DTPE)  
+→ Identity Accountability Binding (IAL)  
+→ Policy Enforcement Runtime (SPECTRE)  
+→ Canonical Receipt  
+→ Ledger Evidence  
+→ Independent Verification
+
 ## Overview
 
 DTPE is a deterministic governance runtime that produces cryptographic evidence
@@ -266,6 +302,7 @@ The expected verification result is:
 PASS: verified 1 ledger record(s)
 
 This confirms that the runtime produced deterministic, verifiable governance evidence.
+
 
 
 
