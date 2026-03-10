@@ -310,3 +310,14 @@ The expected verification result is:
 PASS: verified 1 ledger record(s)
 
 This confirms that the runtime produced deterministic, verifiable governance evidence.
+
+## Research / Grant Review
+
+For grant reviewers, research evaluators, and technical due diligence:
+
+- Project grant brief: `docs/GRANT_BRIEF.md`
+- Demonstration guide: `docs/DEMO.md`
+- Architecture overview: `docs/ARCHITECTURE.md`
+- Threat model: `docs/THREAT_MODEL.md`
+- Cryptographic profile specification: `docs/CRYPTO_PROFILE_SPEC.md`
+- Post-quantum readiness notes: `docs/PQC_READINESS.md`
