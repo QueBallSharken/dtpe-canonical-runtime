@@ -321,3 +321,38 @@ For grant reviewers, research evaluators, and technical due diligence:
 - Threat model: `docs/THREAT_MODEL.md`
 - Cryptographic profile specification: `docs/CRYPTO_PROFILE_SPEC.md`
 - Post-quantum readiness notes: `docs/PQC_READINESS.md`
+
+## 30-Second Verification
+
+A reviewer can verify the prototype in under a minute.
+
+From the repository root run:
+
+```bash
+python -m tools.run_demo
+Set-Location "C:\Users\Stevil\code\dtpe-canonical-runtime"
+
+@'
+
+## 30-Second Verification
+
+A reviewer can verify the prototype in under a minute.
+
+From the repository root run:
+
+```bash
+python -m tools.run_demo'@ | Add-Content ".\README.md"
+## 30-Second Verification
+
+A reviewer can verify the prototype in under a minute.
+
+From the repository root run:
+
+python -m tools.run_demo
+
+Expected result:
+
+PASS: verified 1 ledger record(s)
+
+This demonstrates that the runtime produced deterministic governance evidence
+that can be independently verified.
