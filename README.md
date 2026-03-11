@@ -356,3 +356,18 @@ PASS: verified 1 ledger record(s)
 
 This demonstrates that the runtime produced deterministic governance evidence
 that can be independently verified.
+
+## Documentation Entry Points
+
+For contributors, reviewers, and future work sessions:
+
+- docs/DOCS_INDEX.md
+- docs/ARCHITECTURE_OVERVIEW.md
+- docs/PROJECT_ROADMAP.md
+- docs/GOVERNANCE_KERNEL_POSITIONING.md
+- docs/BOUNDARY_INVARIANT_RULES.md
+- docs/PHASE5_EXECUTION_BOUNDARY.md
+- docs/PHASE6_TEMPORAL_INVARIANTS.md
+- docs/PQC_GOVERNANCE_DIRECTION.md
+- docs/RECEIPT_SCHEMA_V2.md
+- docs/SESSION_HANDOFF.md
