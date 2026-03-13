@@ -371,3 +371,6 @@ For contributors, reviewers, and future work sessions:
 - docs/PQC_GOVERNANCE_DIRECTION.md
 - docs/RECEIPT_SCHEMA_V2.md
 - docs/SESSION_HANDOFF.md
+
+- docs/PHASE7_GOVERNANCE_KERNEL_ROADMAP.md
+- docs/DETERMINISTIC_VERIFICATION_RISKS.md
