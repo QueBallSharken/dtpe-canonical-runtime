@@ -4,19 +4,29 @@ from typing import Any, Dict
 
 
 def evaluate_state_admissibility(
-    current_state: Dict[str, Any],
-    proposed_transition: Dict[str, Any],
+    canonical_current_state: Dict[str, Any],
+    canonical_transition: Dict[str, Any],
+    canonical_policy_state_hash: str,
+    execution_intent: str,
+    authority_hash: str,
+    crypto_profile: str,
 ) -> Dict[str, Any]:
     """
     Phase-5 scaffold for deterministic state admissibility evaluation.
 
-    This module will determine whether a proposed transition keeps the
-    resulting system state inside the admissible state space.
+    This interface is aligned to STATE_ADMISSIBILITY_SPEC.md.
+
+    Boundary admissibility decisions must be replayable from canonical inputs
+    without relying on hidden runtime context.
     """
 
     return {
         "ok": True,
         "reason": "STATE_ADMISSIBILITY_NOT_YET_IMPLEMENTED",
-        "current_state": current_state,
-        "proposed_transition": proposed_transition,
+        "canonical_current_state": canonical_current_state,
+        "canonical_transition": canonical_transition,
+        "canonical_policy_state_hash": canonical_policy_state_hash,
+        "execution_intent": execution_intent,
+        "authority_hash": authority_hash,
+        "crypto_profile": crypto_profile,
     }

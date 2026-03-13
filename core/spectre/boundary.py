@@ -8,9 +8,13 @@ from core.spectre.stability_guard import evaluate_system_stability
 
 def evaluate_execution_boundary(
     authority_result: Dict[str, Any],
-    current_state: Dict[str, Any],
+    canonical_current_state: Dict[str, Any],
     system_state: Dict[str, Any],
-    proposed_transition: Dict[str, Any],
+    canonical_transition: Dict[str, Any],
+    canonical_policy_state_hash: str,
+    execution_intent: str,
+    authority_hash: str,
+    crypto_profile: str,
 ) -> Dict[str, Any]:
     """
     Phase-5 scaffold for deterministic boundary control.
@@ -24,13 +28,17 @@ def evaluate_execution_boundary(
     authority_ok = bool(authority_result.get("ok", False))
 
     state_result = evaluate_state_admissibility(
-        current_state=current_state,
-        proposed_transition=proposed_transition,
+        canonical_current_state=canonical_current_state,
+        canonical_transition=canonical_transition,
+        canonical_policy_state_hash=canonical_policy_state_hash,
+        execution_intent=execution_intent,
+        authority_hash=authority_hash,
+        crypto_profile=crypto_profile,
     )
 
     stability_result = evaluate_system_stability(
         system_state=system_state,
-        proposed_transition=proposed_transition,
+        proposed_transition=canonical_transition,
     )
 
     state_ok = bool(state_result.get("ok", False))
