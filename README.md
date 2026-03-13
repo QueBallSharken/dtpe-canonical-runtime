@@ -374,3 +374,6 @@ For contributors, reviewers, and future work sessions:
 
 - docs/PHASE7_GOVERNANCE_KERNEL_ROADMAP.md
 - docs/DETERMINISTIC_VERIFICATION_RISKS.md
+
+- docs/NEXT_IMPLEMENTATION_TARGET.md
+- docs/MULTI_SYSTEM_GOVERNANCE_DIRECTION.md
