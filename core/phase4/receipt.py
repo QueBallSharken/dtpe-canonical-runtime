@@ -1,4 +1,4 @@
-﻿from typing import Dict
+from typing import Any, Dict
 
 from core.canonical import canonical_json
 from core.hashing import sha256_hex_str
@@ -6,13 +6,13 @@ from core.hashing import sha256_hex_str
 
 def build_receipt(
     *,
-    decision: Dict[str, str],
+    decision: Dict[str, Any],
     authority_hash: str,
     policy_state_hash: str,
     crypto_profile: str,
     authority_signature_b64: str | None = None,
     authority_canonical: str | None = None,
-) -> Dict[str, str]:
+) -> Dict[str, Any]:
 
     receipt_material = {
         "execution_state": decision.get("execution_state"),
@@ -21,6 +21,14 @@ def build_receipt(
         "policy_state_hash": policy_state_hash,
         "crypto_profile": crypto_profile,
     }
+
+    state_admissibility_result = decision.get("state_admissibility_result")
+    if state_admissibility_result is not None:
+        receipt_material["state_admissibility_result"] = state_admissibility_result
+
+    stability_result = decision.get("stability_result")
+    if stability_result is not None:
+        receipt_material["stability_result"] = stability_result
 
     if authority_signature_b64 is not None:
         receipt_material["authority_signature_b64"] = authority_signature_b64
@@ -40,6 +48,12 @@ def build_receipt(
         "receipt_canonical": receipt_canonical,
         "receipt_hash": receipt_hash,
     }
+
+    if state_admissibility_result is not None:
+        receipt["state_admissibility_result"] = state_admissibility_result
+
+    if stability_result is not None:
+        receipt["stability_result"] = stability_result
 
     if authority_signature_b64 is not None:
         receipt["authority_signature_b64"] = authority_signature_b64

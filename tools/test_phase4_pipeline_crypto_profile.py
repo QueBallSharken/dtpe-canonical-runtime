@@ -1,4 +1,4 @@
-﻿import json
+import json
 
 from core.paths import DATA_DIR
 from core.phase4.pipeline import execute_request
@@ -26,11 +26,28 @@ def main() -> int:
     )
 
     assert_equal(receipt["execution_state"], "ALLOW", "receipt.execution_state")
-    assert_equal(receipt["reason"], "admissible", "receipt.reason")
+    assert_equal(receipt["reason"], "BOUNDARY_ALLOW", "receipt.reason")
     assert_equal(
         receipt["crypto_profile"],
         "ed25519+sha256+canonical_json_v1",
         "receipt.crypto_profile",
+    )
+
+    if "state_admissibility_result" not in receipt:
+        raise RuntimeError("receipt missing state_admissibility_result")
+
+    if "stability_result" not in receipt:
+        raise RuntimeError("receipt missing stability_result")
+
+    assert_equal(
+        receipt["state_admissibility_result"]["reason"],
+        "STATE_ADMISSIBLE",
+        "receipt.state_admissibility_result.reason",
+    )
+    assert_equal(
+        receipt["stability_result"]["reason"],
+        "SYSTEM_STABILITY_NOT_YET_IMPLEMENTED",
+        "receipt.stability_result.reason",
     )
 
     if not LEDGER_PATH.exists():
@@ -46,17 +63,35 @@ def main() -> int:
         raise RuntimeError("ledger payload missing or invalid")
 
     assert_equal(payload["execution_state"], "ALLOW", "payload.execution_state")
-    assert_equal(payload["reason"], "admissible", "payload.reason")
+    assert_equal(payload["reason"], "BOUNDARY_ALLOW", "payload.reason")
     assert_equal(
         payload["crypto_profile"],
         "ed25519+sha256+canonical_json_v1",
         "payload.crypto_profile",
     )
+
+    if "state_admissibility_result" not in payload:
+        raise RuntimeError("payload missing state_admissibility_result")
+
+    if "stability_result" not in payload:
+        raise RuntimeError("payload missing stability_result")
+
+    assert_equal(
+        payload["state_admissibility_result"]["reason"],
+        "STATE_ADMISSIBLE",
+        "payload.state_admissibility_result.reason",
+    )
+    assert_equal(
+        payload["stability_result"]["reason"],
+        "SYSTEM_STABILITY_NOT_YET_IMPLEMENTED",
+        "payload.stability_result.reason",
+    )
+
     assert_equal(record["previous_hash"], "GENESIS", "record.previous_hash")
 
     LEDGER_PATH.unlink()
 
-    print("PASS: phase4 pipeline crypto profile path verified")
+    print("PASS: phase5 pipeline boundary path verified")
     return 0
 
 

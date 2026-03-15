@@ -1,4 +1,4 @@
-﻿import base64
+import base64
 import json
 from pathlib import Path
 from typing import Any, Dict, List
@@ -42,6 +42,31 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         "policy_state_hash": payload.get("policy_state_hash"),
         "crypto_profile": payload.get("crypto_profile"),
     }
+
+    state_admissibility_present = "state_admissibility_result" in payload
+    stability_present = "stability_result" in payload
+
+    if state_admissibility_present != stability_present:
+        raise RuntimeError(
+            f"Ledger record {index}: phase5 boundary receipt fields must appear together"
+        )
+
+    if state_admissibility_present:
+        state_admissibility_result = payload.get("state_admissibility_result")
+        stability_result = payload.get("stability_result")
+
+        if not isinstance(state_admissibility_result, dict):
+            raise RuntimeError(
+                f"Ledger record {index}: state_admissibility_result must be a JSON object"
+            )
+
+        if not isinstance(stability_result, dict):
+            raise RuntimeError(
+                f"Ledger record {index}: stability_result must be a JSON object"
+            )
+
+        receipt_material["state_admissibility_result"] = state_admissibility_result
+        receipt_material["stability_result"] = stability_result
 
     authority_signature_b64 = payload.get("authority_signature_b64")
     if authority_signature_b64 is not None:

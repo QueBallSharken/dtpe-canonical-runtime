@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Any, Dict
 
 from core.crypto.registry import initialize_builtin_registry
 from core.policy.snapshot import load_policy_snapshot
@@ -18,7 +18,7 @@ def execute_request(
     intent: str,
     action: str,
     expires_at: str,
-) -> Dict[str, str]:
+) -> Dict[str, Any]:
 
     initialize_builtin_registry()
 
@@ -41,12 +41,18 @@ def execute_request(
         authority_canonical=authority_snapshot["authority_canonical"],
     )
 
-    authority_result = decide_phase4(
+    phase4_result = decide_phase4(
         authority_snapshot=authority_snapshot,
         expected_crypto_profile=policy_snapshot["crypto_profile"],
         permitted_crypto_profiles=policy_snapshot["permitted_crypto_profiles"],
         migration_window=policy_snapshot["migration_window"],
     )
+
+    authority_result = {
+        "ok": phase4_result.get("execution_state") == "ALLOW",
+        "execution_state": phase4_result.get("execution_state"),
+        "reason": phase4_result.get("reason"),
+    }
 
     boundary_result = evaluate_execution_boundary(
         authority_result=authority_result,
