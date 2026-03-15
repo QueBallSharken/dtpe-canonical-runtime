@@ -1,4 +1,4 @@
-﻿from typing import Dict
+from typing import Dict
 
 from core.crypto.registry import initialize_builtin_registry
 from core.policy.snapshot import load_policy_snapshot
@@ -7,6 +7,7 @@ from core.authority.signing import sign_authority_canonical
 from core.phase4.decision import decide_phase4
 from core.phase4.receipt import build_receipt
 from core.ledger.append import append_ledger_record
+from core.spectre.boundary import evaluate_execution_boundary
 
 
 def execute_request(
@@ -40,15 +41,32 @@ def execute_request(
         authority_canonical=authority_snapshot["authority_canonical"],
     )
 
-    decision = decide_phase4(
+    authority_result = decide_phase4(
         authority_snapshot=authority_snapshot,
         expected_crypto_profile=policy_snapshot["crypto_profile"],
         permitted_crypto_profiles=policy_snapshot["permitted_crypto_profiles"],
         migration_window=policy_snapshot["migration_window"],
     )
 
+    boundary_result = evaluate_execution_boundary(
+        authority_result=authority_result,
+        canonical_current_state=authority_snapshot,
+        system_state=policy_snapshot,
+        canonical_transition={
+            "identity_id": identity_id,
+            "owner_id": owner_id,
+            "intent": intent,
+            "action": action,
+            "expires_at": expires_at,
+        },
+        canonical_policy_state_hash=policy_snapshot["policy_state_hash"],
+        execution_intent=intent,
+        authority_hash=authority_snapshot["authority_hash"],
+        crypto_profile=policy_snapshot["crypto_profile"],
+    )
+
     receipt = build_receipt(
-        decision=decision,
+        decision=boundary_result,
         authority_hash=authority_snapshot["authority_hash"],
         policy_state_hash=policy_snapshot["policy_state_hash"],
         crypto_profile=policy_snapshot["crypto_profile"],
