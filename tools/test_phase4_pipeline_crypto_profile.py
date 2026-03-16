@@ -46,7 +46,7 @@ def main() -> int:
     )
     assert_equal(
         receipt["stability_result"]["reason"],
-        "SYSTEM_STABILITY_NOT_YET_IMPLEMENTED",
+        "SYSTEM_STABLE",
         "receipt.stability_result.reason",
     )
 
@@ -83,13 +83,12 @@ def main() -> int:
     )
     assert_equal(
         payload["stability_result"]["reason"],
-        "SYSTEM_STABILITY_NOT_YET_IMPLEMENTED",
+        "SYSTEM_STABLE",
         "payload.stability_result.reason",
     )
 
     assert_equal(record["previous_hash"], "GENESIS", "record.previous_hash")
 
-    LEDGER_PATH.unlink()
 
     print("PASS: phase5 pipeline boundary path verified")
     return 0

@@ -18,19 +18,31 @@ def evaluate_state_admissibility(
     if canonical_current_state is None:
         return {"ok": False, "reason": "MISSING_CANONICAL_CURRENT_STATE"}
 
+    if not isinstance(canonical_current_state, dict):
+        return {"ok": False, "reason": "INVALID_CANONICAL_CURRENT_STATE"}
+
+    if not canonical_current_state:
+        return {"ok": False, "reason": "EMPTY_CANONICAL_CURRENT_STATE"}
+
     if canonical_transition is None:
         return {"ok": False, "reason": "MISSING_CANONICAL_TRANSITION"}
 
-    if not canonical_policy_state_hash:
+    if not isinstance(canonical_transition, dict):
+        return {"ok": False, "reason": "INVALID_CANONICAL_TRANSITION"}
+
+    if not canonical_transition:
+        return {"ok": False, "reason": "EMPTY_CANONICAL_TRANSITION"}
+
+    if not isinstance(canonical_policy_state_hash, str) or not canonical_policy_state_hash.strip():
         return {"ok": False, "reason": "MISSING_POLICY_STATE_HASH"}
 
-    if not execution_intent:
+    if not isinstance(execution_intent, str) or not execution_intent.strip():
         return {"ok": False, "reason": "MISSING_EXECUTION_INTENT"}
 
-    if not authority_hash:
+    if not isinstance(authority_hash, str) or not authority_hash.strip():
         return {"ok": False, "reason": "MISSING_AUTHORITY_HASH"}
 
-    if not crypto_profile:
+    if not isinstance(crypto_profile, str) or not crypto_profile.strip():
         return {"ok": False, "reason": "MISSING_CRYPTO_PROFILE"}
 
     return {
