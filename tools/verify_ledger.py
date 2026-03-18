@@ -8,6 +8,7 @@ from core.crypto.registry import get_crypto_verifier, initialize_builtin_registr
 from core.hashing import sha256_hex_str
 from core.identity.identity_registry import load_identity, resolve_identity_key_record
 from core.paths import DATA_DIR
+from core.spectre.boundary import evaluate_execution_boundary
 
 
 LEDGER_PATH = DATA_DIR / "ledger.log"
@@ -121,6 +122,68 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         raise RuntimeError(f"Ledger record {index}: receipt_hash mismatch")
 
 
+def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
+    authority_result = payload.get("authority_result")
+    canonical_current_state = payload.get("canonical_current_state")
+    system_state = payload.get("system_state")
+    canonical_transition = payload.get("canonical_transition")
+    execution_intent = payload.get("execution_intent")
+    authority_hash = payload.get("authority_hash")
+    policy_state_hash = payload.get("policy_state_hash")
+    crypto_profile = payload.get("crypto_profile")
+
+    replay_inputs_present = all(
+        value is not None
+        for value in [
+            authority_result,
+            canonical_current_state,
+            system_state,
+            canonical_transition,
+            execution_intent,
+            authority_hash,
+            policy_state_hash,
+            crypto_profile,
+        ]
+    )
+
+    if not replay_inputs_present:
+        return
+
+    replay_result = evaluate_execution_boundary(
+        authority_result=authority_result,
+        canonical_current_state=canonical_current_state,
+        system_state=system_state,
+        canonical_transition=canonical_transition,
+        canonical_policy_state_hash=policy_state_hash,
+        execution_intent=execution_intent,
+        authority_hash=authority_hash,
+        crypto_profile=crypto_profile,
+    )
+
+    if payload.get("execution_state") != replay_result.get("execution_state"):
+        raise RuntimeError(
+            f"Ledger record {index}: boundary replay execution_state mismatch"
+        )
+
+    if payload.get("reason") != replay_result.get("reason"):
+        raise RuntimeError(
+            f"Ledger record {index}: boundary replay reason mismatch"
+        )
+
+    recorded_state_result = payload.get("state_admissibility_result")
+    recorded_stability_result = payload.get("stability_result")
+
+    if recorded_state_result != replay_result.get("state_admissibility_result"):
+        raise RuntimeError(
+            f"Ledger record {index}: boundary replay state_admissibility_result mismatch"
+        )
+
+    if recorded_stability_result != replay_result.get("stability_result"):
+        raise RuntimeError(
+            f"Ledger record {index}: boundary replay stability_result mismatch"
+        )
+
+
 def _verify_authority_signature_if_present(payload: Dict[str, Any], index: int) -> None:
     authority_signature_b64 = payload.get("authority_signature_b64")
     if authority_signature_b64 is None:
@@ -220,6 +283,7 @@ def verify_ledger(path: Path) -> int:
             raise RuntimeError(f"Ledger record {index}: record_hash mismatch")
 
         _verify_receipt_payload(payload, index)
+        _verify_boundary_replay(payload, index)
         _verify_authority_signature_if_present(payload, index)
 
         expected_previous_hash = record_hash
