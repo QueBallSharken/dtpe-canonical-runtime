@@ -1,10 +1,9 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Any, Dict
 
 from core.spectre.state_guard import evaluate_state_admissibility
 from core.spectre.stability_guard import evaluate_system_stability
-from core.spectre.temporal_guard import evaluate_temporal_invariants
 
 
 def evaluate_execution_boundary(
@@ -18,13 +17,12 @@ def evaluate_execution_boundary(
     crypto_profile: str,
 ) -> Dict[str, Any]:
     """
-    Phase-6 deterministic boundary control.
+    Phase-5 scaffold for deterministic boundary control.
 
     ALLOW only if:
     - authority is valid
     - state is admissible
     - system remains stable
-    - temporal invariants are satisfied
     """
 
     authority_ok = bool(authority_result.get("ok", False))
@@ -43,15 +41,10 @@ def evaluate_execution_boundary(
         proposed_transition=canonical_transition,
     )
 
-    temporal_result = evaluate_temporal_invariants(
-        canonical_transition=canonical_transition,
-    )
-
     state_ok = bool(state_result.get("ok", False))
     stability_ok = bool(stability_result.get("ok", False))
-    temporal_ok = bool(temporal_result.get("ok", False))
 
-    allowed = authority_ok and state_ok and stability_ok and temporal_ok
+    allowed = authority_ok and state_ok and stability_ok
 
     return {
         "ok": allowed,
@@ -59,6 +52,5 @@ def evaluate_execution_boundary(
         "authority_result": authority_result,
         "state_admissibility_result": state_result,
         "stability_result": stability_result,
-        "temporal_invariant_result": temporal_result,
         "reason": "BOUNDARY_ALLOW" if allowed else "BOUNDARY_REFUSED_NON_BINDING",
     }
