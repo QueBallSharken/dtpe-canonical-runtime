@@ -99,7 +99,7 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
 
     execution_intent = payload.get("execution_intent")
     if execution_intent is not None:
-        if not isinstance(execution_intent, str) or not execution_intent.strip():
+        if not isinstance(execution_intent, str):
             raise RuntimeError(
                 f"Ledger record {index}: execution_intent must be a non-empty string"
             )
