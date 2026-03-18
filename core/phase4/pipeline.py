@@ -54,17 +54,19 @@ def execute_request(
         "reason": phase4_result.get("reason"),
     }
 
+    canonical_transition = {
+        "identity_id": identity_id,
+        "owner_id": owner_id,
+        "intent": intent,
+        "action": action,
+        "expires_at": expires_at,
+    }
+
     boundary_result = evaluate_execution_boundary(
         authority_result=authority_result,
         canonical_current_state=authority_snapshot,
         system_state=policy_snapshot,
-        canonical_transition={
-            "identity_id": identity_id,
-            "owner_id": owner_id,
-            "intent": intent,
-            "action": action,
-            "expires_at": expires_at,
-        },
+        canonical_transition=canonical_transition,
         canonical_policy_state_hash=policy_snapshot["policy_state_hash"],
         execution_intent=intent,
         authority_hash=authority_snapshot["authority_hash"],
@@ -78,6 +80,11 @@ def execute_request(
         crypto_profile=policy_snapshot["crypto_profile"],
         authority_signature_b64=authority_signature_b64,
         authority_canonical=authority_snapshot["authority_canonical"],
+        authority_result=authority_result,
+        canonical_current_state=authority_snapshot,
+        system_state=policy_snapshot,
+        canonical_transition=canonical_transition,
+        execution_intent=intent,
     )
 
     append_ledger_record(receipt)

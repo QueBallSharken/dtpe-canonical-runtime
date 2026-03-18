@@ -12,6 +12,11 @@ def build_receipt(
     crypto_profile: str,
     authority_signature_b64: str | None = None,
     authority_canonical: str | None = None,
+    authority_result: Dict[str, Any] | None = None,
+    canonical_current_state: Dict[str, Any] | None = None,
+    system_state: Dict[str, Any] | None = None,
+    canonical_transition: Dict[str, Any] | None = None,
+    execution_intent: str | None = None,
 ) -> Dict[str, Any]:
 
     receipt_material = {
@@ -29,6 +34,21 @@ def build_receipt(
     stability_result = decision.get("stability_result")
     if stability_result is not None:
         receipt_material["stability_result"] = stability_result
+
+    if authority_result is not None:
+        receipt_material["authority_result"] = authority_result
+
+    if canonical_current_state is not None:
+        receipt_material["canonical_current_state"] = canonical_current_state
+
+    if system_state is not None:
+        receipt_material["system_state"] = system_state
+
+    if canonical_transition is not None:
+        receipt_material["canonical_transition"] = canonical_transition
+
+    if execution_intent is not None:
+        receipt_material["execution_intent"] = execution_intent
 
     if authority_signature_b64 is not None:
         receipt_material["authority_signature_b64"] = authority_signature_b64
@@ -54,6 +74,21 @@ def build_receipt(
 
     if stability_result is not None:
         receipt["stability_result"] = stability_result
+
+    if authority_result is not None:
+        receipt["authority_result"] = authority_result
+
+    if canonical_current_state is not None:
+        receipt["canonical_current_state"] = canonical_current_state
+
+    if system_state is not None:
+        receipt["system_state"] = system_state
+
+    if canonical_transition is not None:
+        receipt["canonical_transition"] = canonical_transition
+
+    if execution_intent is not None:
+        receipt["execution_intent"] = execution_intent
 
     if authority_signature_b64 is not None:
         receipt["authority_signature_b64"] = authority_signature_b64

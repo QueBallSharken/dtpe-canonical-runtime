@@ -68,6 +68,42 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         receipt_material["state_admissibility_result"] = state_admissibility_result
         receipt_material["stability_result"] = stability_result
 
+    authority_result = payload.get("authority_result")
+    if authority_result is not None:
+        if not isinstance(authority_result, dict):
+            raise RuntimeError(f"Ledger record {index}: authority_result must be a JSON object")
+        receipt_material["authority_result"] = authority_result
+
+    canonical_current_state = payload.get("canonical_current_state")
+    if canonical_current_state is not None:
+        if not isinstance(canonical_current_state, dict):
+            raise RuntimeError(
+                f"Ledger record {index}: canonical_current_state must be a JSON object"
+            )
+        receipt_material["canonical_current_state"] = canonical_current_state
+
+    system_state = payload.get("system_state")
+    if system_state is not None:
+        if not isinstance(system_state, dict):
+            raise RuntimeError(f"Ledger record {index}: system_state must be a JSON object")
+        receipt_material["system_state"] = system_state
+
+    canonical_transition = payload.get("canonical_transition")
+    if canonical_transition is not None:
+        if not isinstance(canonical_transition, dict):
+            raise RuntimeError(
+                f"Ledger record {index}: canonical_transition must be a JSON object"
+            )
+        receipt_material["canonical_transition"] = canonical_transition
+
+    execution_intent = payload.get("execution_intent")
+    if execution_intent is not None:
+        if not isinstance(execution_intent, str) or not execution_intent.strip():
+            raise RuntimeError(
+                f"Ledger record {index}: execution_intent must be a non-empty string"
+            )
+        receipt_material["execution_intent"] = execution_intent
+
     authority_signature_b64 = payload.get("authority_signature_b64")
     if authority_signature_b64 is not None:
         receipt_material["authority_signature_b64"] = authority_signature_b64
