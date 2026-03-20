@@ -46,10 +46,17 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
 
     state_admissibility_present = "state_admissibility_result" in payload
     stability_present = "stability_result" in payload
+    temporal_present = "temporal_invariant_result" in payload
+    execution_time_present = "execution_time" in payload
 
     if state_admissibility_present != stability_present:
         raise RuntimeError(
-            f"Ledger record {index}: phase5 boundary receipt fields must appear together"
+            f"Ledger record {index}: boundary receipt state/stability fields must appear together"
+        )
+
+    if temporal_present != execution_time_present:
+        raise RuntimeError(
+            f"Ledger record {index}: temporal_invariant_result and execution_time must appear together"
         )
 
     if state_admissibility_present:
@@ -68,6 +75,23 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
 
         receipt_material["state_admissibility_result"] = state_admissibility_result
         receipt_material["stability_result"] = stability_result
+
+    if temporal_present:
+        temporal_invariant_result = payload.get("temporal_invariant_result")
+        execution_time = payload.get("execution_time")
+
+        if not isinstance(temporal_invariant_result, dict):
+            raise RuntimeError(
+                f"Ledger record {index}: temporal_invariant_result must be a JSON object"
+            )
+
+        if not isinstance(execution_time, str):
+            raise RuntimeError(
+                f"Ledger record {index}: execution_time must be a string"
+            )
+
+        receipt_material["temporal_invariant_result"] = temporal_invariant_result
+        receipt_material["execution_time"] = execution_time
 
     authority_result = payload.get("authority_result")
     if authority_result is not None:
@@ -101,7 +125,7 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
     if execution_intent is not None:
         if not isinstance(execution_intent, str):
             raise RuntimeError(
-                f"Ledger record {index}: execution_intent must be a non-empty string"
+                f"Ledger record {index}: execution_intent must be a string"
             )
         receipt_material["execution_intent"] = execution_intent
 
@@ -131,6 +155,7 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
     authority_hash = payload.get("authority_hash")
     policy_state_hash = payload.get("policy_state_hash")
     crypto_profile = payload.get("crypto_profile")
+    execution_time = payload.get("execution_time")
 
     replay_inputs_present = all(
         value is not None
@@ -143,6 +168,7 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
             authority_hash,
             policy_state_hash,
             crypto_profile,
+            execution_time,
         ]
     )
 
@@ -158,6 +184,7 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
         execution_intent=execution_intent,
         authority_hash=authority_hash,
         crypto_profile=crypto_profile,
+        execution_time=execution_time,
     )
 
     if payload.get("execution_state") != replay_result.get("execution_state"):
@@ -172,6 +199,7 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
 
     recorded_state_result = payload.get("state_admissibility_result")
     recorded_stability_result = payload.get("stability_result")
+    recorded_temporal_result = payload.get("temporal_invariant_result")
 
     if recorded_state_result != replay_result.get("state_admissibility_result"):
         raise RuntimeError(
@@ -181,6 +209,11 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
     if recorded_stability_result != replay_result.get("stability_result"):
         raise RuntimeError(
             f"Ledger record {index}: boundary replay stability_result mismatch"
+        )
+
+    if recorded_temporal_result != replay_result.get("temporal_invariant_result"):
+        raise RuntimeError(
+            f"Ledger record {index}: boundary replay temporal_invariant_result mismatch"
         )
 
 

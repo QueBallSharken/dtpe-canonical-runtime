@@ -18,6 +18,7 @@ def execute_request(
     intent: str,
     action: str,
     expires_at: str,
+    execution_time: str,
 ) -> Dict[str, Any]:
 
     initialize_builtin_registry()
@@ -71,6 +72,7 @@ def execute_request(
         execution_intent=intent,
         authority_hash=authority_snapshot["authority_hash"],
         crypto_profile=policy_snapshot["crypto_profile"],
+        execution_time=execution_time,
     )
 
     receipt = build_receipt(
@@ -85,6 +87,7 @@ def execute_request(
         system_state=policy_snapshot,
         canonical_transition=canonical_transition,
         execution_intent=intent,
+        execution_time=execution_time,
     )
 
     append_ledger_record(receipt)

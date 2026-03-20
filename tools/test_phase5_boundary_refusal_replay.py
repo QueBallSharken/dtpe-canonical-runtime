@@ -24,6 +24,7 @@ def main() -> int:
         intent="",
         action="execute",
         expires_at="2030-01-01T00:00:00",
+        execution_time="2029-01-01T00:00:00",
     )
 
     assert_equal(receipt["execution_state"], "REFUSED_NON_BINDING", "receipt.execution_state")
@@ -37,10 +38,17 @@ def main() -> int:
     if not isinstance(stability_result, dict):
         raise RuntimeError("receipt missing stability_result")
 
+    temporal_result = receipt.get("temporal_invariant_result")
+    if not isinstance(temporal_result, dict):
+        raise RuntimeError("receipt missing temporal_invariant_result")
+
     assert_equal(state_result["ok"], False, "state_result.ok")
     assert_equal(state_result["reason"], "MISSING_EXECUTION_INTENT", "state_result.reason")
     assert_equal(stability_result["ok"], True, "stability_result.ok")
     assert_equal(stability_result["reason"], "SYSTEM_STABLE", "stability_result.reason")
+    assert_equal(temporal_result["ok"], True, "temporal_result.ok")
+    assert_equal(temporal_result["reason"], "VALID", "temporal_result.reason")
+    assert_equal(receipt["execution_time"], "2029-01-01T00:00:00", "receipt.execution_time")
 
     if not LEDGER_PATH.exists():
         raise RuntimeError("ledger.log was not created")
@@ -60,8 +68,10 @@ def main() -> int:
     assert_equal(payload["reason"], "BOUNDARY_REFUSED_NON_BINDING", "payload.reason")
     assert_equal(payload["state_admissibility_result"]["reason"], "MISSING_EXECUTION_INTENT", "payload.state.reason")
     assert_equal(payload["stability_result"]["reason"], "SYSTEM_STABLE", "payload.stability.reason")
+    assert_equal(payload["temporal_invariant_result"]["reason"], "VALID", "payload.temporal.reason")
+    assert_equal(payload["execution_time"], "2029-01-01T00:00:00", "payload.execution_time")
 
-    print("PASS: phase5 refusal replay path verified")
+    print("PASS: phase6 refusal replay path verified")
     return 0
 
 

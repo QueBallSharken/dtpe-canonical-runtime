@@ -17,6 +17,7 @@ def build_receipt(
     system_state: Dict[str, Any] | None = None,
     canonical_transition: Dict[str, Any] | None = None,
     execution_intent: str | None = None,
+    execution_time: str | None = None,
 ) -> Dict[str, Any]:
 
     receipt_material = {
@@ -35,6 +36,10 @@ def build_receipt(
     if stability_result is not None:
         receipt_material["stability_result"] = stability_result
 
+    temporal_invariant_result = decision.get("temporal_invariant_result")
+    if temporal_invariant_result is not None:
+        receipt_material["temporal_invariant_result"] = temporal_invariant_result
+
     if authority_result is not None:
         receipt_material["authority_result"] = authority_result
 
@@ -49,6 +54,9 @@ def build_receipt(
 
     if execution_intent is not None:
         receipt_material["execution_intent"] = execution_intent
+
+    if execution_time is not None:
+        receipt_material["execution_time"] = execution_time
 
     if authority_signature_b64 is not None:
         receipt_material["authority_signature_b64"] = authority_signature_b64
@@ -75,6 +83,9 @@ def build_receipt(
     if stability_result is not None:
         receipt["stability_result"] = stability_result
 
+    if temporal_invariant_result is not None:
+        receipt["temporal_invariant_result"] = temporal_invariant_result
+
     if authority_result is not None:
         receipt["authority_result"] = authority_result
 
@@ -89,6 +100,9 @@ def build_receipt(
 
     if execution_intent is not None:
         receipt["execution_intent"] = execution_intent
+
+    if execution_time is not None:
+        receipt["execution_time"] = execution_time
 
     if authority_signature_b64 is not None:
         receipt["authority_signature_b64"] = authority_signature_b64

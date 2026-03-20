@@ -23,6 +23,7 @@ def main() -> int:
         intent="demo.intent",
         action="execute",
         expires_at="2030-01-01T00:00:00",
+        execution_time="2029-01-01T00:00:00",
     )
 
     assert_equal(receipt["execution_state"], "ALLOW", "receipt.execution_state")
@@ -39,6 +40,12 @@ def main() -> int:
     if "stability_result" not in receipt:
         raise RuntimeError("receipt missing stability_result")
 
+    if "temporal_invariant_result" not in receipt:
+        raise RuntimeError("receipt missing temporal_invariant_result")
+
+    if "execution_time" not in receipt:
+        raise RuntimeError("receipt missing execution_time")
+
     assert_equal(
         receipt["state_admissibility_result"]["reason"],
         "STATE_ADMISSIBLE",
@@ -48,6 +55,16 @@ def main() -> int:
         receipt["stability_result"]["reason"],
         "SYSTEM_STABLE",
         "receipt.stability_result.reason",
+    )
+    assert_equal(
+        receipt["temporal_invariant_result"]["reason"],
+        "VALID",
+        "receipt.temporal_invariant_result.reason",
+    )
+    assert_equal(
+        receipt["execution_time"],
+        "2029-01-01T00:00:00",
+        "receipt.execution_time",
     )
 
     if not LEDGER_PATH.exists():
@@ -76,6 +93,12 @@ def main() -> int:
     if "stability_result" not in payload:
         raise RuntimeError("payload missing stability_result")
 
+    if "temporal_invariant_result" not in payload:
+        raise RuntimeError("payload missing temporal_invariant_result")
+
+    if "execution_time" not in payload:
+        raise RuntimeError("payload missing execution_time")
+
     assert_equal(
         payload["state_admissibility_result"]["reason"],
         "STATE_ADMISSIBLE",
@@ -86,11 +109,20 @@ def main() -> int:
         "SYSTEM_STABLE",
         "payload.stability_result.reason",
     )
+    assert_equal(
+        payload["temporal_invariant_result"]["reason"],
+        "VALID",
+        "payload.temporal_invariant_result.reason",
+    )
+    assert_equal(
+        payload["execution_time"],
+        "2029-01-01T00:00:00",
+        "payload.execution_time",
+    )
 
     assert_equal(record["previous_hash"], "GENESIS", "record.previous_hash")
 
-
-    print("PASS: phase5 pipeline boundary path verified")
+    print("PASS: phase6 pipeline temporal path verified")
     return 0
 
 

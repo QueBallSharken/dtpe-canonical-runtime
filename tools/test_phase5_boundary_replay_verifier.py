@@ -28,12 +28,14 @@ def main() -> int:
         "system_state",
         "canonical_transition",
         "execution_intent",
+        "execution_time",
+        "temporal_invariant_result",
     ]
     for field in required_replay_fields:
         if field not in payload:
             raise RuntimeError(f"payload missing replay field: {field}")
 
-    print("PASS: phase5 boundary replay verifier path verified")
+    print("PASS: phase6 boundary replay verifier path verified")
     return 0
 
 
