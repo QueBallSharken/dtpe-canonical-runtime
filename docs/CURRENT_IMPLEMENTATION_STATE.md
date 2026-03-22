@@ -1,245 +1,173 @@
-# CURRENT IMPLEMENTATION STATE
-
-## PURPOSE
-
-This document defines the current implementation state of the repository, the immediate blocker, the required constraints on future changes, and the intended direction of work.
-
-This repository must remain the authoritative source of implementation truth.
-
----
+ï»¿# CURRENT IMPLEMENTATION STATE
 
 ## REPOSITORY STATUS
 
-Branch:
-- main
+Current authoritative baseline:
 
-Current implementation position:
-- Phase 7 specification is locked in documentation
-- Phase 7 implementation is in progress
-- Core Phase 7 continuity logic exists
-- Full verifier alignment is not yet complete
+- branch: `main`
+- remote branch: `origin/main`
+- latest verified Phase 7 commit: `87dcd33`
+- latest verified Phase 7 commit message:
+  - `feat(phase7): implement frame continuity + verifier alignment; fix receipt canonical + replay parity`
 
-Current condition:
-- dedicated Phase 7 guard, boundary, and pipeline tests pass
-- replay/verifier path is not yet fully aligned
-- no implementation commit should be made until verifier alignment is complete
+This repository is currently at a stable, verified stopping point.
+
+Do not assume local-only work exists beyond this point unless it is visible in `git status` and intentionally staged.
 
 ---
 
-## VERIFIED PASSING TESTS
+## MANDATORY OPERATING RULES
 
-The following commands are confirmed passing at the current stop point:
+Any collaborator working in this repository must follow these rules before making changes:
 
-- `python -m tools.test_phase7_frame_continuity`
-- `python -m tools.test_phase7_boundary_frame_path`
-- `python -m tools.test_phase7_pipeline_continuity`
-
-These passes confirm:
-
-- deterministic invariant frame construction
-- deterministic frame continuity evaluation
-- boundary integration for Phase 7
-- pipeline emission of Phase 7 continuity fields
-
----
-
-## CURRENT BLOCKER
-
-The current blocking failure is:
-
-- `RuntimeError: Ledger record 1: receipt_canonical mismatch`
-
-This occurs during:
-
-- `python -m tools.verify_ledger`
-- `python -m tools.test_phase5_boundary_replay_verifier`
-- `python -m tools.test_phase5_boundary_refusal_replay`
-
-This means:
-
-- receipt construction and verifier reconstruction are not perfectly aligned
-- the remaining problem is narrow and deterministic
-- the current issue is not a broad Phase 7 logic failure
+1. Read this file fully before doing anything else.
+2. Do not suggest changes before understanding current state.
+3. Do not guess root causes.
+4. Do not refactor unrelated logic.
+5. Do not change multiple files without direct proof.
+6. Do not modify already-working behavior unless a specific mismatch or failure is proven.
+7. Preserve determinism, replayability, canonical equivalence, and fail-closed behavior.
+8. Do not push to `main` with partial verification.
+9. Do not rely on untracked files unless they are intentionally added and committed.
+10. Do not assume future phases are active just because design ideas exist.
 
 ---
 
-## KNOWN PROBLEM SCOPE
+## SYSTEM SCOPE
 
-The remaining issue must be treated as isolated to receipt/verifier alignment unless direct inspection proves otherwise.
+This repository implements:
 
-Primary files requiring inspection:
+- DTPE (Digital Twin Persona Engine)
+- IAL (Intent & Accountability Layer)
+- SPECTRE (enforcement / boundary system)
 
-- `core/phase4/receipt.py`
-- `tools/verify_ledger.py`
+Core system properties:
 
-Additional files that may need to be referenced for alignment, but must not be changed without proof:
+- deterministic execution
+- canonical JSON construction
+- cryptographic hashing
+- ledger-based replay verification
+- fail-closed boundary enforcement
+
+---
+
+## CURRENT IMPLEMENTED PHASE STATE
+
+### Phase 6
+Implemented and previously verified:
+- temporal admissibility
+- replayable verification path
+
+### Phase 7
+Implemented, committed, pushed, and verified:
+- frame continuity
+- invariant frame hashing
+- sequence continuity support
+- continuity metadata in receipts
+- verifier receipt reconstruction alignment
+- replay parity for boundary verification
+
+Phase 7 is the current stable checkpoint.
+
+---
+
+## PHASE 7 AUTHORITATIVE FILES
+
+Current Phase 7 behavior depends on these files:
 
 - `core/phase4/pipeline.py`
+- `core/phase4/receipt.py`
 - `core/spectre/boundary.py`
 - `core/spectre/frame_continuity.py`
+- `tools/verify_ledger.py`
 - `tools/test_phase5_boundary_replay_verifier.py`
 - `tools/test_phase5_boundary_refusal_replay.py`
+- `tools/test_phase7_frame_continuity.py`
+- `tools/test_phase7_boundary_frame_path.py`
 - `tools/test_phase7_pipeline_continuity.py`
 
-Observed mismatch candidate:
-
-- `constraint_profile` values differ between pipeline/test inputs and ledger payload
-- `temporal_rule_profile` values differ between pipeline/test inputs and ledger payload
-
-This mismatch may affect `receipt_canonical` construction and verifier reconstruction.
-This must be verified directly before any code changes are made.
-
-Phase 7 introduced new receipt fields:
-
-- `constraint_profile`
-- `temporal_rule_profile`
-
-These fields must be included identically in:
-- receipt construction
-- verifier reconstruction
-
-Any asymmetry will cause `receipt_canonical` mismatch.
+If investigating behavior, read these first before proposing any change.
 
 ---
 
-## REQUIRED NEXT ACTIONS
+## VERIFIED PASS SET
 
-The next collaborator must proceed in this order:
+The following commands passed at the current stable checkpoint:
 
-1. Read the current contents of the relevant files completely.
-2. Compare exactly:
-   - the `receipt_material` used to build `receipt_canonical`
-   - the verifier reconstruction used to compute `expected_receipt_canonical`
-   - the actual payload written to `data/ledger.log`
-3. Identify the exact field mismatch.
-4. Fix only the exact mismatch.
-5. Re-run all required Phase 7 tests.
-6. Only commit after the verifier path passes completely.
+python -m tools.test_phase7_frame_continuity
+python -m tools.test_phase7_boundary_frame_path
+python -m tools.test_phase7_pipeline_continuity
+python -m tools.test_phase5_boundary_replay_verifier
+python -m tools.test_phase5_boundary_refusal_replay
+python -m tools.verify_ledger
 
-Required verification commands:
-
-- `python -m tools.test_phase7_frame_continuity`
-- `python -m tools.test_phase7_boundary_frame_path`
-- `python -m tools.test_phase7_pipeline_continuity`
-- `python -m tools.test_phase5_boundary_replay_verifier`
-- `python -m tools.test_phase5_boundary_refusal_replay`
-- `python -m tools.verify_ledger`
+Do not consider the repository stable after any change unless this full set passes again.
 
 ---
 
-## MUST-DO RULES
+## REQUIRED INVESTIGATION METHOD FOR FUTURE FAILURES
 
-Any collaborator working from this state must:
+If canonical mismatch or replay mismatch appears again, use this order:
 
-- preserve deterministic behavior
-- preserve replayability
-- preserve verifier reconstructability
-- inspect actual file contents before changing anything
-- prove the mismatch before editing a file
-- keep fixes minimal and isolated
-- rerun all required verification commands before commit
-- treat the repository as the only implementation authority
+1. Read the relevant source files fully.
+2. Extract actual runtime structure.
+3. Extract verifier reconstruction structure.
+4. Compare field-by-field.
+5. Compare against actual ledger payload.
+6. Prove exact mismatch before changing code.
+7. Change only the responsible file.
+8. Re-run the full verification set.
 
----
+Do not patch by intuition.
+Do not fix forward without proof.
 
-## MUST-NOT-DO RULES
+If `receipt_canonical` fails, the structures are not identical.
 
-Any collaborator working from this state must not:
-
-- guess
-- redesign Phase 7
-- expand scope
-- refactor unrelated code
-- change files “just in case”
-- change multiple files without direct justification
-- introduce new behavior while resolving the verifier mismatch
-- commit partial fixes
-- push unfinished Phase 7 work
-
-A file must not be changed unless there is direct evidence that changing it is necessary and safe.
+Find the difference first.
 
 ---
 
-## SAFE CHANGE POLICY
+## FILE INTEGRITY RULES
 
-A file may only be modified if all of the following are true:
+Before any future implementation work:
 
-1. the file is directly involved in the proven mismatch
-2. the exact mismatch is understood
-3. the proposed change is minimal
-4. the change does not alter intended Phase 7 behavior
-5. the change can be verified immediately through deterministic tests
+1. Run `git status --short`
+2. Confirm all referenced files exist locally
+3. Confirm Python is resolving the intended local files
+4. Confirm no temp/debug files are influencing behavior
+5. Confirm no untracked critical files are being silently relied on
 
-If any of these conditions are not met, the file must not be changed.
-
----
-
-## PHASE 8 DIRECTION
-
-Phase 8 is the next planned structural direction after Phase 7 is complete.
-
-Phase 8 concerns:
-- decision-space integrity
-- defensibility of the visible option space before final admissibility
-- preservation of upstream signal / constraint / risk framing structure
-- replay-verifiable validation that a decision emerged from a structurally valid decision space
-
-Phase 8 must not begin until:
-- Phase 7 verifier alignment is complete
-- replay paths are stable
-- ledger reconstruction is deterministic end-to-end
+Temporary debug scripts must not remain in the repository.
 
 ---
 
-## PHASE 9 DIRECTION
+## PRE-PUSH REQUIREMENT
 
-Phase 9 follows after Phase 8.
+Do not push to `main` unless all are true:
 
-Phase 9 concerns:
-- evaluator integrity
-- validation that the checking layer itself remains structurally trustworthy
-- protection against degraded or self-confirming evaluation layers
-- replay-verifiable evidence that the evaluator remains within its own admissible integrity frame
-
-Phase 9 must not begin until:
-- Phase 7 is complete
-- Phase 8 is stable
-- the repository remains deterministic and verifier-sound
-
----
-
-## IMPLEMENTATION PRINCIPLE
-
-The repository must continue to enforce:
-
-- canonical construction
-- deterministic comparison
-- ledger-based replay
-- failure on structural mismatch
-- no hidden runtime dependence
-
-No future work should weaken these properties.
+- repository state is intentional
+- no debug artifacts remain
+- no partial edits remain
+- full verification pass set succeeds
+- ledger verification passes
+- replay verification passes
+- canonical equivalence is preserved
+- `git status --short` shows only intended staged changes before commit
+- post-commit repo state is clean
 
 ---
 
-## STOP CONDITION FOR PHASE 7
+## HANDOFF SUMMARY
 
-Phase 7 may be treated as complete only when all of the following are true:
+This repository is currently in a good state.
 
-- dedicated Phase 7 tests pass
-- replay verifier test passes
-- refusal replay test passes
-- `tools.verify_ledger` passes
-- `receipt_canonical` matches exactly
-- no unresolved schema mismatch remains
-- changes are committed cleanly
+Authoritative checkpoint:
 
-Until then, Phase 7 is still in progress.
+- Phase 7 implemented
+- Phase 7 verified
+- replay verifier passing
+- refusal replay passing
+- ledger verification passing
+- commit pushed to `origin/main`
 
----
-
-## FINAL INSTRUCTION
-
-This repository must not be moved in a new direction while resolving the current blocker.
-
-The immediate task is to finish Phase 7 cleanly, minimally, and deterministically.
+Any collaborator must preserve this baseline unless a change is directly proven, minimal, and re-verified end-to-end.
