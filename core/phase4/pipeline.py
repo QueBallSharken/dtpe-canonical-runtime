@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from core.crypto.registry import initialize_builtin_registry
 from core.policy.snapshot import load_policy_snapshot
@@ -19,6 +19,13 @@ def execute_request(
     action: str,
     expires_at: str,
     execution_time: str,
+    constraint_profile: str,
+    temporal_rule_profile: str,
+    prior_invariant_frame_hash: str | None = None,
+    prior_execution_time: str | None = None,
+    continuity_required: bool = False,
+    transition_mode: str = "DISABLED",
+    allowed_frame_transitions: List[Dict[str, str]] | None = None,
 ) -> Dict[str, Any]:
 
     initialize_builtin_registry()
@@ -73,6 +80,13 @@ def execute_request(
         authority_hash=authority_snapshot["authority_hash"],
         crypto_profile=policy_snapshot["crypto_profile"],
         execution_time=execution_time,
+        constraint_profile=constraint_profile,
+        temporal_rule_profile=temporal_rule_profile,
+        prior_invariant_frame_hash=prior_invariant_frame_hash,
+        prior_execution_time=prior_execution_time,
+        continuity_required=continuity_required,
+        transition_mode=transition_mode,
+        allowed_frame_transitions=allowed_frame_transitions,
     )
 
     receipt = build_receipt(
@@ -88,6 +102,8 @@ def execute_request(
         canonical_transition=canonical_transition,
         execution_intent=intent,
         execution_time=execution_time,
+        constraint_profile=constraint_profile,
+        temporal_rule_profile=temporal_rule_profile,
     )
 
     append_ledger_record(receipt)

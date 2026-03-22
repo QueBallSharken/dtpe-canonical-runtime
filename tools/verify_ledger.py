@@ -1,4 +1,4 @@
-import base64
+﻿import base64
 import json
 from pathlib import Path
 from typing import Any, Dict, List
@@ -129,6 +129,64 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
             )
         receipt_material["execution_intent"] = execution_intent
 
+
+    frame_continuity_present = "frame_continuity_result" in payload
+
+    if frame_continuity_present:
+        frame_continuity_result = payload.get("frame_continuity_result")
+        invariant_frame_hash = payload.get("invariant_frame_hash")
+        sequence_id = payload.get("sequence_id")
+        continuity_mode = payload.get("continuity_mode")
+        current_execution_time = payload.get("current_execution_time")
+
+        if not isinstance(frame_continuity_result, dict):
+            raise RuntimeError(
+                f"Ledger record {index}: frame_continuity_result must be a JSON object"
+            )
+
+        if not isinstance(invariant_frame_hash, str):
+            raise RuntimeError(
+                f"Ledger record {index}: invariant_frame_hash must be a string"
+            )
+
+        if not isinstance(sequence_id, str):
+            raise RuntimeError(
+                f"Ledger record {index}: sequence_id must be a string"
+            )
+
+        if not isinstance(continuity_mode, str):
+            raise RuntimeError(
+                f"Ledger record {index}: continuity_mode must be a string"
+            )
+
+        if not isinstance(current_execution_time, str):
+            raise RuntimeError(
+                f"Ledger record {index}: current_execution_time must be a string"
+            )
+
+        receipt_material["frame_continuity_result"] = frame_continuity_result
+        receipt_material["invariant_frame_hash"] = invariant_frame_hash
+        receipt_material["sequence_id"] = sequence_id
+        receipt_material["continuity_mode"] = continuity_mode
+        receipt_material["current_execution_time"] = current_execution_time
+
+
+    constraint_profile = payload.get("constraint_profile")
+    if constraint_profile is not None:
+        if not isinstance(constraint_profile, str):
+            raise RuntimeError(
+                f"Ledger record {index}: constraint_profile must be a string"
+            )
+        receipt_material["constraint_profile"] = constraint_profile
+
+    temporal_rule_profile = payload.get("temporal_rule_profile")
+    if temporal_rule_profile is not None:
+        if not isinstance(temporal_rule_profile, str):
+            raise RuntimeError(
+                f"Ledger record {index}: temporal_rule_profile must be a string"
+            )
+        receipt_material["temporal_rule_profile"] = temporal_rule_profile
+
     authority_signature_b64 = payload.get("authority_signature_b64")
     if authority_signature_b64 is not None:
         receipt_material["authority_signature_b64"] = authority_signature_b64
@@ -185,6 +243,11 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
         authority_hash=authority_hash,
         crypto_profile=crypto_profile,
         execution_time=execution_time,
+        constraint_profile=payload.get("constraint_profile"),
+        temporal_rule_profile=payload.get("temporal_rule_profile"),
+        prior_invariant_frame_hash=payload.get("prior_invariant_frame_hash"),
+        prior_execution_time=payload.get("prior_execution_time"),
+        continuity_required=("frame_continuity_result" in payload),
     )
 
     if payload.get("execution_state") != replay_result.get("execution_state"):
@@ -331,3 +394,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+

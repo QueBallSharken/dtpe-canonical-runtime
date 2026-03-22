@@ -18,6 +18,8 @@ def build_receipt(
     canonical_transition: Dict[str, Any] | None = None,
     execution_intent: str | None = None,
     execution_time: str | None = None,
+    constraint_profile: str | None = None,
+    temporal_rule_profile: str | None = None,
 ) -> Dict[str, Any]:
 
     receipt_material = {
@@ -40,6 +42,40 @@ def build_receipt(
     if temporal_invariant_result is not None:
         receipt_material["temporal_invariant_result"] = temporal_invariant_result
 
+    frame_continuity_result = decision.get("frame_continuity_result")
+    if frame_continuity_result is not None:
+        receipt_material["frame_continuity_result"] = frame_continuity_result
+
+    invariant_frame_hash = decision.get("invariant_frame_hash")
+    if invariant_frame_hash is not None:
+        receipt_material["invariant_frame_hash"] = invariant_frame_hash
+
+    prior_invariant_frame_hash = decision.get("prior_invariant_frame_hash")
+    if prior_invariant_frame_hash is not None:
+        receipt_material["prior_invariant_frame_hash"] = prior_invariant_frame_hash
+
+    sequence_id = decision.get("sequence_id")
+    if sequence_id is not None:
+        receipt_material["sequence_id"] = sequence_id
+
+    continuity_mode = None
+    current_execution_time = None
+    prior_execution_time = None
+
+    if isinstance(frame_continuity_result, dict):
+        continuity_mode = frame_continuity_result.get("continuity_mode")
+        current_execution_time = frame_continuity_result.get("current_execution_time")
+        prior_execution_time = frame_continuity_result.get("prior_execution_time")
+
+    if continuity_mode is not None:
+        receipt_material["continuity_mode"] = continuity_mode
+
+    if current_execution_time is not None:
+        receipt_material["current_execution_time"] = current_execution_time
+
+    if prior_execution_time is not None:
+        receipt_material["prior_execution_time"] = prior_execution_time
+
     if authority_result is not None:
         receipt_material["authority_result"] = authority_result
 
@@ -57,6 +93,12 @@ def build_receipt(
 
     if execution_time is not None:
         receipt_material["execution_time"] = execution_time
+
+    if constraint_profile is not None:
+        receipt_material["constraint_profile"] = constraint_profile
+
+    if temporal_rule_profile is not None:
+        receipt_material["temporal_rule_profile"] = temporal_rule_profile
 
     if authority_signature_b64 is not None:
         receipt_material["authority_signature_b64"] = authority_signature_b64
@@ -86,6 +128,27 @@ def build_receipt(
     if temporal_invariant_result is not None:
         receipt["temporal_invariant_result"] = temporal_invariant_result
 
+    if frame_continuity_result is not None:
+        receipt["frame_continuity_result"] = frame_continuity_result
+
+    if invariant_frame_hash is not None:
+        receipt["invariant_frame_hash"] = invariant_frame_hash
+
+    if prior_invariant_frame_hash is not None:
+        receipt["prior_invariant_frame_hash"] = prior_invariant_frame_hash
+
+    if sequence_id is not None:
+        receipt["sequence_id"] = sequence_id
+
+    if continuity_mode is not None:
+        receipt["continuity_mode"] = continuity_mode
+
+    if current_execution_time is not None:
+        receipt["current_execution_time"] = current_execution_time
+
+    if prior_execution_time is not None:
+        receipt["prior_execution_time"] = prior_execution_time
+
     if authority_result is not None:
         receipt["authority_result"] = authority_result
 
@@ -103,6 +166,12 @@ def build_receipt(
 
     if execution_time is not None:
         receipt["execution_time"] = execution_time
+
+    if constraint_profile is not None:
+        receipt["constraint_profile"] = constraint_profile
+
+    if temporal_rule_profile is not None:
+        receipt["temporal_rule_profile"] = temporal_rule_profile
 
     if authority_signature_b64 is not None:
         receipt["authority_signature_b64"] = authority_signature_b64

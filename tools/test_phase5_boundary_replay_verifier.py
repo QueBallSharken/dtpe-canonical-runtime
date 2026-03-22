@@ -30,12 +30,17 @@ def main() -> int:
         "execution_intent",
         "execution_time",
         "temporal_invariant_result",
+        "frame_continuity_result",
+        "invariant_frame_hash",
+        "sequence_id",
+        "continuity_mode",
+        "current_execution_time",
     ]
     for field in required_replay_fields:
         if field not in payload:
             raise RuntimeError(f"payload missing replay field: {field}")
 
-    print("PASS: phase6 boundary replay verifier path verified")
+    print("PASS: phase7 boundary replay verifier path verified")
     return 0
 
 
