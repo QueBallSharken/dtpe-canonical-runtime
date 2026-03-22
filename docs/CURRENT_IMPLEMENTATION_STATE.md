@@ -171,3 +171,33 @@ Authoritative checkpoint:
 - commit pushed to `origin/main`
 
 Any collaborator must preserve this baseline unless a change is directly proven, minimal, and re-verified end-to-end.
+
+---
+
+## PHASE 10 — EXECUTION INTEGRITY / EXECUTION HARDENING
+
+STATUS:
+Design classified. Not implemented.
+
+POSITION IN SEQUENCE:
+Follows Phase 9 (Evaluator Integrity)
+
+IMPLEMENTATION:
+No runtime implementation exists.
+No partial implementation exists.
+No implementation is authorized at this stage.
+
+DEPENDENCIES:
+Requires full implementation and verification of:
+- Phase 8 (Decision-Space Integrity)
+- Phase 9 (Evaluator Integrity)
+
+SCOPE:
+Defines execution admissibility and execution gating based on validated system state.
+
+CONSTRAINT:
+Execution MUST NOT be permitted unless all prior-phase invariants are satisfied.
+
+NOTES:
+This phase is documentation-only and design-locked.
+It MUST NOT introduce runtime changes or assumptions.
