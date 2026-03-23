@@ -16,6 +16,20 @@ Do not assume local-only work exists beyond this point unless it is visible in `
 
 ---
 
+
+## CRYPTO AGILITY / PQC GUARDRAIL (MANDATORY)
+
+All collaborators MUST read:
+
+- `docs/CRYPTO_AGILITY_PQC_GUARDRAIL.md`
+
+before implementing or modifying any phase logic.
+
+All work MUST comply with the constraints defined in that document.
+
+No exceptions.
+
+---
 ## MANDATORY OPERATING RULES
 
 Any collaborator working in this repository must follow these rules before making changes:
@@ -201,3 +215,4 @@ Execution MUST NOT be permitted unless all prior-phase invariants are satisfied.
 NOTES:
 This phase is documentation-only and design-locked.
 It MUST NOT introduce runtime changes or assumptions.
+
