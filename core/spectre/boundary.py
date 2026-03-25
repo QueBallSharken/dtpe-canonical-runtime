@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from typing import Any, Dict, List
 
@@ -103,5 +103,59 @@ def evaluate_execution_boundary(
         "invariant_frame_hash": frame_continuity_result.get("current_invariant_frame_hash"),
         "prior_invariant_frame_hash": prior_invariant_frame_hash,
         "sequence_id": frame_continuity_result.get("sequence_id"),
+        "continuity_required": continuity_required,
+        "signal_profile": {
+            "state_admissibility": {
+                "ok": bool(state_result.get("ok", False)),
+                "reason": state_result.get("reason"),
+            },
+            "system_stability": {
+                "ok": bool(stability_result.get("ok", False)),
+                "reason": stability_result.get("reason"),
+            },
+            "temporal_invariant": {
+                "ok": bool(temporal_result.get("ok", False)),
+                "reason": temporal_result.get("reason"),
+            },
+            "frame_continuity": {
+                "ok": bool(frame_continuity_result.get("ok", False)),
+                "reason": frame_continuity_result.get("reason"),
+                "continuity_mode": frame_continuity_result.get("continuity_mode"),
+                "temporal_continuity_ok": bool(frame_continuity_result.get("temporal_continuity_ok", False)),
+            },
+            "signal_profile_version": "v1",
+        },
+        "decision_space": {
+            "policy_hash": canonical_policy_state_hash,
+            "authority_hash": authority_hash,
+            "execution_intent": execution_intent,
+            "constraint_profile": constraint_profile,
+            "signal_profile": {
+                "state_admissibility": {
+                    "ok": bool(state_result.get("ok", False)),
+                    "reason": state_result.get("reason"),
+                },
+                "system_stability": {
+                    "ok": bool(stability_result.get("ok", False)),
+                    "reason": stability_result.get("reason"),
+                },
+                "temporal_invariant": {
+                    "ok": bool(temporal_result.get("ok", False)),
+                    "reason": temporal_result.get("reason"),
+                },
+                "frame_continuity": {
+                    "ok": bool(frame_continuity_result.get("ok", False)),
+                    "reason": frame_continuity_result.get("reason"),
+                    "continuity_mode": frame_continuity_result.get("continuity_mode"),
+                    "temporal_continuity_ok": bool(frame_continuity_result.get("temporal_continuity_ok", False)),
+                },
+                "signal_profile_version": "v1",
+            },
+            "decision_space_version": "v1",
+        },
         "reason": "BOUNDARY_ALLOW" if allowed else "BOUNDARY_REFUSED_NON_BINDING",
     }
+
+
+
+

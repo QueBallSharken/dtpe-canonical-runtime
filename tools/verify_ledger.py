@@ -171,6 +171,21 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         receipt_material["current_execution_time"] = current_execution_time
 
 
+        continuity_required = payload.get("continuity_required")
+    if not isinstance(continuity_required, bool):
+        raise RuntimeError(f"Ledger record {index}: continuity_required must be a bool")
+    receipt_material["continuity_required"] = continuity_required
+
+    signal_profile = payload.get("signal_profile")
+    if not isinstance(signal_profile, dict):
+        raise RuntimeError(f"Ledger record {index}: signal_profile missing or invalid")
+    receipt_material["signal_profile"] = signal_profile
+
+    decision_space = payload.get("decision_space")
+    if not isinstance(decision_space, dict):
+        raise RuntimeError(f"Ledger record {index}: decision_space missing or invalid")
+    receipt_material["decision_space"] = decision_space
+
     constraint_profile = payload.get("constraint_profile")
     if constraint_profile is not None:
         if not isinstance(constraint_profile, str):
@@ -247,7 +262,7 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
         temporal_rule_profile=payload.get("temporal_rule_profile"),
         prior_invariant_frame_hash=payload.get("prior_invariant_frame_hash"),
         prior_execution_time=payload.get("prior_execution_time"),
-        continuity_required=("frame_continuity_result" in payload),
+        continuity_required=payload.get("continuity_required"),
     )
 
     if payload.get("execution_state") != replay_result.get("execution_state"):
@@ -394,6 +409,8 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
 
 
 

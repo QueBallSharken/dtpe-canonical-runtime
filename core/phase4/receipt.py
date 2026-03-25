@@ -1,4 +1,4 @@
-from typing import Any, Dict
+﻿from typing import Any, Dict
 
 from core.canonical import canonical_json
 from core.hashing import sha256_hex_str
@@ -76,6 +76,18 @@ def build_receipt(
     if prior_execution_time is not None:
         receipt_material["prior_execution_time"] = prior_execution_time
 
+    continuity_required = decision.get("continuity_required")
+    if continuity_required is not None:
+        receipt_material["continuity_required"] = continuity_required
+
+    signal_profile = decision.get("signal_profile")
+    if signal_profile is not None:
+        receipt_material["signal_profile"] = signal_profile
+
+    decision_space = decision.get("decision_space")
+    if decision_space is not None:
+        receipt_material["decision_space"] = decision_space
+
     if authority_result is not None:
         receipt_material["authority_result"] = authority_result
 
@@ -149,6 +161,15 @@ def build_receipt(
     if prior_execution_time is not None:
         receipt["prior_execution_time"] = prior_execution_time
 
+    if continuity_required is not None:
+        receipt["continuity_required"] = continuity_required
+
+    if signal_profile is not None:
+        receipt["signal_profile"] = signal_profile
+
+    if decision_space is not None:
+        receipt["decision_space"] = decision_space
+
     if authority_result is not None:
         receipt["authority_result"] = authority_result
 
@@ -180,3 +201,5 @@ def build_receipt(
         receipt["authority_canonical"] = authority_canonical
 
     return receipt
+
+
