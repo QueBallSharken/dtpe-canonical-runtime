@@ -184,6 +184,89 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
     decision_space = payload.get("decision_space")
     if not isinstance(decision_space, dict):
         raise RuntimeError(f"Ledger record {index}: decision_space missing or invalid")
+
+    required_decision_space_fields = {
+        "policy_hash": str,
+        "authority_hash": str,
+        "execution_intent": str,
+        "constraint_profile": str,
+        "signal_profile": dict,
+        "decision_space_version": str,
+    }
+
+    for field, expected_type in required_decision_space_fields.items():
+        if field not in decision_space:
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space missing required field {field}"
+            )
+        if not isinstance(decision_space[field], expected_type):
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space field {field} must be {expected_type.__name__}"
+            )
+
+    for forbidden_field in [
+        "visible_alternatives_profile",
+        "risk_frame_profile",
+        "sequence_id",
+    ]:
+        if forbidden_field in decision_space:
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space contains forbidden field {forbidden_field}"
+            )
+
+    decision_space_signal_profile = decision_space["signal_profile"]
+
+    required_signal_profile_fields = {
+        "state_admissibility": dict,
+        "system_stability": dict,
+        "temporal_invariant": dict,
+        "frame_continuity": dict,
+        "signal_profile_version": str,
+    }
+
+    for field, expected_type in required_signal_profile_fields.items():
+        if field not in decision_space_signal_profile:
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space.signal_profile missing required field {field}"
+            )
+        if not isinstance(decision_space_signal_profile[field], expected_type):
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space.signal_profile field {field} must be {expected_type.__name__}"
+            )
+
+    for field in ["state_admissibility", "system_stability", "temporal_invariant"]:
+        nested_obj = decision_space_signal_profile[field]
+        if "ok" not in nested_obj or "reason" not in nested_obj:
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space.signal_profile.{field} missing ok/reason"
+            )
+        if not isinstance(nested_obj["ok"], bool):
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space.signal_profile.{field}.ok must be a bool"
+            )
+        if not isinstance(nested_obj["reason"], str):
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space.signal_profile.{field}.reason must be a string"
+            )
+
+    frame_continuity_signal = decision_space_signal_profile["frame_continuity"]
+    required_frame_continuity_fields = {
+        "ok": bool,
+        "reason": str,
+        "continuity_mode": str,
+        "temporal_continuity_ok": bool,
+    }
+
+    for field, expected_type in required_frame_continuity_fields.items():
+        if field not in frame_continuity_signal:
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space.signal_profile.frame_continuity missing required field {field}"
+            )
+        if not isinstance(frame_continuity_signal[field], expected_type):
+            raise RuntimeError(
+                f"Ledger record {index}: decision_space.signal_profile.frame_continuity field {field} must be {expected_type.__name__}"
+            )
+
     receipt_material["decision_space"] = decision_space
 
     constraint_profile = payload.get("constraint_profile")
@@ -409,8 +492,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-
-
-
-
