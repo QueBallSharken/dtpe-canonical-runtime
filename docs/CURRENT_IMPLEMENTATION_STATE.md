@@ -2,217 +2,159 @@
 
 ## REPOSITORY STATUS
 
-Current authoritative baseline:
-
-- branch: `main`
-- remote branch: `origin/main`
-- latest verified Phase 7 commit: `87dcd33`
-- latest verified Phase 7 commit message:
-  - `feat(phase7): implement frame continuity + verifier alignment; fix receipt canonical + replay parity`
-
-This repository is currently at a stable, verified stopping point.
-
-Do not assume local-only work exists beyond this point unless it is visible in `git status` and intentionally staged.
+- branch: main
+- working tree: clean
+- local state matches origin/main
+- no partial runtime changes present
 
 ---
 
+## PHASE STATUS
 
-## CRYPTO AGILITY / PQC GUARDRAIL (MANDATORY)
-
-All collaborators MUST read:
-
-- `docs/CRYPTO_AGILITY_PQC_GUARDRAIL.md`
-
-before implementing or modifying any phase logic.
-
-All work MUST comply with the constraints defined in that document.
-
-No exceptions.
-
----
-## MANDATORY OPERATING RULES
-
-Any collaborator working in this repository must follow these rules before making changes:
-
-1. Read this file fully before doing anything else.
-2. Do not suggest changes before understanding current state.
-3. Do not guess root causes.
-4. Do not refactor unrelated logic.
-5. Do not change multiple files without direct proof.
-6. Do not modify already-working behavior unless a specific mismatch or failure is proven.
-7. Preserve determinism, replayability, canonical equivalence, and fail-closed behavior.
-8. Do not push to `main` with partial verification.
-9. Do not rely on untracked files unless they are intentionally added and committed.
-10. Do not assume future phases are active just because design ideas exist.
+- Phase 7: COMPLETE (runtime stable)
+- Phase 8: PARTIALLY IMPLEMENTED (bounded slices committed)
+- Phase 9: DESIGN COMPLETE (NO RUNTIME IMPLEMENTATION ACTIVE)
 
 ---
 
-## SYSTEM SCOPE
+## PHASE 9 STATUS
 
-This repository implements:
+All Phase 9 specifications are locked:
 
-- DTPE (Digital Twin Persona Engine)
-- IAL (Intent & Accountability Layer)
-- SPECTRE (enforcement / boundary system)
-
-Core system properties:
-
-- deterministic execution
-- canonical JSON construction
-- cryptographic hashing
-- ledger-based replay verification
-- fail-closed boundary enforcement
-
----
-
-## CURRENT IMPLEMENTED PHASE STATE
-
-### Phase 6
-Implemented and previously verified:
-- temporal admissibility
-- replayable verification path
-
-### Phase 7
-Implemented, committed, pushed, and verified:
-- frame continuity
-- invariant frame hashing
-- sequence continuity support
-- continuity metadata in receipts
-- verifier receipt reconstruction alignment
-- replay parity for boundary verification
-
-Phase 7 is the current stable checkpoint.
-
----
-
-## PHASE 7 AUTHORITATIVE FILES
-
-Current Phase 7 behavior depends on these files:
-
-- `core/phase4/pipeline.py`
-- `core/phase4/receipt.py`
-- `core/spectre/boundary.py`
-- `core/spectre/frame_continuity.py`
-- `tools/verify_ledger.py`
-- `tools/test_phase5_boundary_replay_verifier.py`
-- `tools/test_phase5_boundary_refusal_replay.py`
-- `tools/test_phase7_frame_continuity.py`
-- `tools/test_phase7_boundary_frame_path.py`
-- `tools/test_phase7_pipeline_continuity.py`
-
-If investigating behavior, read these first before proposing any change.
-
----
-
-## VERIFIED PASS SET
-
-The following commands passed at the current stable checkpoint:
-
-python -m tools.test_phase7_frame_continuity
-python -m tools.test_phase7_boundary_frame_path
-python -m tools.test_phase7_pipeline_continuity
-python -m tools.test_phase5_boundary_replay_verifier
-python -m tools.test_phase5_boundary_refusal_replay
-python -m tools.verify_ledger
-
-Do not consider the repository stable after any change unless this full set passes again.
-
----
-
-## REQUIRED INVESTIGATION METHOD FOR FUTURE FAILURES
-
-If canonical mismatch or replay mismatch appears again, use this order:
-
-1. Read the relevant source files fully.
-2. Extract actual runtime structure.
-3. Extract verifier reconstruction structure.
-4. Compare field-by-field.
-5. Compare against actual ledger payload.
-6. Prove exact mismatch before changing code.
-7. Change only the responsible file.
-8. Re-run the full verification set.
-
-Do not patch by intuition.
-Do not fix forward without proof.
-
-If `receipt_canonical` fails, the structures are not identical.
-
-Find the difference first.
-
----
-
-## FILE INTEGRITY RULES
-
-Before any future implementation work:
-
-1. Run `git status --short`
-2. Confirm all referenced files exist locally
-3. Confirm Python is resolving the intended local files
-4. Confirm no temp/debug files are influencing behavior
-5. Confirm no untracked critical files are being silently relied on
-
-Temporary debug scripts must not remain in the repository.
-
----
-
-## PRE-PUSH REQUIREMENT
-
-Do not push to `main` unless all are true:
-
-- repository state is intentional
-- no debug artifacts remain
-- no partial edits remain
-- full verification pass set succeeds
-- ledger verification passes
-- replay verification passes
-- canonical equivalence is preserved
-- `git status --short` shows only intended staged changes before commit
-- post-commit repo state is clean
-
----
-
-## HANDOFF SUMMARY
-
-This repository is currently in a good state.
-
-Authoritative checkpoint:
-
-- Phase 7 implemented
-- Phase 7 verified
-- replay verifier passing
-- refusal replay passing
-- ledger verification passing
-- commit pushed to `origin/main`
-
-Any collaborator must preserve this baseline unless a change is directly proven, minimal, and re-verified end-to-end.
-
----
-
-## PHASE 10 — EXECUTION INTEGRITY / EXECUTION HARDENING
-
-STATUS:
-Design classified. Not implemented.
-
-POSITION IN SEQUENCE:
-Follows Phase 9 (Evaluator Integrity)
-
-IMPLEMENTATION:
-No runtime implementation exists.
-No partial implementation exists.
-No implementation is authorized at this stage.
-
-DEPENDENCIES:
-Requires full implementation and verification of:
-- Phase 8 (Decision-Space Integrity)
 - Phase 9 (Evaluator Integrity)
+- Phase 9B (Evaluator Rule Continuity Binding)
+- Phase 9C (Evaluator Output Determinism)
+- Phase 9 Implementation Strategy
 
-SCOPE:
-Defines execution admissibility and execution gating based on validated system state.
+No Phase 9 runtime code is currently committed.
 
-CONSTRAINT:
-Execution MUST NOT be permitted unless all prior-phase invariants are satisfied.
+---
 
-NOTES:
-This phase is documentation-only and design-locked.
-It MUST NOT introduce runtime changes or assumptions.
+## PRIOR LOCAL STATE (REVERTED)
 
+Phase 9A runtime work was attempted locally and reverted.
+
+Attempted components:
+
+- evaluator_trace construction in boundary
+- evaluator_trace validation in verifier
+- evaluator_trace receipt wiring
+
+These changes were NOT committed and have been fully restored.
+
+Repository is now back to a clean authoritative state.
+
+---
+
+## NEXT IMPLEMENTATION TARGET
+
+Phase 9A — Minimal Evaluator Trace
+
+Scope:
+
+- introduce evaluator_trace as a canonical element
+- ensure deterministic structure
+- bind evaluator identity to execution boundary
+
+Required files:
+
+- core/spectre/boundary.py
+- core/phase4/receipt.py
+- tools/verify_ledger.py
+
+---
+
+## REQUIRED CHANGES (PHASE 9A)
+
+### boundary.py
+
+- construct evaluator_trace
+- return evaluator_trace in decision object
+
+Minimal structure:
+
+{
+  "evaluator_id": str,
+  "evaluator_trace_version": str
+}
+
+---
+
+### receipt.py
+
+Must perform BOTH:
+
+1. before canonical_json(receipt_material):
+
+    evaluator_trace = decision.get("evaluator_trace")
+    if evaluator_trace is not None:
+        receipt_material["evaluator_trace"] = evaluator_trace
+
+2. after receipt = { ... } is constructed:
+
+    if evaluator_trace is not None:
+        receipt["evaluator_trace"] = evaluator_trace
+
+---
+
+### verify_ledger.py
+
+- extract evaluator_trace from payload
+- validate structure
+- required fields:
+  - evaluator_id: str
+  - evaluator_trace_version: str
+- insert into reconstructed receipt_material
+
+---
+
+## IMPLEMENTATION RULES
+
+- no regex-based insertion
+- no multi-line pattern replacement
+- no writes using Set-Content -Encoding utf8 (BOM risk)
+- all insertions must be line-index based
+- verify diff after each file change
+- stop immediately if anchor mismatch occurs
+
+---
+
+## REQUIRED PASS SET
+
+After Phase 9A implementation:
+
+py -m tools.test_phase7_frame_continuity
+py -m tools.test_phase7_boundary_frame_path
+py -m tools.test_phase7_pipeline_continuity
+py -m tools.test_phase5_boundary_refusal_replay
+py -m tools.verify_ledger
+py -m tools.test_phase5_boundary_replay_verifier
+
+All must PASS before commit.
+
+---
+
+## STOP CONDITIONS
+
+Stop immediately if:
+
+- insertion occurs before variable definition
+- insertion occurs before receipt exists
+- diff shows merged lines
+- BOM or encoding artifacts appear
+- verifier reconstruction fails
+- replay parity fails
+
+---
+
+## GOAL
+
+Complete Phase 9A only:
+
+- evaluator_trace present in boundary
+- evaluator_trace included in receipt
+- evaluator_trace included in canonical hash
+- evaluator_trace reconstructed by verifier
+- replay parity preserved
+
+No Phase 9B or Phase 9C runtime work is authorized.
