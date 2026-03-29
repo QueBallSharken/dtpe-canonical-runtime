@@ -158,3 +158,25 @@ Complete Phase 9A only:
 - replay parity preserved
 
 No Phase 9B or Phase 9C runtime work is authorized.
+
+## PHASE 9 UPDATE
+
+- Phase 9A: IMPLEMENTED
+- Phase 9B: BLOCKED PENDING CANONICAL RULE SOURCE
+- Phase 9C: DESIGN ONLY
+
+Phase 9A is committed and pushed:
+- evaluator_trace construction in boundary
+- evaluator_trace receipt wiring
+- evaluator_trace verifier reconstruction
+
+Rollback tag:
+- phase9a-minimal-evaluator-trace
+
+Phase 9B implementation is not yet authorized.
+
+Blocking reason:
+A canonical evaluator rule source was not originally defined as a replay-reconstructable artifact.
+
+Current next safe step:
+Define and lock evaluator_rule_profile as the canonical Phase 9B rule source before any runtime implementation begins.
