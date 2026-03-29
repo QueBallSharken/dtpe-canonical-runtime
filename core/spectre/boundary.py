@@ -92,8 +92,14 @@ def evaluate_execution_boundary(
         and temporal_continuity_ok
     )
 
+    evaluator_trace = {
+        "evaluator_id": "spectre_boundary_v1",
+        "evaluator_trace_version": "1.0",
+    }
+
     return {
         "ok": allowed,
+        "evaluator_trace": evaluator_trace,
         "execution_state": "ALLOW" if allowed else "REFUSED_NON_BINDING",
         "authority_result": authority_result,
         "state_admissibility_result": state_result,

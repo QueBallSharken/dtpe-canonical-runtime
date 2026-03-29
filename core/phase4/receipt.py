@@ -118,6 +118,10 @@ def build_receipt(
     if authority_canonical is not None:
         receipt_material["authority_canonical"] = authority_canonical
 
+    evaluator_trace = decision.get("evaluator_trace")
+    if evaluator_trace is not None:
+        receipt_material["evaluator_trace"] = evaluator_trace
+
     receipt_canonical = canonical_json(receipt_material)
     receipt_hash = sha256_hex_str(receipt_canonical)
 
@@ -130,6 +134,9 @@ def build_receipt(
         "receipt_canonical": receipt_canonical,
         "receipt_hash": receipt_hash,
     }
+    if evaluator_trace is not None:
+        receipt["evaluator_trace"] = evaluator_trace
+
 
     if state_admissibility_result is not None:
         receipt["state_admissibility_result"] = state_admissibility_result

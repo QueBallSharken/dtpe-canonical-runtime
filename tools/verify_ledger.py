@@ -1,4 +1,4 @@
-﻿import base64
+import base64
 import json
 from pathlib import Path
 from typing import Any, Dict, List
@@ -43,6 +43,19 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         "policy_state_hash": payload.get("policy_state_hash"),
         "crypto_profile": payload.get("crypto_profile"),
     }
+
+    evaluator_trace = payload.get("evaluator_trace")
+    if evaluator_trace is None:
+        raise RuntimeError(f"Ledger record {index}: payload missing evaluator_trace")
+    if not isinstance(evaluator_trace, dict):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace must be a JSON object")
+    if set(evaluator_trace.keys()) != {"evaluator_id", "evaluator_trace_version"}:
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace fields invalid")
+    if not isinstance(evaluator_trace.get("evaluator_id"), str):
+        raise RuntimeError(f"Ledger record {index}: evaluator_id must be a string")
+    if not isinstance(evaluator_trace.get("evaluator_trace_version"), str):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace_version must be a string")
+    receipt_material["evaluator_trace"] = evaluator_trace
 
     state_admissibility_present = "state_admissibility_result" in payload
     stability_present = "stability_result" in payload
