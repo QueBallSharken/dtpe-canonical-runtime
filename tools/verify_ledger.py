@@ -49,10 +49,12 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         raise RuntimeError(f"Ledger record {index}: payload missing evaluator_trace")
     if not isinstance(evaluator_trace, dict):
         raise RuntimeError(f"Ledger record {index}: evaluator_trace must be a JSON object")
-    if set(evaluator_trace.keys()) != {"evaluator_id", "evaluator_trace_version"}:
+    if set(evaluator_trace.keys()) != {"evaluator_id", "evaluator_rule_hash", "evaluator_trace_version"}:
         raise RuntimeError(f"Ledger record {index}: evaluator_trace fields invalid")
     if not isinstance(evaluator_trace.get("evaluator_id"), str):
         raise RuntimeError(f"Ledger record {index}: evaluator_id must be a string")
+    if not isinstance(evaluator_trace.get("evaluator_rule_hash"), str):
+        raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash must be a string")
     if not isinstance(evaluator_trace.get("evaluator_trace_version"), str):
         raise RuntimeError(f"Ledger record {index}: evaluator_trace_version must be a string")
     receipt_material["evaluator_trace"] = evaluator_trace

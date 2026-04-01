@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List
+from core.canonical import canonical_json
+from core.hashing import sha256_hex_str
 
 from core.spectre.frame_continuity import evaluate_frame_continuity
 from core.spectre.state_guard import evaluate_state_admissibility
@@ -92,8 +94,16 @@ def evaluate_execution_boundary(
         and temporal_continuity_ok
     )
 
+    evaluator_rule_profile = {
+        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
+        "evaluator_rule_version": "1.0",
+    }
+
+    evaluator_rule_hash = sha256_hex_str(canonical_json(evaluator_rule_profile))
+
     evaluator_trace = {
         "evaluator_id": "spectre_boundary_v1",
+        "evaluator_rule_hash": evaluator_rule_hash,
         "evaluator_trace_version": "1.0",
     }
 
