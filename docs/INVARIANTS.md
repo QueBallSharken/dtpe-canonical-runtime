@@ -49,3 +49,20 @@ Refusal decisions must not mutate ledger state unless the refusal receipt is the
 An offline verifier must be able to reproduce authorization decisions deterministically from stored artifacts.
 
 Crypto profile is governance-significant and must be bound through policy, authority, receipt, and replayable evidence.
+
+---
+
+## EXECUTION INTEGRITY MODEL
+
+DTPE's execution integrity model is defined in:
+
+- docs/EXECUTION_INTEGRITY_MODEL.md
+- docs/PHASE9_GAP_STATEMENT.md
+
+All boundary decisions, receipts, ledger records, and verifier logic must remain consistent with:
+
+- execution-bound admissibility
+- replay integrity
+- reconstruction integrity as the required later proof layer
+
+No change may weaken these guarantees by introducing hidden runtime dependence, inferred evaluator identity, or non-canonical proof artifacts.
