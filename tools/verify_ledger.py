@@ -57,6 +57,13 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash must be a string")
     if not isinstance(evaluator_trace.get("evaluator_trace_version"), str):
         raise RuntimeError(f"Ledger record {index}: evaluator_trace_version must be a string")
+    expected_evaluator_rule_profile = {
+        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
+        "evaluator_rule_version": "1.0",
+    }
+    expected_evaluator_rule_hash = sha256_hex_str(canonical_json(expected_evaluator_rule_profile))
+    if evaluator_trace.get("evaluator_rule_hash") != expected_evaluator_rule_hash:
+        raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash mismatch")
     receipt_material["evaluator_trace"] = evaluator_trace
 
     state_admissibility_present = "state_admissibility_result" in payload
