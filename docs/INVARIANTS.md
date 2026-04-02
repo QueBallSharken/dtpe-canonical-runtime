@@ -66,3 +66,29 @@ All boundary decisions, receipts, ledger records, and verifier logic must remain
 - reconstruction integrity as the required later proof layer
 
 No change may weaken these guarantees by introducing hidden runtime dependence, inferred evaluator identity, or non-canonical proof artifacts.
+
+---
+
+## MUTATION AUTHORITY INVARIANT
+
+Authorization, execution evidence, and mutation authority are distinct governance roles.
+
+A system is not structurally governable unless the component that controls the state-changing primitive is subordinate to the admissibility predicate at the mutation boundary.
+
+No irreversible mutation may occur unless mutation authority revalidates the bound admissibility predicate against the governing live state at the mutation boundary.
+
+If a side effect can occur before that revalidation, the system is observational rather than governable.
+
+Receipts, attestations, replay, and post-hoc verification are necessary but insufficient unless the state-changing primitive is fail-closed behind mutation authority.
+
+The guarded primitive may include, but is not limited to:
+
+- write
+- send
+- transfer
+- publish
+- queue irreversible downstream work
+- invoke an external side effect
+- commit a state transition
+
+What cannot be re-established at the mutation boundary MUST NOT become real.

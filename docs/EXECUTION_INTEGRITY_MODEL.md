@@ -200,3 +200,44 @@ If any required integrity layer fails:
 DTPE integrity expands from execution integrity to replay integrity to reconstruction integrity.
 
 Later phases must strengthen proof without introducing hidden runtime dependence, inferred artifacts, or non-canonical authority.
+---
+
+## MUTATION AUTHORITY
+
+DTPE distinguishes between:
+
+- authorization integrity
+- execution evidence
+- mutation authority
+- mutation-time admissibility
+
+Mutation authority is the component that controls the state-changing primitive itself.
+
+It is not identical to:
+
+- the component that evaluated policy
+- the component that issued a receipt
+- the component that later attested or recorded what happened
+
+DTPE's integrity model requires that mutation authority be subordinate to the admissibility predicate at the mutation boundary.
+
+A system may be able to prove what it decided and what it later recorded, yet still fail governance if the irreversible side effect could cross the mutation boundary without the same admissibility predicate being revalidated against the governing live state.
+
+This is the difference between:
+
+- gate integrity
+- boundary integrity
+
+A receipt required at evaluation time is evidence.
+
+A mutation path that is structurally impossible unless the same admissibility predicate still holds at mutation time is governance.
+
+---
+
+## MUTATION INTEGRITY DIRECTION
+
+DTPE already enforces execution-bound admissibility and replay integrity.
+
+A later integrity layer may need to make mutation authority explicit wherever the component that changes reality is not identical to the component enforcing the execution boundary.
+
+Until that boundary is explicit, governance claims must not silently assume that execution boundary and mutation boundary are the same thing.
