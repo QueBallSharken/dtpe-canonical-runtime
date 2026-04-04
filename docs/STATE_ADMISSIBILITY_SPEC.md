@@ -1,42 +1,63 @@
-STATE ADMISSIBILITY SPECIFICATION
+# State Admissibility Specification
 
-Purpose
-Define the deterministic admissibility model used by the DTPE execution boundary.
+## Purpose
 
-Core Rule
+This document defines the deterministic state-admissibility model used by the DTPE execution boundary.
+
+State admissibility determines whether a proposed transition is admissible relative to canonical current state and canonical transition inputs.
+
+It is a subordinate component of DTPE boundary integrity.
+
+For the integrated mutation-boundary governance model, see `BOUNDARY_INTEGRITY_AND_MUTATION_AUTHORITY.md`.
+
+## Core rule
+
 Boundary admissibility decisions must be deterministically replayable from canonical inputs.
 
-Decision Model
+## Decision model
+
 admissible = f(canonical_current_state, canonical_transition)
 
-Admissibility Inputs
-- canonical_current_state
-- canonical_transition
-- canonical_policy_state_hash
-- execution_intent
-- authority_hash
-- crypto_profile
+## Admissibility inputs
 
-Deterministic Requirements
-- Inputs must be canonicalized
-- Inputs must be reproducible
-- Inputs must be verifiable offline
-- Inputs must not depend on hidden runtime context
+The admissibility decision is evaluated from canonical inputs including:
 
-Replay Requirement
+- `canonical_current_state`
+- `canonical_transition`
+- `canonical_policy_state_hash`
+- `execution_intent`
+- `authority_hash`
+- `crypto_profile`
+
+These inputs define part of the canonical boundary input surface used to determine whether a proposed transition may become real.
+
+This specification does not, by itself, define mutation authority, temporal validity, continuity requirements, or enforceability class.
+
+## Deterministic requirements
+
+- inputs must be canonicalized
+- inputs must be reproducible
+- inputs must be verifiable offline
+- inputs must not depend on hidden runtime context
+
+## Replay requirement
+
 An offline verifier must be able to recompute the admissibility decision using only the canonical receipt inputs.
 
-Receipt Binding
+## Receipt binding
+
 Receipts must contain sufficient evidence to replay admissibility evaluation.
 
-Failure Behavior
+## Failure behavior
+
 If admissibility cannot be recomputed deterministically:
 
-execution_state = REFUSED_NON_BINDING
+- `execution_state = REFUSED_NON_BINDING`
 
-Invariant
+## Invariant
+
 Boundary admissibility decisions must remain:
 
-deterministic
-replayable
-independent of hidden runtime state
+- deterministic
+- replayable
+- independent of hidden runtime state
