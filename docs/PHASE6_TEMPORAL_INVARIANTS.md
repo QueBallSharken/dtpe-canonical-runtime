@@ -1,17 +1,16 @@
-DTPE / IAL / SPECTRE — PHASE 6 (TEMPORAL ADMISSIBILITY)
+# DTPE / IAL / SPECTRE - Phase 6 (Temporal Admissibility)
 
-Status
+## Status
 
 Locked specification.
 Next public implementation target.
 Not yet implemented in the current runtime.
 
-Purpose
+## Purpose
 
-Phase 6 enforces:
+Phase 6 enforces temporal validity as a canonical execution-boundary requirement.
 
-A transition is only valid if a canonical execution-time input satisfies
-its temporal constraints at the moment of evaluation.
+A transition is only valid if a canonical execution-time input satisfies the temporal constraints of the proposed transition.
 
 This prevents:
 
@@ -20,167 +19,183 @@ This prevents:
 - hidden runtime clock dependency
 - unverifiable temporal decisions
 
-Core invariant
+Temporal validity is a subordinate component of DTPE boundary integrity.
+
+For the integrated mutation-boundary governance model, see `BOUNDARY_INTEGRITY_AND_MUTATION_AUTHORITY.md`.
+
+## Core invariant
 
 Temporal validity must be:
 
 - evaluated using explicit canonical input
-- recorded in receipt
+- recorded in receipts
 - stored in ledger
 - replayed by verifier
 - compared deterministically
 
 No implicit time.
 No runtime clock.
-No hidden temporal state.
+No hidden wall-clock state.
 
-Critical rule
+## Critical rule
 
-Time is a canonical input, not a system computation.
+Time is a canonical input, not a runtime computation.
 
 The system must not:
 
 - read system time for decision logic
-- generate timestamps internally for temporal admissibility
+- generate timestamps internally for admissibility
 - depend on runtime clock state
 
 The system must:
 
-- require execution_time as input
-- evaluate against canonical temporal constraints
-- persist execution_time in the receipt
-- replay that same input during verification
+- receive execution time as input
+- use that input against temporal constraints
+- persist execution time for replay verification
 
-Canonical temporal result
+## Locked rules
 
-temporal_invariant_result = {
-  "ok": bool,
-  "reason": str,
-  "execution_time": str,
-  "expires_at": str
-}
+### 1. execution_time is required
 
-Locked rules
-
-1. execution_time is required
-
-execution_time must:
+`execution_time` must:
 
 - be present at pipeline entry
-- be passed unchanged through pipeline -> boundary -> receipt -> ledger -> verifier
+- be passed unchanged through pipeline, boundary, receipt, ledger, and verifier
 - not be generated or modified by runtime logic
 
-2. temporal constraints are canonical
+### 2. temporal constraints are canonical
 
-expires_at must:
+`expires_at` must:
 
 - be part of canonical transition input
-- be deterministic
+- be deterministically evaluated
 - be present for temporal validation
 
-3. temporal evaluation is pure
+### 3. temporal evaluation is pure
 
 Temporal guard must:
 
-- compare execution_time vs expires_at
+- consume canonical temporal inputs only
 - produce deterministic result
 - return structured output only
 
 Temporal guard must not:
 
 - access external state
-- raise exceptions for normal failure
+- raise exceptions for normal failures
 - introduce side effects
 
-4. enumerated reasons only
+### 4. enumerated reasons only
 
-temporal_invariant_result.reason must be one of:
+`temporal_invariant_result.reason` must be one of:
 
-- VALID
-- MISSING_EXECUTION_TIME
-- MISSING_EXPIRES_AT
-- EXPIRED
+- `VALID`
+- `MISSING_EXECUTION_TIME`
+- `MISSING_EXPIRES_AT`
+- `EXPIRED`
 
-Architecture flow
+## Canonical temporal result
 
-INPUT (execution_time)
--> pipeline
--> boundary
-   - authority_result
-   - state_admissibility_result
-   - stability_result
-   - temporal_invariant_result
--> decision
--> receipt
--> ledger
--> verifier
-   - recompute temporal result
-   - compare deterministically
+The canonical result format is:
 
-Required implementation scope
+- `ok`
+- `reason`
+- `execution_time`
+- `expires_at`
 
-Phase 6 implementation must update:
+## Architecture flow
 
-- core/spectre/temporal_guard.py
-- core/spectre/boundary.py
-- core/phase4/pipeline.py
-- core/phase4/receipt.py
-- tools/test_phase6_temporal_guard.py
-- tools/test_phase6_boundary_temporal_path.py
-- tools/test_phase4_pipeline_crypto_profile.py
-- tools/verify_ledger.py
-- tools/test_phase5_boundary_replay_verifier.py
-- tools/test_phase5_boundary_refusal_replay.py
+`INPUT (execution_time) -> pipeline -> boundary`
 
-Verifier requirement
+Boundary output includes:
+
+- `authority_result`
+- `state_admissibility_result`
+- `stability_result`
+- `temporal_invariant_result`
+
+Then:
+
+`decision -> receipt -> ledger -> verifier`
 
 Verifier must:
 
-- read execution_time from receipt
+- recompute temporal result
+- compare stored versus recomputed result deterministically
+
+## Boundary requirement
+
+Temporal admissibility is not transferable across time.
+
+A valid evaluation at one time does not imply validity at a later time.
+
+Temporal validity must therefore be re-derived from canonical inputs at the execution boundary.
+
+A temporally invalid action must refuse rather than mutate.
+
+## Required implementation scope
+
+Phase 6 implementation must update:
+
+- `core/spectre/temporal_guard.py`
+- `core/spectre/boundary.py`
+- `core/phase4/pipeline.py`
+- `core/phase4/receipt.py`
+- `tools/test_phase6_temporal_guard.py`
+- `tools/test_phase6_boundary_temporal_path.py`
+- `tools/test_phase4_pipeline_crypto_profile.py`
+- `tools/verify_ledger.py`
+- `tools/test_phase5_boundary_replay_verifier.py`
+- `tools/test_phase5_boundary_refusal_replay.py`
+
+## Verifier requirement
+
+Verifier must:
+
+- read `execution_time` from receipt
 - recompute temporal result using the same recorded input
-- compare stored vs recomputed temporal result
+- compare stored versus recomputed temporal result
 
 Failure condition:
 
-if recomputed != stored:
-    raise RuntimeError("temporal_invariant_result mismatch")
+if recomputed != stored: raise
 
-Definition of done
+`RuntimeError("temporal_invariant_result mismatch")`
+
+## Definition of done
 
 Phase 6 is complete only if:
 
-- execution_time is required at input
+- `execution_time` is required at input
 - temporal guard exists and is pure
 - boundary includes temporal result
-- receipt stores execution_time and temporal result
+- receipt stores `execution_time` and temporal result
 - ledger contains temporal data
-- verifier recomputes using recorded execution_time
+- verifier recomputes using recorded `execution_time`
 - mismatch fails deterministically
 - all Phase 6 and dependent replay tests pass
 
-Failure modes to prevent
+## Failure modes to prevent
 
 - runtime clock usage
-- missing execution_time
-- missing expires_at
+- missing `execution_time`
+- missing `expires_at`
 - non-deterministic timestamps
 - verifier not recomputing
 - free-form reason strings
 
-PQC safety
+## PQC safety
 
 Phase 6 remains PQC-safe because:
 
-- crypto_profile handling does not change
+- crypto-profile handling does not change
 - no signature algorithm assumptions are introduced
 - temporal logic is independent of cryptography
 - canonical JSON remains preserved
 - verifier remains deterministic
 
-Relationship to Phase 7
+## Relationship to Phase 7
 
 Phase 6 validates a single decision at an explicit canonical execution time.
 
 Phase 7, if implemented later, will validate continuity across decisions.
-
-END OF FILE
