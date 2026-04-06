@@ -1,4 +1,4 @@
-﻿DTPE Multi-System Governance Direction
+DTPE Multi-System Governance Direction
 
 Purpose
 
@@ -26,7 +26,25 @@ Single-system DTPE proves:
 - whether temporal invariants were preserved
 
 Multi-system DTPE must preserve the same properties across interacting
-systems.
+systems and across mutation-capable boundaries where a governed
+transition passes between systems.
+
+Portable continuity direction
+
+DTPE's portable-invariant / boundary-to-boundary continuity direction
+extends the existing execution-boundary model into multi-system paths.
+
+It does not replace authority validity, state admissibility, temporal
+validity, receipts, ledger evidence, or offline replay.
+
+It strengthens the governance claim by requiring the governing basis to
+survive cross-system mutation-capable boundaries as a live refusal
+condition rather than treating prior authorization or later evidence as
+sufficient by itself.
+
+For the continuity model, see:
+- `PORTABLE_BOUNDARY_INVARIANT.md`
+- `PORTABLE_INVARIANT_MAPPING_TO_DTPE.md`
 
 Multi-system governance objective
 
@@ -55,6 +73,8 @@ Required properties for future multi-system support
 - refusal paths must remain canonical and replayable
 - temporal reasoning must remain ledger-derivable or otherwise
   canonically recorded
+- continuity conditions across mutation-capable boundaries must remain
+  explicit, replayable, and refusal-relevant
 
 Forbidden future pattern
 
@@ -71,6 +91,8 @@ Future federation or orchestration features must:
 - define replayable cross-system receipt evidence
 - define verifier recomputation rules
 - preserve offline independent verification
+- preserve portable continuity where governed transitions cross
+  mutation-capable system boundaries
 
 Relationship to PQC direction
 
@@ -82,12 +104,21 @@ This means:
 - profile migration must remain governed and evidenced
 - historical cross-system evidence must remain reconstructable across
   profile generations
+- portable continuity across systems must remain crypto-profile
+  explicit, policy-governed, and replay-reconstructable
+
+Nothing in this direction authorizes:
+- implicit cryptographic behavior
+- silent profile substitution
+- hard-coded permanent algorithm assumptions
+- weakening replayability across profile transitions
 
 Long-term expected outcome
 
 DTPE becomes a deterministic governance kernel capable of governing
 actions within and across multiple systems while preserving canonical
-receipts, append-only evidence, and independent offline verification.
+receipts, append-only evidence, independent offline verification, and
+stronger continuity claims across mutation-capable boundaries.
 
 Design gate
 

@@ -1,182 +1,96 @@
-﻿# CURRENT IMPLEMENTATION STATE
+# CURRENT IMPLEMENTATION STATE
 
 ## REPOSITORY STATUS
 
 - branch: main
 - working tree: clean
 - local state matches origin/main
-- no partial runtime changes present
+- no partial local runtime changes are shown in the grounded repo state for this thread
 
 ---
 
 ## PHASE STATUS
 
-- Phase 7: COMPLETE (runtime stable)
-- Phase 8: PARTIALLY IMPLEMENTED (bounded slices committed)
-- Phase 9: DESIGN COMPLETE (NO RUNTIME IMPLEMENTATION ACTIVE)
+- Phase 7: runtime structures are present in the grounded repo state
+- Phase 8: bounded runtime structures are present in the grounded repo state
+- Phase 9: runtime and documentation state is not described consistently across current repo docs
 
 ---
 
-## PHASE 9 STATUS
+## CURRENT GROUNDED RUNTIME SURFACE
 
-All Phase 9 specifications are locked:
+The grounded repo state in this thread visibly includes runtime structures related to:
 
-- Phase 9 (Evaluator Integrity)
-- Phase 9B (Evaluator Rule Continuity Binding)
-- Phase 9C (Evaluator Output Determinism)
-- Phase 9 Implementation Strategy
+- temporal invariant handling
+- frame continuity handling
+- continuity-required boundary fields
+- bounded signal_profile construction
+- bounded decision_space construction
+- receipt binding for continuity-related fields
+- receipt binding for evaluator_trace
+- verifier validation for evaluator_trace including evaluator_rule_hash
 
-No Phase 9 runtime code is currently committed.
+Accordingly, the repository must not be described in this file as:
 
----
-
-## PRIOR LOCAL STATE (REVERTED)
-
-Phase 9A runtime work was attempted locally and reverted.
-
-Attempted components:
-
-- evaluator_trace construction in boundary
-- evaluator_trace validation in verifier
-- evaluator_trace receipt wiring
-
-These changes were NOT committed and have been fully restored.
-
-Repository is now back to a clean authoritative state.
+- Phase 5 only
+- Phase 6 next with no later runtime structures present
+- Phase 9 runtime absent
 
 ---
 
-## NEXT IMPLEMENTATION TARGET
+## CURRENT DOCUMENTATION CONFLICT
 
-Phase 9A — Minimal Evaluator Trace
+This repository currently contains conflicting Phase 9 statements.
 
-Scope:
+This file previously stated all of the following:
 
-- introduce evaluator_trace as a canonical element
-- ensure deterministic structure
-- bind evaluator identity to execution boundary
+- no Phase 9 runtime code is currently committed
+- prior Phase 9A runtime work was reverted
+- Phase 9A is implemented and pushed
 
-Required files:
-
-- core/spectre/boundary.py
-- core/phase4/receipt.py
-- tools/verify_ledger.py
+Those statements must not coexist.
 
 ---
 
-## REQUIRED CHANGES (PHASE 9A)
+## CURRENT SAFE DESCRIPTION
 
-### boundary.py
+The safe repo-authoritative statement is:
 
-- construct evaluator_trace
-- return evaluator_trace in decision object
-
-Minimal structure:
-
-{
-  "evaluator_id": str,
-  "evaluator_trace_version": str
-}
+- the grounded repo state is beyond a pure Phase 5 baseline
+- continuity-related runtime structures are present
+- bounded decision-space structures are present
+- evaluator_trace-related receipt and verifier logic are present
+- the exact bounded Phase 9 classification must be stated explicitly and consistently before any further implementation planning
 
 ---
 
-### receipt.py
+## PQC / CRYPTO-AGILITY GUARDRAIL
 
-Must perform BOTH:
+All repository-state and planning updates must preserve DTPE's crypto-agility posture.
 
-1. before canonical_json(receipt_material):
+Nothing in this cleanup authorizes:
 
-    evaluator_trace = decision.get("evaluator_trace")
-    if evaluator_trace is not None:
-        receipt_material["evaluator_trace"] = evaluator_trace
+- implicit cryptographic behavior
+- silent profile substitution
+- hard-coding a single permanent algorithm assumption
+- weakening replayability across profile transitions
 
-2. after receipt = { ... } is constructed:
+All current and future runtime and documentation alignment must remain compatible with:
 
-    if evaluator_trace is not None:
-        receipt["evaluator_trace"] = evaluator_trace
-
----
-
-### verify_ledger.py
-
-- extract evaluator_trace from payload
-- validate structure
-- required fields:
-  - evaluator_id: str
-  - evaluator_trace_version: str
-- insert into reconstructed receipt_material
+- explicit crypto-profile identity
+- policy-governed permitted profiles
+- governed migration across profile generations
+- independently reconstructable historical evidence
+- post-quantum readiness
 
 ---
 
-## IMPLEMENTATION RULES
+## IMMEDIATE PRIORITY
 
-- no regex-based insertion
-- no multi-line pattern replacement
-- no writes using Set-Content -Encoding utf8 (BOM risk)
-- all insertions must be line-index based
-- verify diff after each file change
-- stop immediately if anchor mismatch occurs
+Before authorizing new runtime work:
 
----
+1. reconcile implementation-state docs to match committed code
+2. state the exact current bounded Phase 7 / Phase 8 / Phase 9 classification
+3. only then define the next implementation target
 
-## REQUIRED PASS SET
-
-After Phase 9A implementation:
-
-py -m tools.test_phase7_frame_continuity
-py -m tools.test_phase7_boundary_frame_path
-py -m tools.test_phase7_pipeline_continuity
-py -m tools.test_phase5_boundary_refusal_replay
-py -m tools.verify_ledger
-py -m tools.test_phase5_boundary_replay_verifier
-
-All must PASS before commit.
-
----
-
-## STOP CONDITIONS
-
-Stop immediately if:
-
-- insertion occurs before variable definition
-- insertion occurs before receipt exists
-- diff shows merged lines
-- BOM or encoding artifacts appear
-- verifier reconstruction fails
-- replay parity fails
-
----
-
-## GOAL
-
-Complete Phase 9A only:
-
-- evaluator_trace present in boundary
-- evaluator_trace included in receipt
-- evaluator_trace included in canonical hash
-- evaluator_trace reconstructed by verifier
-- replay parity preserved
-
-No Phase 9B or Phase 9C runtime work is authorized.
-
-## PHASE 9 UPDATE
-
-- Phase 9A: IMPLEMENTED
-- Phase 9B: BLOCKED PENDING CANONICAL RULE SOURCE
-- Phase 9C: DESIGN ONLY
-
-Phase 9A is committed and pushed:
-- evaluator_trace construction in boundary
-- evaluator_trace receipt wiring
-- evaluator_trace verifier reconstruction
-
-Rollback tag:
-- phase9a-minimal-evaluator-trace
-
-Phase 9B implementation is not yet authorized.
-
-Blocking reason:
-A canonical evaluator rule source was not originally defined as a replay-reconstructable artifact.
-
-Current next safe step:
-Define and lock evaluator_rule_profile as the canonical Phase 9B rule source before any runtime implementation begins.
+END OF FILE

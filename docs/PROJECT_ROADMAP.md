@@ -33,127 +33,90 @@ All architecture decisions must preserve this property.
 
 Current Runtime Capabilities
 
-The runtime currently supports:
-
-- deterministic authority recomputation
-- canonical policy snapshots
-- canonical authority snapshots
-- cryptographic profile enforcement
-- deterministic boundary evaluation
-- canonical receipt generation
-- append-only ledger evidence
-- independent offline verification
-
-Current execution pipeline
-
-request
--> authority evaluation
--> boundary decision
--> canonical receipt
--> ledger append
--> offline verification
+The runtime currently supports deterministic governance behavior,
+but the exact current bounded phase classification must be described
+consistently with the committed runtime surface before further
+implementation planning proceeds.
 
 ------------------------------------------------
 
 Current Stable Baseline
 
-Public repository baseline is Phase 5 complete.
+The grounded repo state for this thread is beyond a pure Phase 5 baseline.
 
-Phase 5 currently covers:
+Visible runtime structures in the grounded repo state include:
 
-- authority validity
-- state admissibility
-- system stability
+- temporal invariant handling
+- frame continuity handling
+- bounded signal_profile construction
+- bounded decision_space construction
+- continuity-related receipt fields
+- evaluator_trace-related receipt and verifier handling
 
-Execution is allowed only when the current boundary constraints evaluate true.
-
-------------------------------------------------
-
-Completed Phases
-
-Phase 4
-
-Deterministic authority enforcement at the execution boundary.
-
-Phase 5
-
-Deterministic boundary control using:
-
-- authority validity
-- state admissibility
-- system stability
-
-Receipts and ledger records now contain replayable boundary evidence for
-the current implemented boundary path.
+Accordingly, this roadmap must not describe the current public baseline
+as Phase 5 only.
 
 ------------------------------------------------
 
-Next Architecture Evolution
+Current Repository Reality
 
-Phase 6
+The current repository state shown in this thread includes runtime
+structures associated with:
 
-Temporal Admissibility
+- execution-boundary admissibility
+- temporal admissibility
+- continuity across linked decisions
+- bounded decision-space evidence
+- evaluator-trace-related receipt and verifier handling
 
-Goal:
-
-A transition is only valid if a canonical execution_time input satisfies
-its temporal constraints at the moment of evaluation.
-
-Phase 6 design rules:
-
-- execution_time is a required canonical input
-- runtime clock must not be used
-- temporal results must be stored in receipt and ledger
-- verifier must replay temporal admissibility from recorded inputs
-
-Primary files expected to change in Phase 6:
-
-- core/spectre/temporal_guard.py
-- core/spectre/boundary.py
-- core/phase4/pipeline.py
-- core/phase4/receipt.py
-- tools/verify_ledger.py
-- temporal and replay test files
+However, current implementation-state documentation does not describe
+these structures consistently.
 
 ------------------------------------------------
 
-Planned Follow-On Phase
+PQC / Crypto-Agility Guardrail
 
-Phase 7
+All repository-state and planning updates must preserve DTPE's
+crypto-agility posture.
 
-Invariant-Frame Continuity
+Nothing in this cleanup authorizes:
 
-Phase 7 is currently a locked design direction only.
+- implicit cryptographic behavior
+- silent profile substitution
+- hard-coding a single permanent algorithm assumption
+- weakening replayability across profile transitions
 
-It is not the current public implementation target.
+All current and future runtime and documentation alignment must remain
+compatible with:
 
-Its role will be to validate cross-decision continuity after Phase 6 is
-fully implemented and verified.
-
-------------------------------------------------
-
-Strategic Direction
-
-The system evolves from a verification runtime into a deterministic
-governance kernel for automated systems.
-
-The runtime is moving toward proving:
-
-- who acted
-- why the action was authorized
-- whether the resulting state was admissible
-- whether the system remained stable
-- whether the action was temporally admissible
-- whether future decisions remain coherent across boundaries
+- explicit crypto-profile identity
+- policy-governed permitted profiles
+- governed migration across profile generations
+- independently reconstructable historical evidence
+- post-quantum readiness
 
 ------------------------------------------------
 
-Immediate Implementation Priority
+Immediate Documentation Priority
 
-1. Document Phase 6 as the locked next implementation target.
-2. Implement temporal admissibility with canonical execution_time input.
-3. Bind temporal results into receipt and ledger.
-4. Extend offline verifier to replay temporal admissibility.
-5. Keep Phase 7 out of the public implementation path until Phase 6 is complete.
+Before introducing new implementation work, the repository must first
+reconcile:
+
+1. current repo-authoritative phase baseline
+2. current bounded Phase 8 status
+3. current bounded Phase 9 runtime status
+4. current planning documents so they match visible committed code
+
+------------------------------------------------
+
+Planning Rule
+
+No roadmap section should describe:
+
+- Phase 5 as the effective live baseline
+- Phase 7 as absent from the public repo
+- Phase 9 as both absent and implemented
+
+until the repo state is made internally consistent.
 
 END OF FILE
