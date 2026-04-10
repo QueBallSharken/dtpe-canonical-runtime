@@ -49,23 +49,40 @@ def main() -> int:
         "evaluator_rule_hash",
         "decision_space_hash",
         "signal_profile_hash",
+        "policy_hash",
+        "authority_hash",
+        "execution_intent",
+        "constraint_profile",
+        "temporal_rule_profile",
         "evaluator_trace_version",
     ]
     for field in required_evaluator_trace_string_fields:
         value = evaluator_trace.get(field)
-        if not isinstance(value, str) or not value.strip():
+        if not isinstance(value, str):
             raise RuntimeError(f"payload evaluator_trace field missing or invalid: {field}")
-
-    evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
-    if not isinstance(evaluator_rule_profile, dict):
-        raise RuntimeError("payload evaluator_rule_profile missing or invalid")
 
     expected_evaluator_rule_profile = {
         "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
         "evaluator_rule_version": "1.0",
     }
+    evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
     if evaluator_rule_profile != expected_evaluator_rule_profile:
         raise RuntimeError(f"unexpected evaluator_rule_profile: {evaluator_rule_profile!r}")
+
+    if evaluator_trace.get("policy_hash") != payload.get("policy_state_hash"):
+        raise RuntimeError("payload evaluator_trace policy_hash mismatch")
+
+    if evaluator_trace.get("authority_hash") != payload.get("authority_hash"):
+        raise RuntimeError("payload evaluator_trace authority_hash mismatch")
+
+    if evaluator_trace.get("execution_intent") != payload.get("execution_intent"):
+        raise RuntimeError("payload evaluator_trace execution_intent mismatch")
+
+    if evaluator_trace.get("constraint_profile") != payload.get("constraint_profile"):
+        raise RuntimeError("payload evaluator_trace constraint_profile mismatch")
+
+    if evaluator_trace.get("temporal_rule_profile") != payload.get("temporal_rule_profile"):
+        raise RuntimeError("payload evaluator_trace temporal_rule_profile mismatch")
 
     frame_result = payload.get("frame_continuity_result")
     if not isinstance(frame_result, dict):

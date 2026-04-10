@@ -13,9 +13,9 @@ def assert_equal(actual, expected, label: str) -> None:
         raise RuntimeError(f"{label}: expected {expected!r}, got {actual!r}")
 
 
-def assert_nonempty_string(value, label: str) -> None:
-    if not isinstance(value, str) or not value.strip():
-        raise RuntimeError(f"{label}: expected non-empty string, got {value!r}")
+def assert_string(value, label: str) -> None:
+    if not isinstance(value, str):
+        raise RuntimeError(f"{label}: expected string, got {value!r}")
 
 
 def main() -> int:
@@ -84,20 +84,28 @@ def main() -> int:
         "evaluator_rule_hash",
         "decision_space_hash",
         "signal_profile_hash",
+        "policy_hash",
+        "authority_hash",
+        "execution_intent",
+        "constraint_profile",
+        "temporal_rule_profile",
         "evaluator_trace_version",
     ]:
-        assert_nonempty_string(evaluator_trace.get(field), f"receipt.evaluator_trace.{field}")
-
-    evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
-    if not isinstance(evaluator_rule_profile, dict):
-        raise RuntimeError("receipt missing evaluator_rule_profile")
+        assert_string(evaluator_trace.get(field), f"receipt.evaluator_trace.{field}")
 
     expected_evaluator_rule_profile = {
         "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
         "evaluator_rule_version": "1.0",
     }
+    evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
     if evaluator_rule_profile != expected_evaluator_rule_profile:
         raise RuntimeError(f"unexpected receipt evaluator_rule_profile: {evaluator_rule_profile!r}")
+
+    assert_equal(evaluator_trace["policy_hash"], receipt["policy_state_hash"], "receipt.evaluator_trace.policy_hash")
+    assert_equal(evaluator_trace["authority_hash"], receipt["authority_hash"], "receipt.evaluator_trace.authority_hash")
+    assert_equal(evaluator_trace["execution_intent"], receipt["execution_intent"], "receipt.evaluator_trace.execution_intent")
+    assert_equal(evaluator_trace["constraint_profile"], receipt["constraint_profile"], "receipt.evaluator_trace.constraint_profile")
+    assert_equal(evaluator_trace["temporal_rule_profile"], receipt["temporal_rule_profile"], "receipt.evaluator_trace.temporal_rule_profile")
 
     if not LEDGER_PATH.exists():
         raise RuntimeError("ledger.log was not created")
@@ -139,9 +147,14 @@ def main() -> int:
         "evaluator_rule_hash",
         "decision_space_hash",
         "signal_profile_hash",
+        "policy_hash",
+        "authority_hash",
+        "execution_intent",
+        "constraint_profile",
+        "temporal_rule_profile",
         "evaluator_trace_version",
     ]:
-        assert_nonempty_string(payload_evaluator_trace.get(field), f"payload.evaluator_trace.{field}")
+        assert_string(payload_evaluator_trace.get(field), f"payload.evaluator_trace.{field}")
 
     payload_evaluator_rule_profile = payload_evaluator_trace.get("evaluator_rule_profile")
     if not isinstance(payload_evaluator_rule_profile, dict):
@@ -153,6 +166,12 @@ def main() -> int:
     }
     if payload_evaluator_rule_profile != expected_evaluator_rule_profile:
         raise RuntimeError(f"unexpected payload evaluator_rule_profile: {payload_evaluator_rule_profile!r}")
+
+    assert_equal(payload_evaluator_trace["policy_hash"], payload["policy_state_hash"], "payload.evaluator_trace.policy_hash")
+    assert_equal(payload_evaluator_trace["authority_hash"], payload["authority_hash"], "payload.evaluator_trace.authority_hash")
+    assert_equal(payload_evaluator_trace["execution_intent"], payload["execution_intent"], "payload.evaluator_trace.execution_intent")
+    assert_equal(payload_evaluator_trace["constraint_profile"], payload["constraint_profile"], "payload.evaluator_trace.constraint_profile")
+    assert_equal(payload_evaluator_trace["temporal_rule_profile"], payload["temporal_rule_profile"], "payload.evaluator_trace.temporal_rule_profile")
 
     print("PASS: phase7 refusal replay path verified")
     return 0

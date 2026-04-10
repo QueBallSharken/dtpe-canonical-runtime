@@ -56,6 +56,11 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         "evaluator_rule_hash": str,
         "decision_space_hash": str,
         "signal_profile_hash": str,
+        "policy_hash": str,
+        "authority_hash": str,
+        "execution_intent": str,
+        "constraint_profile": str,
+        "temporal_rule_profile": str,
         "evaluator_trace_version": str,
     }
 
@@ -313,6 +318,21 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
     expected_evaluator_rule_hash = sha256_hex_str(canonical_json(evaluator_rule_profile))
     if evaluator_trace.get("evaluator_rule_hash") != expected_evaluator_rule_hash:
         raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash mismatch")
+
+    if evaluator_trace.get("policy_hash") != payload.get("policy_state_hash"):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace policy_hash mismatch")
+
+    if evaluator_trace.get("authority_hash") != payload.get("authority_hash"):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace authority_hash mismatch")
+
+    if evaluator_trace.get("execution_intent") != payload.get("execution_intent"):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace execution_intent mismatch")
+
+    if evaluator_trace.get("constraint_profile") != payload.get("constraint_profile"):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace constraint_profile mismatch")
+
+    if evaluator_trace.get("temporal_rule_profile") != payload.get("temporal_rule_profile"):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace temporal_rule_profile mismatch")
 
     constraint_profile = payload.get("constraint_profile")
     if constraint_profile is not None:

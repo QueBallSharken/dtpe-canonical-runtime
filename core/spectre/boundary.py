@@ -141,6 +141,11 @@ def evaluate_execution_boundary(
         "evaluator_rule_hash": evaluator_rule_hash,
         "decision_space_hash": decision_space_hash,
         "signal_profile_hash": signal_profile_hash,
+        "policy_hash": canonical_policy_state_hash,
+        "authority_hash": authority_hash,
+        "execution_intent": execution_intent,
+        "constraint_profile": constraint_profile,
+        "temporal_rule_profile": temporal_rule_profile,
         "evaluator_trace_version": "1.0",
     }
 
