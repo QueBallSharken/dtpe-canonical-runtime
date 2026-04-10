@@ -94,6 +94,40 @@ def evaluate_execution_boundary(
         and temporal_continuity_ok
     )
 
+    signal_profile = {
+        "state_admissibility": {
+            "ok": bool(state_result.get("ok", False)),
+            "reason": state_result.get("reason"),
+        },
+        "system_stability": {
+            "ok": bool(stability_result.get("ok", False)),
+            "reason": stability_result.get("reason"),
+        },
+        "temporal_invariant": {
+            "ok": bool(temporal_result.get("ok", False)),
+            "reason": temporal_result.get("reason"),
+        },
+        "frame_continuity": {
+            "ok": bool(frame_continuity_result.get("ok", False)),
+            "reason": frame_continuity_result.get("reason"),
+            "continuity_mode": frame_continuity_result.get("continuity_mode"),
+            "temporal_continuity_ok": bool(frame_continuity_result.get("temporal_continuity_ok", False)),
+        },
+        "signal_profile_version": "v1",
+    }
+
+    decision_space = {
+        "policy_hash": canonical_policy_state_hash,
+        "authority_hash": authority_hash,
+        "execution_intent": execution_intent,
+        "constraint_profile": constraint_profile,
+        "signal_profile": signal_profile,
+        "decision_space_version": "v1",
+    }
+
+    signal_profile_hash = sha256_hex_str(canonical_json(signal_profile))
+    decision_space_hash = sha256_hex_str(canonical_json(decision_space))
+
     evaluator_rule_profile = {
         "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
         "evaluator_rule_version": "1.0",
@@ -104,6 +138,8 @@ def evaluate_execution_boundary(
     evaluator_trace = {
         "evaluator_id": "spectre_boundary_v1",
         "evaluator_rule_hash": evaluator_rule_hash,
+        "decision_space_hash": decision_space_hash,
+        "signal_profile_hash": signal_profile_hash,
         "evaluator_trace_version": "1.0",
     }
 
@@ -120,58 +156,7 @@ def evaluate_execution_boundary(
         "prior_invariant_frame_hash": prior_invariant_frame_hash,
         "sequence_id": frame_continuity_result.get("sequence_id"),
         "continuity_required": continuity_required,
-        "signal_profile": {
-            "state_admissibility": {
-                "ok": bool(state_result.get("ok", False)),
-                "reason": state_result.get("reason"),
-            },
-            "system_stability": {
-                "ok": bool(stability_result.get("ok", False)),
-                "reason": stability_result.get("reason"),
-            },
-            "temporal_invariant": {
-                "ok": bool(temporal_result.get("ok", False)),
-                "reason": temporal_result.get("reason"),
-            },
-            "frame_continuity": {
-                "ok": bool(frame_continuity_result.get("ok", False)),
-                "reason": frame_continuity_result.get("reason"),
-                "continuity_mode": frame_continuity_result.get("continuity_mode"),
-                "temporal_continuity_ok": bool(frame_continuity_result.get("temporal_continuity_ok", False)),
-            },
-            "signal_profile_version": "v1",
-        },
-        "decision_space": {
-            "policy_hash": canonical_policy_state_hash,
-            "authority_hash": authority_hash,
-            "execution_intent": execution_intent,
-            "constraint_profile": constraint_profile,
-            "signal_profile": {
-                "state_admissibility": {
-                    "ok": bool(state_result.get("ok", False)),
-                    "reason": state_result.get("reason"),
-                },
-                "system_stability": {
-                    "ok": bool(stability_result.get("ok", False)),
-                    "reason": stability_result.get("reason"),
-                },
-                "temporal_invariant": {
-                    "ok": bool(temporal_result.get("ok", False)),
-                    "reason": temporal_result.get("reason"),
-                },
-                "frame_continuity": {
-                    "ok": bool(frame_continuity_result.get("ok", False)),
-                    "reason": frame_continuity_result.get("reason"),
-                    "continuity_mode": frame_continuity_result.get("continuity_mode"),
-                    "temporal_continuity_ok": bool(frame_continuity_result.get("temporal_continuity_ok", False)),
-                },
-                "signal_profile_version": "v1",
-            },
-            "decision_space_version": "v1",
-        },
+        "signal_profile": signal_profile,
+        "decision_space": decision_space,
         "reason": "BOUNDARY_ALLOW" if allowed else "BOUNDARY_REFUSED_NON_BINDING",
     }
-
-
-
-

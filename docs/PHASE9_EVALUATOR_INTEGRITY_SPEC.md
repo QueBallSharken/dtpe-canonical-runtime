@@ -1,4 +1,4 @@
-# PHASE 9 — EVALUATOR INTEGRITY SPEC (LOCKED)
+# PHASE 9 - EVALUATOR INTEGRITY SPEC (LOCKED)
 
 ## STATUS
 
@@ -40,6 +40,8 @@ The current committed Phase 9 slice is:
 
 - evaluator_trace
 - evaluator_rule_hash
+- decision_space_hash
+- signal_profile_hash
 - evaluator_trace_version
 
 This slice is already present in the committed runtime surface.
@@ -53,6 +55,8 @@ No broader Phase 9 structure is authorized by this document.
 evaluator_trace = {
   "evaluator_id": str,
   "evaluator_rule_hash": str,
+  "decision_space_hash": str,
+  "signal_profile_hash": str,
   "evaluator_trace_version": str
 }
 
@@ -76,6 +80,12 @@ Current committed source mapping is bounded to:
 - evaluator_rule_hash
   - deterministic SHA-256 over a canonical evaluator rule profile object already defined by the committed runtime
 
+- decision_space_hash
+  - deterministic SHA-256 over canonical_json(decision_space)
+
+- signal_profile_hash
+  - deterministic SHA-256 over canonical_json(signal_profile)
+
 - evaluator_trace_version
   - fixed version string for the bounded slice
 
@@ -92,6 +102,8 @@ The current committed runtime already includes all of the following:
 - evaluator_trace inclusion in final receipt payload
 - ledger payload carrying evaluator_trace through receipt append
 - verifier validation for evaluator_trace, including evaluator_rule_hash
+- verifier validation for decision_space_hash
+- verifier validation for signal_profile_hash
 - committed evaluator-trace-related test coverage
 
 Accordingly, this repository must not be described as having no Phase 9 runtime, receipt, verifier, or replay fields.
@@ -103,8 +115,6 @@ Accordingly, this repository must not be described as having no Phase 9 runtime,
 The following broader Phase 9 fields are deferred and MUST NOT be treated as implemented unless separately authorized:
 
 - evaluator_rule_profile
-- decision_space_hash
-- signal_profile_hash
 - policy_hash inside evaluator_trace
 - authority_hash inside evaluator_trace
 - execution_intent inside evaluator_trace
@@ -139,6 +149,8 @@ Verifier must be able to confirm:
 
 - the same evaluator_id is reconstructed
 - the same evaluator_rule_hash is reconstructed
+- the same decision_space_hash is reconstructed
+- the same signal_profile_hash is reconstructed
 - the same evaluator_trace_version is reconstructed
 
 If replay cannot prove evaluator-trace consistency exactly, verification must fail.
@@ -195,6 +207,8 @@ Implementation or documentation alignment must stop if:
 
 - evaluator identity has no deterministic canonical source
 - evaluator_rule_hash cannot be reconstructed exactly
+- decision_space_hash cannot be reconstructed exactly
+- signal_profile_hash cannot be reconstructed exactly
 - replay parity would diverge
 - any broader Phase 9 field requires hidden runtime state
 - any broader Phase 9 field is treated as already implemented without committed runtime proof

@@ -13,6 +13,11 @@ def assert_equal(actual, expected, label: str) -> None:
         raise RuntimeError(f"{label}: expected {expected!r}, got {actual!r}")
 
 
+def assert_nonempty_string(value, label: str) -> None:
+    if not isinstance(value, str) or not value.strip():
+        raise RuntimeError(f"{label}: expected non-empty string, got {value!r}")
+
+
 def main() -> int:
     if LEDGER_PATH.exists():
         LEDGER_PATH.unlink()
@@ -70,6 +75,19 @@ def main() -> int:
     if "sequence_id" not in receipt:
         raise RuntimeError("receipt missing sequence_id")
 
+    evaluator_trace = receipt.get("evaluator_trace")
+    if not isinstance(evaluator_trace, dict):
+        raise RuntimeError("receipt missing evaluator_trace")
+
+    for field in [
+        "evaluator_id",
+        "evaluator_rule_hash",
+        "decision_space_hash",
+        "signal_profile_hash",
+        "evaluator_trace_version",
+    ]:
+        assert_nonempty_string(evaluator_trace.get(field), f"receipt.evaluator_trace.{field}")
+
     if not LEDGER_PATH.exists():
         raise RuntimeError("ledger.log was not created")
 
@@ -100,6 +118,19 @@ def main() -> int:
 
     if "sequence_id" not in payload:
         raise RuntimeError("payload missing sequence_id")
+
+    payload_evaluator_trace = payload.get("evaluator_trace")
+    if not isinstance(payload_evaluator_trace, dict):
+        raise RuntimeError("payload missing evaluator_trace")
+
+    for field in [
+        "evaluator_id",
+        "evaluator_rule_hash",
+        "decision_space_hash",
+        "signal_profile_hash",
+        "evaluator_trace_version",
+    ]:
+        assert_nonempty_string(payload_evaluator_trace.get(field), f"payload.evaluator_trace.{field}")
 
     print("PASS: phase7 refusal replay path verified")
     return 0
