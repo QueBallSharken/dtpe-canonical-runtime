@@ -88,6 +88,17 @@ def main() -> int:
     ]:
         assert_nonempty_string(evaluator_trace.get(field), f"receipt.evaluator_trace.{field}")
 
+    evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
+    if not isinstance(evaluator_rule_profile, dict):
+        raise RuntimeError("receipt missing evaluator_rule_profile")
+
+    expected_evaluator_rule_profile = {
+        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
+        "evaluator_rule_version": "1.0",
+    }
+    if evaluator_rule_profile != expected_evaluator_rule_profile:
+        raise RuntimeError(f"unexpected receipt evaluator_rule_profile: {evaluator_rule_profile!r}")
+
     if not LEDGER_PATH.exists():
         raise RuntimeError("ledger.log was not created")
 
@@ -131,6 +142,17 @@ def main() -> int:
         "evaluator_trace_version",
     ]:
         assert_nonempty_string(payload_evaluator_trace.get(field), f"payload.evaluator_trace.{field}")
+
+    payload_evaluator_rule_profile = payload_evaluator_trace.get("evaluator_rule_profile")
+    if not isinstance(payload_evaluator_rule_profile, dict):
+        raise RuntimeError("payload missing evaluator_rule_profile")
+
+    expected_evaluator_rule_profile = {
+        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
+        "evaluator_rule_version": "1.0",
+    }
+    if payload_evaluator_rule_profile != expected_evaluator_rule_profile:
+        raise RuntimeError(f"unexpected payload evaluator_rule_profile: {payload_evaluator_rule_profile!r}")
 
     print("PASS: phase7 refusal replay path verified")
     return 0

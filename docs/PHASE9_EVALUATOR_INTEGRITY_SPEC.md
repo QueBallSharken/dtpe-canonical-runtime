@@ -39,6 +39,7 @@ If evaluator-trace evidence cannot be reconstructed from canonical recorded stat
 The current committed Phase 9 slice is:
 
 - evaluator_trace
+- evaluator_rule_profile
 - evaluator_rule_hash
 - decision_space_hash
 - signal_profile_hash
@@ -54,6 +55,10 @@ No broader Phase 9 structure is authorized by this document.
 
 evaluator_trace = {
   "evaluator_id": str,
+  "evaluator_rule_profile": {
+    "evaluator_rule_profile_id": str,
+    "evaluator_rule_version": str
+  },
   "evaluator_rule_hash": str,
   "decision_space_hash": str,
   "signal_profile_hash": str,
@@ -77,8 +82,11 @@ Current committed source mapping is bounded to:
 - evaluator_id
   - fixed canonical identifier for the current evaluator surface
 
+- evaluator_rule_profile
+  - fixed canonical evaluator rule profile object for the current bounded evaluator surface
+
 - evaluator_rule_hash
-  - deterministic SHA-256 over a canonical evaluator rule profile object already defined by the committed runtime
+  - deterministic SHA-256 over canonical_json(evaluator_rule_profile)
 
 - decision_space_hash
   - deterministic SHA-256 over canonical_json(decision_space)
@@ -101,7 +109,8 @@ The current committed runtime already includes all of the following:
 - evaluator_trace inclusion in receipt_material before canonical_json
 - evaluator_trace inclusion in final receipt payload
 - ledger payload carrying evaluator_trace through receipt append
-- verifier validation for evaluator_trace, including evaluator_rule_hash
+- verifier validation for evaluator_rule_profile shape
+- verifier validation for evaluator_rule_hash
 - verifier validation for decision_space_hash
 - verifier validation for signal_profile_hash
 - committed evaluator-trace-related test coverage
@@ -114,7 +123,6 @@ Accordingly, this repository must not be described as having no Phase 9 runtime,
 
 The following broader Phase 9 fields are deferred and MUST NOT be treated as implemented unless separately authorized:
 
-- evaluator_rule_profile
 - policy_hash inside evaluator_trace
 - authority_hash inside evaluator_trace
 - execution_intent inside evaluator_trace
@@ -148,6 +156,7 @@ Replay for the current bounded slice must remain exact.
 Verifier must be able to confirm:
 
 - the same evaluator_id is reconstructed
+- the same evaluator_rule_profile is reconstructed
 - the same evaluator_rule_hash is reconstructed
 - the same decision_space_hash is reconstructed
 - the same signal_profile_hash is reconstructed
@@ -206,6 +215,7 @@ Evaluator integrity validates evaluator behavior, not cryptographic mechanism.
 Implementation or documentation alignment must stop if:
 
 - evaluator identity has no deterministic canonical source
+- evaluator_rule_profile cannot be reconstructed exactly
 - evaluator_rule_hash cannot be reconstructed exactly
 - decision_space_hash cannot be reconstructed exactly
 - signal_profile_hash cannot be reconstructed exactly

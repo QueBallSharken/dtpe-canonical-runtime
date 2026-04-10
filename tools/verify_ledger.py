@@ -52,6 +52,7 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
 
     required_evaluator_trace_fields = {
         "evaluator_id": str,
+        "evaluator_rule_profile": dict,
         "evaluator_rule_hash": str,
         "decision_space_hash": str,
         "signal_profile_hash": str,
@@ -304,7 +305,12 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
         "evaluator_rule_version": "1.0",
     }
-    expected_evaluator_rule_hash = sha256_hex_str(canonical_json(expected_evaluator_rule_profile))
+
+    evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
+    if evaluator_rule_profile != expected_evaluator_rule_profile:
+        raise RuntimeError(f"Ledger record {index}: evaluator_rule_profile mismatch")
+
+    expected_evaluator_rule_hash = sha256_hex_str(canonical_json(evaluator_rule_profile))
     if evaluator_trace.get("evaluator_rule_hash") != expected_evaluator_rule_hash:
         raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash mismatch")
 

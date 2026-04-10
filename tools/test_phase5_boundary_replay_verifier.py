@@ -44,17 +44,28 @@ def main() -> int:
     if not isinstance(evaluator_trace, dict):
         raise RuntimeError("payload evaluator_trace missing or invalid")
 
-    required_evaluator_trace_fields = [
+    required_evaluator_trace_string_fields = [
         "evaluator_id",
         "evaluator_rule_hash",
         "decision_space_hash",
         "signal_profile_hash",
         "evaluator_trace_version",
     ]
-    for field in required_evaluator_trace_fields:
+    for field in required_evaluator_trace_string_fields:
         value = evaluator_trace.get(field)
         if not isinstance(value, str) or not value.strip():
             raise RuntimeError(f"payload evaluator_trace field missing or invalid: {field}")
+
+    evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
+    if not isinstance(evaluator_rule_profile, dict):
+        raise RuntimeError("payload evaluator_rule_profile missing or invalid")
+
+    expected_evaluator_rule_profile = {
+        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
+        "evaluator_rule_version": "1.0",
+    }
+    if evaluator_rule_profile != expected_evaluator_rule_profile:
+        raise RuntimeError(f"unexpected evaluator_rule_profile: {evaluator_rule_profile!r}")
 
     frame_result = payload.get("frame_continuity_result")
     if not isinstance(frame_result, dict):

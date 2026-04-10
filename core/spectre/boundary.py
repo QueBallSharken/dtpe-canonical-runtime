@@ -137,6 +137,7 @@ def evaluate_execution_boundary(
 
     evaluator_trace = {
         "evaluator_id": "spectre_boundary_v1",
+        "evaluator_rule_profile": evaluator_rule_profile,
         "evaluator_rule_hash": evaluator_rule_hash,
         "decision_space_hash": decision_space_hash,
         "signal_profile_hash": signal_profile_hash,
