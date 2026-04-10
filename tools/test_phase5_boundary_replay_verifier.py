@@ -40,6 +40,26 @@ def main() -> int:
         if field not in payload:
             raise RuntimeError(f"payload missing replay field: {field}")
 
+    frame_result = payload.get("frame_continuity_result")
+    if not isinstance(frame_result, dict):
+        raise RuntimeError("payload frame_continuity_result missing or invalid")
+
+    continuation_disposition = frame_result.get("continuation_disposition")
+    if not isinstance(continuation_disposition, str) or not continuation_disposition.strip():
+        raise RuntimeError("payload continuation_disposition missing or invalid")
+
+    allowed_dispositions = {
+        "continue_initial",
+        "continue_exact",
+        "continue_authorized_transition",
+        "refuse_missing_prior_frame_hash",
+        "refuse_missing_prior_execution_time",
+        "refuse_temporal_order_violation",
+        "refuse_frame_mismatch",
+    }
+    if continuation_disposition not in allowed_dispositions:
+        raise RuntimeError(f"unexpected continuation_disposition: {continuation_disposition!r}")
+
     print("PASS: phase7 boundary replay verifier path verified")
     return 0
 

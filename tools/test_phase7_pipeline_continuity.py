@@ -49,6 +49,11 @@ def main() -> int:
         "initial_frame",
         "receipt.frame_continuity_result.reason",
     )
+    assert_equal(
+        receipt["frame_continuity_result"]["continuation_disposition"],
+        "continue_initial",
+        "receipt.frame_continuity_result.continuation_disposition",
+    )
     assert_equal(receipt["continuity_mode"], "INITIAL", "receipt.continuity_mode")
     assert_equal(
         receipt["current_execution_time"],
@@ -82,6 +87,11 @@ def main() -> int:
         payload["frame_continuity_result"]["reason"],
         "initial_frame",
         "payload.frame_continuity_result.reason",
+    )
+    assert_equal(
+        payload["frame_continuity_result"]["continuation_disposition"],
+        "continue_initial",
+        "payload.frame_continuity_result.continuation_disposition",
     )
     assert_equal(payload["continuity_mode"], "INITIAL", "payload.continuity_mode")
     assert_equal(

@@ -57,10 +57,10 @@ def main() -> int:
     assert_equal(temporal_result["ok"], True, "temporal_result.ok")
     assert_equal(temporal_result["reason"], "VALID", "temporal_result.reason")
     assert_equal(receipt["execution_time"], "2029-01-01T00:00:00", "receipt.execution_time")
-
     assert_equal(frame_result["ok"], True, "frame_result.ok")
     assert_equal(frame_result["reason"], "initial_frame", "frame_result.reason")
     assert_equal(frame_result["continuity_mode"], "INITIAL", "frame_result.continuity_mode")
+    assert_equal(frame_result["continuation_disposition"], "continue_initial", "frame_result.continuation_disposition")
     assert_equal(receipt["continuity_mode"], "INITIAL", "receipt.continuity_mode")
     assert_equal(receipt["current_execution_time"], "2029-01-01T00:00:00", "receipt.current_execution_time")
 
@@ -91,6 +91,7 @@ def main() -> int:
     assert_equal(payload["temporal_invariant_result"]["reason"], "VALID", "payload.temporal.reason")
     assert_equal(payload["execution_time"], "2029-01-01T00:00:00", "payload.execution_time")
     assert_equal(payload["frame_continuity_result"]["reason"], "initial_frame", "payload.frame.reason")
+    assert_equal(payload["frame_continuity_result"]["continuation_disposition"], "continue_initial", "payload.frame.disposition")
     assert_equal(payload["continuity_mode"], "INITIAL", "payload.continuity_mode")
     assert_equal(payload["current_execution_time"], "2029-01-01T00:00:00", "payload.current_execution_time")
 

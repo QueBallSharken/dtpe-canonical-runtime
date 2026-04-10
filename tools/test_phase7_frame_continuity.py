@@ -39,6 +39,7 @@ def main() -> int:
     assert_equal(initial_result["ok"], True, "initial.ok")
     assert_equal(initial_result["reason"], "initial_frame", "initial.reason")
     assert_equal(initial_result["continuity_mode"], "INITIAL", "initial.mode")
+    assert_equal(initial_result["continuation_disposition"], "continue_initial", "initial.disposition")
     assert_true(initial_result["sequence_id"], "initial.sequence_id")
 
     exact_result = evaluate_frame_continuity(
@@ -56,6 +57,7 @@ def main() -> int:
     assert_equal(exact_result["reason"], "frame_continuity_ok", "exact.reason")
     assert_equal(exact_result["continuity_mode"], "EXACT", "exact.mode")
     assert_equal(exact_result["temporal_continuity_ok"], True, "exact.temporal_ok")
+    assert_equal(exact_result["continuation_disposition"], "continue_exact", "exact.disposition")
 
     missing_prior_hash = evaluate_frame_continuity(
         policy_hash="policy-1",
@@ -70,6 +72,12 @@ def main() -> int:
     )
     assert_equal(missing_prior_hash["ok"], False, "missing_hash.ok")
     assert_equal(missing_prior_hash["reason"], "missing_prior_frame_hash", "missing_hash.reason")
+    assert_equal(missing_prior_hash["continuity_mode"], "VIOLATION", "missing_hash.mode")
+    assert_equal(
+        missing_prior_hash["continuation_disposition"],
+        "refuse_missing_prior_frame_hash",
+        "missing_hash.disposition",
+    )
 
     missing_prior_time = evaluate_frame_continuity(
         policy_hash="policy-1",
@@ -84,6 +92,11 @@ def main() -> int:
     )
     assert_equal(missing_prior_time["ok"], False, "missing_time.ok")
     assert_equal(missing_prior_time["reason"], "missing_prior_execution_time", "missing_time.reason")
+    assert_equal(
+        missing_prior_time["continuation_disposition"],
+        "refuse_missing_prior_execution_time",
+        "missing_time.disposition",
+    )
 
     mismatch_disabled = evaluate_frame_continuity(
         policy_hash="policy-2",
@@ -99,6 +112,11 @@ def main() -> int:
     )
     assert_equal(mismatch_disabled["ok"], False, "mismatch_disabled.ok")
     assert_equal(mismatch_disabled["reason"], "frame_mismatch", "mismatch_disabled.reason")
+    assert_equal(
+        mismatch_disabled["continuation_disposition"],
+        "refuse_frame_mismatch",
+        "mismatch_disabled.disposition",
+    )
 
     next_frame = build_invariant_frame(
         policy_hash="policy-2",
@@ -125,6 +143,11 @@ def main() -> int:
     assert_equal(authorized_transition["ok"], True, "authorized.ok")
     assert_equal(authorized_transition["reason"], "authorized_frame_transition", "authorized.reason")
     assert_equal(authorized_transition["continuity_mode"], "AUTHORIZED_TRANSITION", "authorized.mode")
+    assert_equal(
+        authorized_transition["continuation_disposition"],
+        "continue_authorized_transition",
+        "authorized.disposition",
+    )
 
     temporal_violation = evaluate_frame_continuity(
         policy_hash="policy-1",
@@ -140,6 +163,11 @@ def main() -> int:
     assert_equal(temporal_violation["ok"], False, "temporal_violation.ok")
     assert_equal(temporal_violation["reason"], "temporal_order_violation", "temporal_violation.reason")
     assert_equal(temporal_violation["continuity_mode"], "VIOLATION", "temporal_violation.mode")
+    assert_equal(
+        temporal_violation["continuation_disposition"],
+        "refuse_temporal_order_violation",
+        "temporal_violation.disposition",
+    )
 
     print("PASS: phase7 frame continuity guard verified")
     return 0

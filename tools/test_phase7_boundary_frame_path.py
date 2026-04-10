@@ -44,9 +44,13 @@ def main() -> int:
         prior_execution_time=None,
         continuity_required=False,
     )
-
     assert_equal(result_initial["ok"], True, "initial.ok")
     assert_true(result_initial["frame_continuity_result"], "initial.frame_result")
+    assert_equal(
+        result_initial["frame_continuity_result"]["continuation_disposition"],
+        "continue_initial",
+        "initial.disposition",
+    )
 
     prior_hash = result_initial["invariant_frame_hash"]
 
@@ -56,8 +60,12 @@ def main() -> int:
         prior_execution_time="2029-01-01T00:00:00",
         continuity_required=True,
     )
-
     assert_equal(result_exact["ok"], True, "exact.ok")
+    assert_equal(
+        result_exact["frame_continuity_result"]["continuation_disposition"],
+        "continue_exact",
+        "exact.disposition",
+    )
 
     result_temporal_fail = evaluate_execution_boundary(
         **base_inputs,
@@ -65,8 +73,12 @@ def main() -> int:
         prior_execution_time="2030-01-01T00:00:00",
         continuity_required=True,
     )
-
     assert_equal(result_temporal_fail["ok"], False, "temporal_fail.ok")
+    assert_equal(
+        result_temporal_fail["frame_continuity_result"]["continuation_disposition"],
+        "refuse_temporal_order_violation",
+        "temporal_fail.disposition",
+    )
 
     print("PASS: phase7 boundary frame continuity path verified")
     return 0
