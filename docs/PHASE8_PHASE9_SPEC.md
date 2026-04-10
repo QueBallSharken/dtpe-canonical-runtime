@@ -1,19 +1,24 @@
-﻿# PHASE 8 / PHASE 9 — IMPLEMENTATION SPEC (LOCKED)
+# PHASE 8 / PHASE 9 - IMPLEMENTATION SPEC (LOCKED)
 
 ## STATUS
 
+- Phase 7: IMPLEMENTED IN THE COMMITTED RUNTIME SURFACE
 - Phase 8: PARTIALLY IMPLEMENTED AND VERIFIED IN BOUNDED SLICES
-- Phase 9: DESIGN COMPLETE (NOT IMPLEMENTED)
+- Phase 9: PARTIALLY ACTIVE IN COMMITTED RUNTIME SURFACE, BUT NOT YET DESCRIBED CONSISTENTLY ACROSS CURRENT REPO DOCS
 
 Repository runtime does not remain at Phase 7 only.
 
-Current runtime includes bounded Phase 8 structures already committed and verified.
+Current runtime includes:
 
-No implementation exists yet for Phase 9.
+- committed Phase 7 continuity structures
+- committed bounded Phase 8 structures
+- committed evaluator_trace-related runtime, receipt, verifier, and test surface
+
+No further Phase 9 implementation should proceed until the exact bounded Phase 9 runtime classification is stated consistently across the repo.
 
 ---
 
-## PHASE 8 — DECISION-SPACE INTEGRITY
+## PHASE 8 - DECISION-SPACE INTEGRITY
 
 ### PURPOSE
 
@@ -34,9 +39,9 @@ Phase 8 is being implemented in bounded slices.
 
 Current bounded slices are:
 
-- Phase 8A — seed inputs / canonical decision inputs
-- Phase 8B — signal_profile and bounded decision_space construction
-- Phase 8C — verifier hardening for decision_space structure and forbidden fields
+- Phase 8A - seed inputs / canonical decision inputs
+- Phase 8B - signal_profile and bounded decision_space construction
+- Phase 8C - verifier hardening for decision_space structure and forbidden fields
 
 These slices are implemented and verified.
 
@@ -116,7 +121,7 @@ Until then, Phase 8 remains partially implemented.
 
 ---
 
-## PHASE 9 — EVALUATOR INTEGRITY
+## PHASE 9 - EVALUATOR INTEGRITY
 
 ### PURPOSE
 
@@ -129,22 +134,56 @@ Evaluator integrity must prove:
 - rule continuity
 - replay fidelity
 
-### IMPLEMENTATION STATUS
+### CURRENT REPO REALITY
 
-Phase 9 is not implemented.
+The committed runtime already includes evaluator-trace-related surface.
 
-No Phase 9 runtime fields, receipt fields, verifier fields, or replay fields currently exist.
+Visible committed runtime structures include:
+- evaluator_trace construction in boundary
+- evaluator_trace binding in receipt
+- evaluator-trace-related verifier handling
+- evaluator_rule_hash present in the committed runtime surface
+- committed evaluator-trace-related test coverage
 
-Phase 9 MUST NOT be treated as active.
+Accordingly, Phase 9 MUST NOT be described in this file as absent from the committed runtime.
+
+### CURRENT DOCUMENTATION CONFLICT
+
+Some current Phase 9 documents still state:
+
+- Phase 9 is not implemented
+- no Phase 9 runtime fields exist
+- no Phase 9 receipt fields exist
+- no Phase 9 verifier fields exist
+
+Those statements are no longer safe as repo-authoritative summaries of the committed runtime surface.
+
+### SAFE CURRENT DESCRIPTION
+
+The safe repo-authoritative statement is:
+
+- evaluator-trace-related runtime surface is present
+- the exact bounded Phase 9 slice is not yet described consistently across current repo docs
+- no additional Phase 9 implementation should proceed until that bounded classification is reconciled explicitly
 
 ### SEQUENCING RULE
 
-Phase 9 work begins only after Phase 8 documentation and implementation state are internally consistent.
+Phase 9 documentation must be reconciled before further Phase 9 implementation planning continues.
 
-Phase 9 must attach to committed, verifier-reconstructable canonical state.
+Phase 9 must attach only to committed, verifier-reconstructable canonical state.
 
----
+### PQC / CRYPTO GUARDRAIL
 
-## FINAL RULE
+Any Phase 9 classification or future implementation must remain:
 
-No Phase 9 implementation begins until this spec is committed and aligned with the actual repository state.
+- crypto-agnostic
+- profile-driven where cryptographic behavior exists
+- verifier-reconstructable
+- free of algorithm-specific branching
+- compatible with post-quantum readiness
+
+### FINAL RULE
+
+No further Phase 9 implementation begins until this spec and the related Phase 9 docs are aligned with the actual committed repository state.
+
+END OF FILE

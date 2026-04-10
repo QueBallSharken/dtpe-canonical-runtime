@@ -1,38 +1,57 @@
-﻿DTPE Documentation Index
+# DOCS INDEX
 
-Purpose
+## PURPOSE
 
-This document gives contributors and reviewers a fast entry point into
-the repository documentation.
+This index identifies the repository-authoritative read order for current implementation orientation.
 
-Read in this order
+Use the documents below first when establishing the current committed baseline.
 
-1. README.md
-2. docs/ARCHITECTURE_OVERVIEW.md
-3. docs/PROJECT_ROADMAP.md
-4. docs/GOVERNANCE_KERNEL_POSITIONING.md
-5. docs/BOUNDARY_INVARIANT_RULES.md
-6. docs/PHASE5_EXECUTION_BOUNDARY.md
-7. docs/PHASE6_TEMPORAL_INVARIANTS.md
-8. docs/PQC_GOVERNANCE_DIRECTION.md
-9. docs/RECEIPT_SCHEMA_V2.md
-10. docs/SESSION_HANDOFF.md
+---
 
-Core runtime references
+## PRIMARY READ ORDER
 
-- core/spectre/boundary.py
-- core/spectre/state_guard.py
-- core/spectre/stability_guard.py
+1. `docs/CURRENT_IMPLEMENTATION_STATE.md`
+2. `docs/PHASE8_PHASE9_SPEC.md`
+3. `docs/DTPE_SYSTEM_MODEL.md`
+4. `docs/IAL_SPEC.md`
+5. `docs/SPECTRE_SUBSYSTEM_SPEC.md`
+6. `docs/NEXT_IMPLEMENTATION_TARGET.md`
+7. `docs/PROJECT_ROADMAP.md`
 
-Grant and reviewer references
+---
 
-- docs/GRANT_BRIEF.md
-- docs/QUICK_EVALUATION.md
-- docs/THREAT_MODEL.md
-- docs/PQC_READINESS.md
+## WHAT THIS READ ORDER ESTABLISHES
 
-Core invariant
+This read order is intended to answer, in order:
 
-verify without trusting the runtime that generated it
+1. what is committed now
+2. what the bounded Phase 7 / 8 / 9 classification is
+3. how DTPE, IAL, and SPECTRE relate
+4. what is future-only direction
+5. what sequencing rule governs the next implementation target
+
+---
+
+## LOCKED SUPPORTING SPECS
+
+After the primary read order, consult locked supporting specs as needed, including:
+
+- `docs/PHASE7_INVARIANT_FRAME_CONTINUITY.md`
+- `docs/PHASE8_SIGNAL_PROFILE_SPEC.md`
+- `docs/PHASE8_DECISION_SPACE_COMPOSITION_SPEC.md`
+- `docs/PHASE9_EVALUATOR_INTEGRITY_SPEC.md`
+- `docs/PHASE10_EXECUTION_INTEGRITY_SPEC.md`
+- `docs/PHASE10_MUTATION_INTEGRITY_SPEC.md`
+
+---
+
+## DOCUMENT RULE
+
+Repository-authoritative source documents must avoid:
+
+- non-repository authority wording
+- transient local-working-tree claims as durable repo truth
+- contradictory bounded phase claims
+- future-direction wording that implies current runtime implementation
 
 END OF FILE

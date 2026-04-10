@@ -1,122 +1,140 @@
-DTPE Project Roadmap
+# PROJECT ROADMAP
 
-Repository
-https://github.com/QueBallSharken/dtpe-canonical-runtime
+## PURPOSE
 
-Purpose
+This document provides repository-authoritative orientation for contributors, reviewers, and future work.
 
-This document provides orientation for contributors, reviewers,
-and future development sessions. It explains the current system
-state and the next architectural phases.
+It describes the committed system baseline, the current bounded phase position, and the next sequencing rule.
 
-------------------------------------------------
+---
 
-Project Overview
+## PROJECT OVERVIEW
 
-DTPE (Delegated Task Provenance Engine) is a deterministic governance
-runtime that produces cryptographically verifiable evidence showing
-how automated decisions are made.
+DTPE (Delegated Task Provenance Engine) is a deterministic governance runtime that produces cryptographically verifiable evidence showing how automated decisions are made.
 
-The system generates canonical receipts and append-only ledger records
-that can be independently verified without trusting the runtime that
-produced them.
+The system generates canonical receipts and append-only ledger records that can be independently verified without trusting the runtime that produced them.
 
-------------------------------------------------
+---
 
-Core Invariant
+## CORE INVARIANT
 
 verify without trusting the runtime that generated it
 
-All architecture decisions must preserve this property.
+All architecture and implementation decisions must preserve this property.
 
-------------------------------------------------
+---
 
-Current Runtime Capabilities
+## CURRENT COMMITTED BASELINE
 
-The runtime currently supports deterministic governance behavior,
-but the exact current bounded phase classification must be described
-consistently with the committed runtime surface before further
-implementation planning proceeds.
+The committed repository state is beyond a Phase 5-only baseline.
 
-------------------------------------------------
+The committed runtime surface includes:
 
-Current Stable Baseline
-
-The grounded repo state for this thread is beyond a pure Phase 5 baseline.
-
-Visible runtime structures in the grounded repo state include:
-
+- execution-boundary admissibility handling
 - temporal invariant handling
 - frame continuity handling
-- bounded signal_profile construction
-- bounded decision_space construction
+- bounded `signal_profile` construction
+- bounded `decision_space` construction
 - continuity-related receipt fields
-- evaluator_trace-related receipt and verifier handling
+- bounded `evaluator_trace`-related receipt and verifier handling
+- bounded `continuation_disposition` handling inside `frame_continuity_result`
 
-Accordingly, this roadmap must not describe the current public baseline
-as Phase 5 only.
+Accordingly, this roadmap must not describe the current committed baseline as:
 
-------------------------------------------------
+- Phase 5 only
+- Phase 7 absent
+- Phase 9 runtime absent
 
-Current Repository Reality
+---
 
-The current repository state shown in this thread includes runtime
-structures associated with:
+## CURRENT BOUNDED PHASE POSITION
 
-- execution-boundary admissibility
-- temporal admissibility
-- continuity across linked decisions
-- bounded decision-space evidence
-- evaluator-trace-related receipt and verifier handling
+Safe repository-authoritative phase position:
 
-However, current implementation-state documentation does not describe
-these structures consistently.
+- Phase 7: implemented in the committed runtime surface
+- Phase 8: partially implemented and verified in bounded slices
+- Phase 9: bounded `evaluator_trace`-related runtime, receipt, verifier, and test surface is present in the committed runtime
+- Phase 10: design-only / not implemented in runtime
 
-------------------------------------------------
+This roadmap uses that bounded classification as the current baseline.
 
-PQC / Crypto-Agility Guardrail
+---
 
-All repository-state and planning updates must preserve DTPE's
-crypto-agility posture.
+## DTPE / IAL / SPECTRE POSITION
 
-Nothing in this cleanup authorizes:
+DTPE remains the umbrella governance architecture.
+
+Within DTPE:
+
+- IAL is the semantic / invariant artifact layer
+- SPECTRE is the execution-boundary evaluation subsystem
+- SPECTRE_SENTINEL is future direction only and is not current runtime surface
+
+The current committed runtime already includes `core/spectre` execution-boundary surfaces.
+That does not authorize future-direction runtime expansion by naming alone.
+
+---
+
+## CURRENT ROADMAP PRIORITY
+
+The immediate roadmap priority is repository-authoritative documentation alignment.
+
+That means:
+
+1. keep implementation-state docs aligned with committed runtime
+2. keep architecture-positioning docs aligned with committed runtime
+3. keep bounded Phase 8 and bounded Phase 9 descriptions explicit
+4. only then define the next bounded runtime implementation target
+
+---
+
+## PHASE 8 RULE
+
+The committed bounded Phase 8 structure must remain explicit and unchanged unless a new bounded Phase 8 expansion is separately authorized.
+
+The bounded Phase 7 `continuation_disposition` change is not a Phase 8 structure change.
+
+---
+
+## PHASE 9 RULE
+
+The committed repository already contains bounded `evaluator_trace`-related Phase 9 surface.
+
+That surface must be described conservatively.
+
+No further Phase 9 implementation planning should proceed on the basis of contradictory documentation.
+
+---
+
+## PHASE 10 RULE
+
+Phase 10 remains future design / docs-only direction in the current repository.
+
+Nothing in the current baseline authorizes:
+
+- Phase 10 runtime work
+- mutation-integrity runtime claims
+- execution-hardening runtime claims beyond the currently committed surface
+
+---
+
+## PQC / CRYPTO-AGILITY GUARDRAIL
+
+All roadmap and implementation planning must preserve DTPE's crypto-agility posture.
+
+Nothing in roadmap alignment authorizes:
 
 - implicit cryptographic behavior
 - silent profile substitution
 - hard-coding a single permanent algorithm assumption
 - weakening replayability across profile transitions
 
-All current and future runtime and documentation alignment must remain
-compatible with:
+All current and future alignment must remain compatible with:
 
 - explicit crypto-profile identity
 - policy-governed permitted profiles
 - governed migration across profile generations
 - independently reconstructable historical evidence
 - post-quantum readiness
-
-------------------------------------------------
-
-Immediate Documentation Priority
-
-Before introducing new implementation work, the repository must first
-reconcile:
-
-1. current repo-authoritative phase baseline
-2. current bounded Phase 8 status
-3. current bounded Phase 9 runtime status
-4. current planning documents so they match visible committed code
-
-------------------------------------------------
-
-Planning Rule
-
-No roadmap section should describe:
-
-- Phase 5 as the effective live baseline
-- Phase 7 as absent from the public repo
-- Phase 9 as both absent and implemented
-
-until the repo state is made internally consistent.
 
 END OF FILE

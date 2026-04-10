@@ -1,56 +1,90 @@
-DTPE Next Implementation Target
+# NEXT IMPLEMENTATION TARGET
 
-Purpose
+## PURPOSE
 
-This document defines the exact next repository-authoritative target for future work sessions.
+This document defines the exact next repository-authoritative target for future work.
 
-Current confirmed state
+---
 
-The grounded repo state for this thread is internally inconsistent at the documentation level.
+## CURRENT CONFIRMED BASELINE
 
-Current planning docs still describe:
+The committed runtime surface is beyond a Phase 5-only baseline.
 
-- Phase 5 as the effective public baseline
-- Phase 6 as the next public implementation target
-- Phase 7 as not yet public
-
-But the visible grounded runtime path already includes:
+The committed repository already includes:
 
 - temporal invariant handling
 - frame continuity handling
-- bounded signal_profile construction
-- bounded decision_space construction
+- bounded `signal_profile` construction
+- bounded `decision_space` construction
 - continuity-related receipt fields
-- evaluator_trace-related receipt binding
-- evaluator_trace-related verifier validation with evaluator_rule_hash
+- bounded `evaluator_trace`-related receipt binding
+- bounded `evaluator_trace`-related verifier validation
+- bounded `continuation_disposition` handling inside `frame_continuity_result`
 
-Core invariant
+The immediate priority is no longer to discover whether later runtime structures exist.
+The immediate priority is to keep repository-authoritative documentation aligned with the committed runtime surface.
+
+---
+
+## CORE INVARIANT
 
 verify without trusting the runtime that generated it
 
-Exact next target
+All future work must preserve this property.
 
-The exact next target is documentation reconciliation.
+---
 
-Required sequence:
+## EXACT NEXT TARGET
 
-Step 1
-Reconcile CURRENT_IMPLEMENTATION_STATE.md with visible committed runtime structures.
+The next repository-authoritative target is:
 
-Step 2
-Reconcile PROJECT_ROADMAP.md with the same current runtime surface.
+- complete repository-authoritative documentation alignment for the current bounded Phase 7 / Phase 8 / Phase 9 baseline
+- explicitly preserve the current bounded Phase 8 structure without silent expansion
+- explicitly preserve the current bounded Phase 9 classification without broadening it by implication
+- only after that, define the next bounded implementation target
 
-Step 3
-Replace this file so it no longer describes the repo as Phase 5 only or Phase 7 absent.
+---
 
-Step 4
-Only after those three files align, define the next bounded implementation target.
+## REQUIRED SEQUENCE
 
-PQC / Crypto-Agility Guardrail
+### Step 1
+Align implementation-state and roadmap documents with the committed runtime surface.
+
+### Step 2
+Align architecture-positioning documents so DTPE, IAL, and SPECTRE use one consistent repository-authoritative description.
+
+### Step 3
+Preserve the distinction between:
+
+- committed runtime surface
+- bounded design lock
+- future direction
+
+### Step 4
+Only after those documents align, define the next bounded implementation target.
+
+---
+
+## MUST NOT DO IN THE NEXT CYCLE
+
+The next cycle must not:
+
+- describe the repository as Phase 5 only
+- describe Phase 7 as absent
+- describe Phase 9 as absent
+- treat the bounded Phase 7 `continuation_disposition` change as Phase 8 scope expansion
+- introduce new Phase 8 fields by implication
+- begin Phase 10 runtime work
+- introduce a `SPECTRE_SENTINEL` runtime surface
+- treat planning text as implementation authority
+
+---
+
+## PQC / CRYPTO-AGILITY GUARDRAIL
 
 All repository-state and planning updates must preserve DTPE's crypto-agility posture.
 
-Nothing in this cleanup authorizes:
+Nothing in this document authorizes:
 
 - implicit cryptographic behavior
 - silent profile substitution
@@ -65,25 +99,16 @@ All current and future runtime and documentation alignment must remain compatibl
 - independently reconstructable historical evidence
 - post-quantum readiness
 
-Public repo restriction
+---
 
-Do not authorize additional runtime behavior until the repository's current implemented baseline is described consistently.
+## DEFINITION OF DONE
 
-Must not do in the next cycle
+This target is complete only when:
 
-- must not describe the repo as Phase 5 only
-- must not describe Phase 7 as absent from the public repo
-- must not describe Phase 9 as both reverted and implemented
-- must not use stale planning text as implementation authority
-- must not treat the portable-invariant direction as code authorization before baseline reconciliation is complete
-
-Definition of done
-
-This document-cleanup target is complete only when:
-
-- CURRENT_IMPLEMENTATION_STATE.md matches visible repo structures
-- PROJECT_ROADMAP.md matches the same baseline
-- this file matches the same baseline
-- no contradictory Phase 9 statement remains across those files
+- implementation-state docs match the committed runtime surface
+- roadmap docs match the same bounded baseline
+- architecture-positioning docs match the same bounded baseline
+- no repository-authoritative source doc uses contradictory Phase 7 / 8 / 9 wording
+- the next bounded implementation target can be stated without relying on stale planning text
 
 END OF FILE
