@@ -1,31 +1,36 @@
-﻿# PHASE 10 — EXECUTION INTEGRITY / EXECUTION HARDENING (LOCKED)
+# PHASE 10 — EXECUTION INTEGRITY / EXECUTION HARDENING (LOCKED)
 
 ## STATUS
 
 - Phase 10: DESIGN CLASSIFIED (NOT IMPLEMENTED)
-- Repository runtime remains at Phase 7
+- No Phase 10 runtime implementation exists
+- The committed repository baseline is beyond a Phase 7-only description
 
-No implementation exists for Phase 10.
+Current lower-phase repository-authoritative baseline is:
+
+- Phase 7: implemented in the committed runtime surface
+- Phase 8: partially implemented and verified in bounded slices
+- Phase 9: bounded evaluator_trace-related runtime, receipt, verifier, and test surface is present
+
+This document does not authorize any current Phase 10 runtime surface.
 
 ---
 
 ## SEQUENCING
 
-Phase 10 follows:
+Phase 10 follows the currently bounded lower-phase baseline.
 
-- Phase 7 — Frame Continuity (implemented)
-- Phase 8 — Decision-Space Integrity (design locked)
-- Phase 9 — Evaluator Integrity (design locked)
+Phase 10 MUST NOT be implemented until the remaining authorized lower-phase work is fully implemented, verified, and explicitly authorized for Phase 10 attachment.
 
-Phase 10 MUST NOT be implemented until Phases 8 and 9 are implemented and verified.
+This document is design-only.
 
 ---
 
 ## PURPOSE
 
-Phase 10 defines execution admissibility.
+Phase 10 defines execution admissibility hardening.
 
-Execution must not occur as a direct result of computation.
+Execution must not occur as a direct result of computation alone.
 
 Execution must occur only when derived from a fully resolved and verified canonical system state.
 
@@ -46,17 +51,13 @@ Execution eligibility is:
 - dependent on canonical inputs
 - invalid if any upstream invariant fails
 
-No execution without:
-
-- valid decision-space integrity (Phase 8)
-- valid evaluator integrity (Phase 9)
-- valid continuity and boundary state (Phases 4–7)
+No Phase 10 execution authorization exists in the current committed runtime.
 
 ---
 
 ## SCOPE
 
-Phase 10 governs:
+Phase 10 governs future design for:
 
 - execution admissibility
 - execution denial conditions
@@ -64,8 +65,8 @@ Phase 10 governs:
 
 Phase 10 does NOT:
 
-- define decision-space construction (Phase 8)
-- define evaluator trustworthiness (Phase 9)
+- redefine bounded Phase 8 structures
+- redefine bounded Phase 9 structures
 - modify prior phase invariants
 - introduce new authority derivation
 - introduce new decision logic
@@ -75,16 +76,11 @@ Phase 10 does NOT:
 
 ## CANONICAL EXTENSIONS (DESIGN ONLY)
 
-The following fields are defined as extensions of existing receipt material:
+The following fields remain design-only extensions of existing receipt material:
 
 - sealed_authority_hash
-  → canonical hash derived exclusively from existing canonical receipt inputs
-
 - resolution_complete
-  → boolean indicating all required canonical inputs were present and no fallback/default values were used
-
 - execution_binding
-  → static value indicating execution mode ("strict")
 
 These fields MUST:
 
@@ -100,7 +96,7 @@ No implementation is authorized at this stage.
 
 ## CANONICAL DERIVATION CONSTRAINT
 
-Phase 10 fields may only be derived from canonical inputs already produced by earlier validated phases.
+Any future Phase 10 fields may only be derived from canonical inputs already produced by earlier validated phases.
 
 At minimum, derivation must remain bounded to existing canonical receipt / boundary material such as:
 
@@ -116,6 +112,8 @@ At minimum, derivation must remain bounded to existing canonical receipt / bound
 - frame_continuity_result
 - invariant_frame_hash
 - sequence_id
+- bounded decision_space where present
+- bounded evaluator_trace where present
 
 sealed_authority_hash MUST NOT introduce a new hashing algorithm.
 
@@ -135,7 +133,7 @@ Phase 10 attaches at the final execution boundary:
         → execution gate
         → execution
 
-Execution MUST NOT proceed unless Phase 10 conditions are satisfied.
+Execution MUST NOT proceed unless future Phase 10 conditions are satisfied.
 
 Phase 10 is a gating layer, not a recomputation layer.
 
@@ -146,16 +144,18 @@ It does not create new admissibility state.
 
 ## DEPENDENCIES
 
-Phase 10 requires:
+Phase 10 depends on the lower-phase baseline beneath it.
 
-- Phase 8 (Decision-Space Integrity)
-- Phase 9 (Evaluator Integrity)
-- Phase 7 (Frame Continuity)
-- existing boundary validation (Phases 4–6)
+In repository-authoritative terms, Phase 10 MUST NOT be implemented until:
 
-If any dependency fails:
+- the remaining authorized Phase 8 work is fully implemented and verified
+- the remaining authorized Phase 9 work is fully implemented and verified
+- canonical receipt structure is stable
+- verifier reconstruction is deterministic and complete
 
-    execution MUST be denied
+Until then:
+
+    Phase 10 remains non-executable design
 
 ---
 
@@ -206,7 +206,7 @@ Phase 10 MUST NOT:
 - modify execution outcome after validation
 - mutate canonical inputs after execution eligibility is derived
 
-It is strictly a validation and gating layer.
+It is strictly a future validation and gating layer.
 
 ---
 
@@ -221,23 +221,11 @@ This phase is documentation-only and design-locked.
 
 ---
 
-## UNLOCK CONDITIONS
-
-Phase 10 may be implemented only when:
-
-1. Phase 8 is implemented and verified
-2. Phase 9 is implemented and verified
-3. canonical receipt structure is stable
-4. verifier reconstruction is deterministic and complete
-
-Until then:
-
-    Phase 10 remains non-executable design
-
----
-
 ## FINAL RULE
 
 Execution is not permitted by capability.
 
 Execution is permitted only by validated, canonical, and fully verified system state.
+
+That rule is future Phase 10 design only.
+It is not current committed runtime surface.
