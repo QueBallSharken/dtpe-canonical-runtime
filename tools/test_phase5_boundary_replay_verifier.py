@@ -40,6 +40,22 @@ def main() -> int:
         if field not in payload:
             raise RuntimeError(f"payload missing replay field: {field}")
 
+    evaluator_trace = payload.get("evaluator_trace")
+    if not isinstance(evaluator_trace, dict):
+        raise RuntimeError("payload evaluator_trace missing or invalid")
+
+    required_evaluator_trace_fields = [
+        "evaluator_id",
+        "evaluator_rule_hash",
+        "decision_space_hash",
+        "signal_profile_hash",
+        "evaluator_trace_version",
+    ]
+    for field in required_evaluator_trace_fields:
+        value = evaluator_trace.get(field)
+        if not isinstance(value, str) or not value.strip():
+            raise RuntimeError(f"payload evaluator_trace field missing or invalid: {field}")
+
     frame_result = payload.get("frame_continuity_result")
     if not isinstance(frame_result, dict):
         raise RuntimeError("payload frame_continuity_result missing or invalid")

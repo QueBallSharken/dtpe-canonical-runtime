@@ -49,21 +49,24 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         raise RuntimeError(f"Ledger record {index}: payload missing evaluator_trace")
     if not isinstance(evaluator_trace, dict):
         raise RuntimeError(f"Ledger record {index}: evaluator_trace must be a JSON object")
-    if set(evaluator_trace.keys()) != {"evaluator_id", "evaluator_rule_hash", "evaluator_trace_version"}:
-        raise RuntimeError(f"Ledger record {index}: evaluator_trace fields invalid")
-    if not isinstance(evaluator_trace.get("evaluator_id"), str):
-        raise RuntimeError(f"Ledger record {index}: evaluator_id must be a string")
-    if not isinstance(evaluator_trace.get("evaluator_rule_hash"), str):
-        raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash must be a string")
-    if not isinstance(evaluator_trace.get("evaluator_trace_version"), str):
-        raise RuntimeError(f"Ledger record {index}: evaluator_trace_version must be a string")
-    expected_evaluator_rule_profile = {
-        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
-        "evaluator_rule_version": "1.0",
+
+    required_evaluator_trace_fields = {
+        "evaluator_id": str,
+        "evaluator_rule_hash": str,
+        "decision_space_hash": str,
+        "signal_profile_hash": str,
+        "evaluator_trace_version": str,
     }
-    expected_evaluator_rule_hash = sha256_hex_str(canonical_json(expected_evaluator_rule_profile))
-    if evaluator_trace.get("evaluator_rule_hash") != expected_evaluator_rule_hash:
-        raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash mismatch")
+
+    if set(evaluator_trace.keys()) != set(required_evaluator_trace_fields.keys()):
+        raise RuntimeError(f"Ledger record {index}: evaluator_trace fields invalid")
+
+    for field, expected_type in required_evaluator_trace_fields.items():
+        if not isinstance(evaluator_trace.get(field), expected_type):
+            raise RuntimeError(
+                f"Ledger record {index}: evaluator_trace field {field} must be {expected_type.__name__}"
+            )
+
     receipt_material["evaluator_trace"] = evaluator_trace
 
     state_admissibility_present = "state_admissibility_result" in payload
@@ -151,7 +154,6 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
             )
         receipt_material["execution_intent"] = execution_intent
 
-
     frame_continuity_present = "frame_continuity_result" in payload
 
     if frame_continuity_present:
@@ -192,8 +194,7 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
         receipt_material["continuity_mode"] = continuity_mode
         receipt_material["current_execution_time"] = current_execution_time
 
-
-        continuity_required = payload.get("continuity_required")
+    continuity_required = payload.get("continuity_required")
     if not isinstance(continuity_required, bool):
         raise RuntimeError(f"Ledger record {index}: continuity_required must be a bool")
     receipt_material["continuity_required"] = continuity_required
@@ -290,6 +291,22 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
             )
 
     receipt_material["decision_space"] = decision_space
+
+    expected_signal_profile_hash = sha256_hex_str(canonical_json(signal_profile))
+    if evaluator_trace.get("signal_profile_hash") != expected_signal_profile_hash:
+        raise RuntimeError(f"Ledger record {index}: signal_profile_hash mismatch")
+
+    expected_decision_space_hash = sha256_hex_str(canonical_json(decision_space))
+    if evaluator_trace.get("decision_space_hash") != expected_decision_space_hash:
+        raise RuntimeError(f"Ledger record {index}: decision_space_hash mismatch")
+
+    expected_evaluator_rule_profile = {
+        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
+        "evaluator_rule_version": "1.0",
+    }
+    expected_evaluator_rule_hash = sha256_hex_str(canonical_json(expected_evaluator_rule_profile))
+    if evaluator_trace.get("evaluator_rule_hash") != expected_evaluator_rule_hash:
+        raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash mismatch")
 
     constraint_profile = payload.get("constraint_profile")
     if constraint_profile is not None:
@@ -397,6 +414,11 @@ def _verify_boundary_replay(payload: Dict[str, Any], index: int) -> None:
     if recorded_temporal_result != replay_result.get("temporal_invariant_result"):
         raise RuntimeError(
             f"Ledger record {index}: boundary replay temporal_invariant_result mismatch"
+        )
+
+    if payload.get("evaluator_trace") != replay_result.get("evaluator_trace"):
+        raise RuntimeError(
+            f"Ledger record {index}: boundary replay evaluator_trace mismatch"
         )
 
 
