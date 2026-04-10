@@ -271,7 +271,8 @@ frame_continuity_result = {
   "sequence_id": str,
   "prior_execution_time": str | None,
   "current_execution_time": str,
-  "temporal_continuity_ok": bool
+  "temporal_continuity_ok": bool,
+  "continuation_disposition": str
 }
 
 ----------------------------------------------------------------
@@ -284,6 +285,21 @@ CONTINUITY MODES (CANONICAL ENUM)
 - "VIOLATION"
 
 NO OTHER VALUES PERMITTED
+
+----------------------------------------------------------------
+CONTINUATION DISPOSITION (BOUNDED OUTPUT ENUM)
+----------------------------------------------------------------
+
+- "continue_initial"
+- "continue_exact"
+- "continue_authorized_transition"
+- "refuse_missing_prior_frame_hash"
+- "refuse_missing_prior_execution_time"
+- "refuse_temporal_order_violation"
+- "refuse_frame_mismatch"
+
+continuation_disposition is part of frame_continuity_result only.
+It is not a Phase 8 decision_space expansion.
 
 ----------------------------------------------------------------
 REASON CODES (STRICT)
@@ -520,6 +536,7 @@ Must verify:
 - temporal order violation fails
 - reason codes correct
 - continuity_mode correct
+- continuation_disposition correct
 
 2. BOUNDARY TEST
 tools/test_phase7_boundary_frame_path.py
@@ -527,37 +544,40 @@ tools/test_phase7_boundary_frame_path.py
 Must verify:
 
 - continuity success -> allow
-- frame continuity failure -> refusal
 - temporal continuity failure -> refusal
-- result present
+- frame_continuity_result present
+- continuation_disposition present
 
 3. PIPELINE TEST
+tools/test_phase7_pipeline_continuity.py
 
 Must verify:
 
 - receipt contains Phase 7 fields
+- ledger payload contains the same continuity fields
 - current_execution_time present
-- prior_execution_time present when required
+- continuation_disposition present inside frame_continuity_result
 - crypto_profile unchanged
 
 4. REPLAY VERIFIER TEST
-tools/test_phase7_replay_verifier.py
+tools/test_phase5_boundary_replay_verifier.py
 
 Must verify:
 
-- sequence continuity enforced
-- mismatch triggers hard failure
-- verifier recomputes frame hash
-- verifier recomputes temporal continuity
+- required replay fields are present
+- verifier recomputes frame continuity artifacts
+- verifier recomputes temporal continuity artifacts
+- replay parity remains exact for stored continuity evidence
 
 5. REFUSAL PATH TEST
+tools/test_phase5_boundary_refusal_replay.py
 
 Must verify:
 
-- frame mismatch causes refusal
-- unauthorized transition causes refusal
-- temporal order violation causes refusal
-- replay confirms exact refusal reason
+- refusal payload is replay-verifiable
+- continuity fields remain present in refusal receipt and refusal ledger payload
+- invariant_frame_hash and sequence_id remain present
+- replay confirms exact refusal payload parity
 
 ----------------------------------------------------------------
 SECTION 16 - SCHEMA
