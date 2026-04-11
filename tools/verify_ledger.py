@@ -9,6 +9,10 @@ from core.hashing import sha256_hex_str
 from core.identity.identity_registry import load_identity, resolve_identity_key_record
 from core.paths import DATA_DIR
 from core.spectre.boundary import evaluate_execution_boundary
+from core.spectre.evaluator_rules import (
+    get_boundary_evaluator_rule_hash,
+    get_boundary_evaluator_rule_profile,
+)
 
 
 LEDGER_PATH = DATA_DIR / "ledger.log"
@@ -306,16 +310,13 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
     if evaluator_trace.get("decision_space_hash") != expected_decision_space_hash:
         raise RuntimeError(f"Ledger record {index}: decision_space_hash mismatch")
 
-    expected_evaluator_rule_profile = {
-        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
-        "evaluator_rule_version": "1.0",
-    }
+    expected_evaluator_rule_profile = get_boundary_evaluator_rule_profile()
 
     evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
     if evaluator_rule_profile != expected_evaluator_rule_profile:
         raise RuntimeError(f"Ledger record {index}: evaluator_rule_profile mismatch")
 
-    expected_evaluator_rule_hash = sha256_hex_str(canonical_json(evaluator_rule_profile))
+    expected_evaluator_rule_hash = get_boundary_evaluator_rule_hash()
     if evaluator_trace.get("evaluator_rule_hash") != expected_evaluator_rule_hash:
         raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash mismatch")
 

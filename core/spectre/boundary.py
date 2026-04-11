@@ -8,6 +8,10 @@ from core.spectre.frame_continuity import evaluate_frame_continuity
 from core.spectre.state_guard import evaluate_state_admissibility
 from core.spectre.stability_guard import evaluate_system_stability
 from core.spectre.temporal_guard import evaluate_temporal_invariant
+from core.spectre.evaluator_rules import (
+    get_boundary_evaluator_rule_hash,
+    get_boundary_evaluator_rule_profile,
+)
 
 
 def evaluate_execution_boundary(
@@ -128,12 +132,8 @@ def evaluate_execution_boundary(
     signal_profile_hash = sha256_hex_str(canonical_json(signal_profile))
     decision_space_hash = sha256_hex_str(canonical_json(decision_space))
 
-    evaluator_rule_profile = {
-        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
-        "evaluator_rule_version": "1.0",
-    }
-
-    evaluator_rule_hash = sha256_hex_str(canonical_json(evaluator_rule_profile))
+    evaluator_rule_profile = get_boundary_evaluator_rule_profile()
+    evaluator_rule_hash = get_boundary_evaluator_rule_hash()
 
     evaluator_trace = {
         "evaluator_id": "spectre_boundary_v1",

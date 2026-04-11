@@ -1,6 +1,7 @@
 import json
 
 from core.paths import DATA_DIR
+from core.spectre.evaluator_rules import get_boundary_evaluator_rule_profile
 from tools.verify_ledger import verify_ledger
 
 
@@ -61,10 +62,7 @@ def main() -> int:
         if not isinstance(value, str):
             raise RuntimeError(f"payload evaluator_trace field missing or invalid: {field}")
 
-    expected_evaluator_rule_profile = {
-        "evaluator_rule_profile_id": "spectre_boundary_rules_v1",
-        "evaluator_rule_version": "1.0",
-    }
+    expected_evaluator_rule_profile = get_boundary_evaluator_rule_profile()
     evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
     if evaluator_rule_profile != expected_evaluator_rule_profile:
         raise RuntimeError(f"unexpected evaluator_rule_profile: {evaluator_rule_profile!r}")
