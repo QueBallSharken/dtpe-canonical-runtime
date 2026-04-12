@@ -12,6 +12,7 @@ from core.spectre.boundary import evaluate_execution_boundary
 from core.spectre.evaluator_rules import (
     get_boundary_evaluator_rule_hash,
     get_boundary_evaluator_rule_profile,
+    resolve_evaluator_rule_profile,
 )
 
 
@@ -310,13 +311,31 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
     if evaluator_trace.get("decision_space_hash") != expected_decision_space_hash:
         raise RuntimeError(f"Ledger record {index}: decision_space_hash mismatch")
 
-    expected_evaluator_rule_profile = get_boundary_evaluator_rule_profile()
-
     evaluator_rule_profile = evaluator_trace.get("evaluator_rule_profile")
+    if not isinstance(evaluator_rule_profile, dict):
+        raise RuntimeError(f"Ledger record {index}: evaluator_rule_profile missing or invalid")
+
+    evaluator_rule_profile_id = evaluator_rule_profile.get("evaluator_rule_profile_id")
+    evaluator_rule_version = evaluator_rule_profile.get("evaluator_rule_version")
+
+    if not isinstance(evaluator_rule_profile_id, str):
+        raise RuntimeError(f"Ledger record {index}: evaluator_rule_profile_id must be a string")
+
+    if not isinstance(evaluator_rule_version, str):
+        raise RuntimeError(f"Ledger record {index}: evaluator_rule_version must be a string")
+
+    try:
+        expected_evaluator_rule_profile = resolve_evaluator_rule_profile(
+            evaluator_rule_profile_id=evaluator_rule_profile_id,
+            evaluator_rule_version=evaluator_rule_version,
+        )
+    except ValueError as exc:
+        raise RuntimeError(f"Ledger record {index}: {exc}") from None
+
     if evaluator_rule_profile != expected_evaluator_rule_profile:
         raise RuntimeError(f"Ledger record {index}: evaluator_rule_profile mismatch")
 
-    expected_evaluator_rule_hash = get_boundary_evaluator_rule_hash()
+    expected_evaluator_rule_hash = sha256_hex_str(canonical_json(expected_evaluator_rule_profile))
     if evaluator_trace.get("evaluator_rule_hash") != expected_evaluator_rule_hash:
         raise RuntimeError(f"Ledger record {index}: evaluator_rule_hash mismatch")
 
