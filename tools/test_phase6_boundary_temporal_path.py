@@ -23,6 +23,11 @@ def main() -> int:
         authority_hash="def456",
         crypto_profile="ed25519+sha256+canonical_json_v1",
         execution_time="2029-01-01T00:00:00",
+        constraint_profile="constraint-profile-v1",
+        temporal_rule_profile="temporal-rule-profile-v1",
+        prior_invariant_frame_hash=None,
+        prior_execution_time=None,
+        continuity_required=False,
     )
 
     assert_equal(allow_result["ok"], True, "allow.ok")
@@ -50,6 +55,11 @@ def main() -> int:
         authority_hash="def456",
         crypto_profile="ed25519+sha256+canonical_json_v1",
         execution_time="2025-01-01T00:00:00",
+        constraint_profile="constraint-profile-v1",
+        temporal_rule_profile="temporal-rule-profile-v1",
+        prior_invariant_frame_hash=None,
+        prior_execution_time=None,
+        continuity_required=False,
     )
 
     assert_equal(refused_result["ok"], False, "refused.ok")

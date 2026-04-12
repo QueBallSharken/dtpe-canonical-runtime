@@ -1,4 +1,4 @@
-﻿import json
+import json
 from datetime import UTC, datetime, timedelta
 
 from core.paths import DATA_DIR
@@ -55,6 +55,9 @@ def main() -> int:
                 intent="demo.intent",
                 action="execute",
                 expires_at="2030-01-01T00:00:00",
+                execution_time=now.isoformat(),
+                constraint_profile="constraint-profile-v1",
+                temporal_rule_profile="temporal-rule-profile-v1",
             )
         except NotImplementedError:
             if LEDGER_PATH.exists():

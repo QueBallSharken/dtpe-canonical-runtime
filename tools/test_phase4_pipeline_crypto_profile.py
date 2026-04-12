@@ -24,6 +24,8 @@ def main() -> int:
         action="execute",
         expires_at="2030-01-01T00:00:00",
         execution_time="2029-01-01T00:00:00",
+        constraint_profile="constraint-profile-v1",
+        temporal_rule_profile="temporal-rule-profile-v1",
     )
 
     assert_equal(receipt["execution_state"], "ALLOW", "receipt.execution_state")
