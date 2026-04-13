@@ -13,6 +13,7 @@ from core.spectre.evaluator_rules import (
     get_boundary_evaluator_rule_hash,
     get_boundary_evaluator_rule_profile,
     resolve_evaluator_rule_profile,
+    resolve_evaluator_trace_version,
 )
 
 
@@ -77,6 +78,11 @@ def _verify_receipt_payload(payload: Dict[str, Any], index: int) -> None:
             raise RuntimeError(
                 f"Ledger record {index}: evaluator_trace field {field} must be {expected_type.__name__}"
             )
+
+    try:
+        resolve_evaluator_trace_version(evaluator_trace.get("evaluator_trace_version"))
+    except ValueError as exc:
+        raise RuntimeError(f"Ledger record {index}: {exc}") from None
 
     receipt_material["evaluator_trace"] = evaluator_trace
 
