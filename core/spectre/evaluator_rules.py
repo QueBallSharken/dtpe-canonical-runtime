@@ -56,3 +56,13 @@ def get_boundary_evaluator_rule_hash() -> str:
         evaluator_rule_profile_id=_BOUNDARY_EVALUATOR_RULE_PROFILE_ID,
         evaluator_rule_version=_BOUNDARY_EVALUATOR_RULE_VERSION,
     )
+_EVALUATOR_TRACE_VERSION = "1.0"
+
+def get_evaluator_trace_version() -> str:
+    return _EVALUATOR_TRACE_VERSION
+
+
+def resolve_evaluator_trace_version(evaluator_trace_version: str) -> str:
+    if evaluator_trace_version != _EVALUATOR_TRACE_VERSION:
+        raise ValueError(f"unknown evaluator trace version: {evaluator_trace_version}")
+    return _EVALUATOR_TRACE_VERSION

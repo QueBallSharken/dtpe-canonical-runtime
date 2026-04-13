@@ -11,6 +11,7 @@ from core.spectre.temporal_guard import evaluate_temporal_invariant
 from core.spectre.evaluator_rules import (
     get_boundary_evaluator_rule_hash,
     get_boundary_evaluator_rule_profile,
+    get_evaluator_trace_version,
 )
 
 
@@ -146,7 +147,7 @@ def evaluate_execution_boundary(
         "execution_intent": execution_intent,
         "constraint_profile": constraint_profile,
         "temporal_rule_profile": temporal_rule_profile,
-        "evaluator_trace_version": "1.0",
+        "evaluator_trace_version": get_evaluator_trace_version(),
     }
 
     return {
