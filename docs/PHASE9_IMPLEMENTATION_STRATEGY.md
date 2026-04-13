@@ -1,9 +1,9 @@
-﻿# PHASE 9 — IMPLEMENTATION STRATEGY (LOCKED)
+# PHASE 9 — IMPLEMENTATION STRATEGY (LOCKED)
 
 ## STATUS
 
 - Phase 9 design is locked
-- Phase 9 runtime is not implemented
+- Phase 9 bounded evaluator_trace-related runtime surface is present; broader Phase 9 remains unimplemented and unauthorized
 - This document defines implementation order only
 - This document does not itself authorize unsafe or out-of-order runtime mutation
 
