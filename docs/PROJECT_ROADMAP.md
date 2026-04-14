@@ -77,14 +77,14 @@ That does not authorize future-direction runtime expansion by naming alone.
 
 ## CURRENT ROADMAP PRIORITY
 
-The immediate roadmap priority is repository-authoritative documentation alignment.
+The immediate roadmap priority is completing the remaining repository-authoritative alignment for the current committed bounded Phase 9 slices.
 
 That means:
 
 1. keep implementation-state docs aligned with committed runtime
 2. keep architecture-positioning docs aligned with committed runtime
 3. keep bounded Phase 8 and bounded Phase 9 descriptions explicit
-4. only then define the next bounded runtime implementation target
+4. only then define the next bounded runtime implementation target explicitly from repo truth
 
 ---
 

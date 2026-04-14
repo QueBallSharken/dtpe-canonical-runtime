@@ -94,7 +94,7 @@ Current committed source mapping is bounded to:
   - fixed canonical identifier for the current evaluator surface
 
 - evaluator_rule_profile
-  - fixed canonical evaluator rule profile object for the current bounded evaluator surface
+  - canonical evaluator rule profile object resolved from the bounded evaluator rule registry
 
 - evaluator_rule_hash
   - deterministic SHA-256 over canonical_json(evaluator_rule_profile)
@@ -121,7 +121,7 @@ Current committed source mapping is bounded to:
   - canonical temporal rule profile already present in the runtime boundary inputs
 
 - evaluator_trace_version
-  - fixed version string for the bounded slice
+  - canonical evaluator trace version resolved from the bounded evaluator trace version source
 
 No additional Phase 9 source fields are authorized here.
 
@@ -136,9 +136,12 @@ The current committed runtime already includes all of the following:
 - evaluator_trace inclusion in final receipt payload
 - ledger payload carrying evaluator_trace through receipt append
 - verifier validation for evaluator_rule_profile shape
+- verifier rejection of unknown evaluator_rule_profile_id
+- verifier rejection of unknown evaluator_rule_version
 - verifier validation for evaluator_rule_hash
 - verifier validation for decision_space_hash
 - verifier validation for signal_profile_hash
+- verifier rejection of unknown evaluator_trace_version
 - verifier validation for policy_hash equality
 - verifier validation for authority_hash equality
 - verifier validation for execution_intent equality
@@ -246,6 +249,8 @@ Implementation or documentation alignment must stop if:
 
 - evaluator identity has no deterministic canonical source
 - evaluator_rule_profile cannot be reconstructed exactly
+- evaluator_rule_profile_id is unknown
+- evaluator_rule_version is unknown
 - evaluator_rule_hash cannot be reconstructed exactly
 - decision_space_hash cannot be reconstructed exactly
 - signal_profile_hash cannot be reconstructed exactly
@@ -255,6 +260,7 @@ Implementation or documentation alignment must stop if:
 - constraint_profile cannot be reconstructed exactly
 - temporal_rule_profile cannot be reconstructed exactly
 - replay parity would diverge
+- evaluator_trace_version is unknown
 - any broader Phase 9 field requires hidden runtime state
 - any broader Phase 9 field is treated as already implemented without committed runtime proof
 - any Phase 9 change violates the PQC guardrail

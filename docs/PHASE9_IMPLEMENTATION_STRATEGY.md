@@ -1,4 +1,4 @@
-# PHASE 9 — IMPLEMENTATION STRATEGY (LOCKED)
+# PHASE 9 - IMPLEMENTATION STRATEGY (LOCKED)
 
 ## STATUS
 
@@ -11,7 +11,7 @@
 
 ## PURPOSE
 
-This document defines the safe bounded implementation sequence for Phase 9 — Evaluator Integrity.
+This document defines the safe bounded implementation sequence for Phase 9 - Evaluator Integrity.
 
 Phase 9 implementation must remain:
 
@@ -58,11 +58,11 @@ At completion, Phase 9 must allow verifier replay to prove:
 
 Phase 9 must be implemented in this exact order:
 
-1. introduce bounded evaluator_trace construction
-2. attach evaluator_trace to receipt_material and final receipt
-3. attach evaluator_trace to ledger payload
-4. extend verifier reconstruction for evaluator_trace
-5. add bounded verifier validation for evaluator_trace fields
+1. bounded evaluator_trace construction (committed)
+2. evaluator_trace attached to receipt_material and final receipt (committed)
+3. evaluator_trace attached to ledger payload (committed)
+4. verifier reconstruction extended for evaluator_trace (committed)
+5. bounded verifier validation for evaluator_trace fields (committed)
 6. add replay-safe evaluator hash reconstruction
 7. add tests for receipt parity
 8. add tests for verifier parity
@@ -135,8 +135,8 @@ Expected file order:
 - tools/verify_ledger.py
 
 ### Then tests
-- tools/test_phase9_evaluator_trace_receipt.py
-- tools/test_phase9_evaluator_trace_verifier.py
+- tools/test_phase5_boundary_refusal_replay.py
+- tools/test_phase5_boundary_replay_verifier.py
 
 Additional tests may be added only if directly required by proof.
 
@@ -148,7 +148,7 @@ Do not expand file touch scope without proof.
 
 ## PHASE 9A RUNTIME ATTACHMENT RULE
 
-The first implementation slice must attach evaluator_trace as a pure derived structure from already committed canonical inputs.
+The first implementation slice already attached evaluator_trace as a pure derived structure from already committed canonical inputs.
 
 Allowed initial inputs include:
 
@@ -170,7 +170,7 @@ If evaluator identity has no deterministic committed source, implementation must
 
 ## RECEIPT IMPACT RULE
 
-When Phase 9 is implemented, evaluator_trace must be:
+In the current committed bounded Phase 9 surface, evaluator_trace must be:
 
 - added to receipt_material before canonical_json(...)
 - copied identically to final receipt payload

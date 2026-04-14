@@ -4,7 +4,7 @@
 
 - Phase 7: IMPLEMENTED IN THE COMMITTED RUNTIME SURFACE
 - Phase 8: PARTIALLY IMPLEMENTED AND VERIFIED IN BOUNDED SLICES
-- Phase 9: PARTIALLY ACTIVE IN COMMITTED RUNTIME SURFACE, BUT NOT YET DESCRIBED CONSISTENTLY ACROSS CURRENT REPO DOCS
+- Phase 9: BOUNDED EVALUATOR-TRACE-RELATED RUNTIME SURFACE IS PRESENT IN THE COMMITTED REPO
 
 Repository runtime does not remain at Phase 7 only.
 
@@ -14,7 +14,7 @@ Current runtime includes:
 - committed bounded Phase 8 structures
 - committed evaluator_trace-related runtime, receipt, verifier, and test surface
 
-No further Phase 9 implementation should proceed until the exact bounded Phase 9 runtime classification is stated consistently across the repo.
+Phase 9 description must remain explicitly bounded and must be updated when new bounded Phase 9 slices are committed.
 
 ---
 
@@ -147,30 +147,25 @@ Visible committed runtime structures include:
 
 Accordingly, Phase 9 MUST NOT be described in this file as absent from the committed runtime.
 
-### CURRENT DOCUMENTATION CONFLICT
-
-Some current Phase 9 documents still state:
-
-- Phase 9 is not implemented
-- no Phase 9 runtime fields exist
-- no Phase 9 receipt fields exist
-- no Phase 9 verifier fields exist
-
-Those statements are no longer safe as repo-authoritative summaries of the committed runtime surface.
-
-### SAFE CURRENT DESCRIPTION
+### CURRENT REPO-ALIGNED DESCRIPTION
 
 The safe repo-authoritative statement is:
 
-- evaluator-trace-related runtime surface is present
-- the exact bounded Phase 9 slice is not yet described consistently across current repo docs
-- no additional Phase 9 implementation should proceed until that bounded classification is reconciled explicitly
+- evaluator-trace-related runtime, receipt, verifier, and test surface is present
+- later bounded hardening slices are committed inside that explicit Phase 9 surface
+- broader Phase 9 remains incomplete and must not be broadened by implication
+- repo-authoritative docs must be updated when new bounded Phase 9 slices are committed
 
 ### SEQUENCING RULE
 
-Phase 9 documentation must be reconciled before further Phase 9 implementation planning continues.
+Future bounded Phase 9 work must remain:
 
-Phase 9 must attach only to committed, verifier-reconstructable canonical state.
+- explicit
+- replay-verifiable
+- verifier-reconstructable
+- documented in the same bounded implementation cycle
+
+No broad or ambiguous Phase 9 expansion is authorized here.
 
 ### PQC / CRYPTO GUARDRAIL
 

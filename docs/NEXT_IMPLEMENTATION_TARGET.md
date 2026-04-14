@@ -38,10 +38,10 @@ All future work must preserve this property.
 
 The next repository-authoritative target is:
 
-- complete repository-authoritative documentation alignment for the current bounded Phase 7 / Phase 8 / Phase 9 baseline
+- complete the remaining repository-authoritative documentation alignment for the current committed bounded Phase 9 slices
 - explicitly preserve the current bounded Phase 8 structure without silent expansion
 - explicitly preserve the current bounded Phase 9 classification without broadening it by implication
-- only after that, define the next bounded implementation target
+- only after that alignment is complete, define the next bounded implementation target explicitly from repo truth
 
 ---
 
