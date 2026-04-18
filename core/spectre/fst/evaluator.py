@@ -9,6 +9,7 @@ from .scenarios import (
     get_first_target_scenario_id,
     get_first_target_stress_category,
     get_second_target_scenario_id,
+    get_third_target_scenario_id,
     resolve_scenario,
 )
 
@@ -34,6 +35,7 @@ def evaluate_first_target(
     allowed_scenario_ids = {
         get_first_target_scenario_id(),
         get_second_target_scenario_id(),
+        get_third_target_scenario_id(),
     }
     if scenario_id not in allowed_scenario_ids:
         raise ValueError(f"unsupported scenario_id: {scenario_id}")

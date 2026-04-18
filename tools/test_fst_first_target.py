@@ -52,8 +52,15 @@ def main() -> int:
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
+    receipt_three = evaluate_first_target(
+        scenario_id="fst_first_target_scenario_003",
+        stress_category="boundary_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
     _assert_minimal_receipt_shape(receipt_one)
     _assert_minimal_receipt_shape(receipt_two)
+    _assert_minimal_receipt_shape(receipt_three)
 
     assert receipt_one["stress_scenario_id"] == "fst_first_target_scenario_001"
     assert receipt_one["fst_result"] == "PARTIAL"
@@ -76,6 +83,14 @@ def main() -> int:
     assert receipt_two["fst_contradictions"] == [
         "stronger continuity claim exceeded what the evidenced path supports"
     ]
+
+    assert receipt_three["stress_scenario_id"] == "fst_first_target_scenario_003"
+    assert receipt_three["fst_result"] == "UNVERIFIABLE"
+    assert receipt_three["fst_findings"] == []
+    assert receipt_three["fst_gaps"] == [
+        "system-wide refusal continuity not proven under in-flight authority change"
+    ]
+    assert receipt_three["fst_contradictions"] == []
 
     rule_profile = get_first_target_rule_profile()
     expected_rule_profile_hash = sha256_hex_str(canonical_json(rule_profile))
@@ -108,7 +123,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst multi-scenario first-target evaluation verified")
+    print("PASS: fst three-scenario first-target evaluation verified")
     return 0
 
 

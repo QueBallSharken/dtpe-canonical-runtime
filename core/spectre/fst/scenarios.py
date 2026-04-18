@@ -5,6 +5,7 @@ from typing import Any, Dict, Tuple
 
 _FIRST_TARGET_SCENARIO_ID = "fst_first_target_scenario_001"
 _SECOND_TARGET_SCENARIO_ID = "fst_first_target_scenario_002"
+_THIRD_TARGET_SCENARIO_ID = "fst_first_target_scenario_003"
 _FIRST_TARGET_STRESS_CATEGORY = "boundary_continuity_stress"
 
 _FIRST_TARGET_SCENARIO: Dict[str, Any] = {
@@ -25,9 +26,19 @@ _SECOND_TARGET_SCENARIO: Dict[str, Any] = {
     "stronger_continuity_claim_asserted": True,
 }
 
+_THIRD_TARGET_SCENARIO: Dict[str, Any] = {
+    "stress_scenario_id": _THIRD_TARGET_SCENARIO_ID,
+    "scenario_name": "Boundary continuity claim without live local refusal boundary and without sufficient stronger-claim contradiction evidence",
+    "stress_category": _FIRST_TARGET_STRESS_CATEGORY,
+    "local_refusal_boundary_live": False,
+    "system_wide_refusal_continuity_proven": False,
+    "stronger_continuity_claim_asserted": False,
+}
+
 _SCENARIO_REGISTRY: Dict[Tuple[str, str], Dict[str, Any]] = {
     (_FIRST_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _FIRST_TARGET_SCENARIO,
     (_SECOND_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _SECOND_TARGET_SCENARIO,
+    (_THIRD_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _THIRD_TARGET_SCENARIO,
 }
 
 
@@ -47,6 +58,10 @@ def get_first_target_scenario_id() -> str:
 
 def get_second_target_scenario_id() -> str:
     return _SECOND_TARGET_SCENARIO_ID
+
+
+def get_third_target_scenario_id() -> str:
+    return _THIRD_TARGET_SCENARIO_ID
 
 
 def get_first_target_stress_category() -> str:
