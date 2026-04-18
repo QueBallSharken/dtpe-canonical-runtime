@@ -82,10 +82,10 @@ def main() -> int:
             stress_category="wrong_stress_category",
             rule_profile_id="spectre_fst_first_target_rules_v1",
         ),
-        "unsupported stress_category",
+        "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst first target deterministic result, minimal receipt, and negative-path validation verified")
+    print("PASS: fst evaluator rule-profile enforcement and negative-path validation verified")
     return 0
 
 

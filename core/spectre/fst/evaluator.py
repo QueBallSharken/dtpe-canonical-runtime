@@ -26,6 +26,10 @@ def evaluate_first_target(
     if rule_profile_id != rule_profile["fst_rule_profile_id"]:
         raise ValueError(f"unsupported rule_profile_id: {rule_profile_id}")
 
+    allowed_stress_categories = rule_profile["allowed_stress_categories"]
+    if stress_category not in allowed_stress_categories:
+        raise ValueError(f"stress_category not allowed by rule profile: {stress_category}")
+
     expected_scenario_id = get_first_target_scenario_id()
     expected_stress_category = get_first_target_stress_category()
 
@@ -68,6 +72,10 @@ def evaluate_first_target(
 
     if not is_valid_primary_result(fst_result):
         raise ValueError(f"invalid fst_result: {fst_result}")
+
+    allowed_primary_results = rule_profile["allowed_primary_results"]
+    if fst_result not in allowed_primary_results:
+        raise ValueError(f"fst_result not allowed by rule profile: {fst_result}")
 
     receipt = {
         "fst_profile_id": _FST_PROFILE_ID,
