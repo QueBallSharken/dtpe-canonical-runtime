@@ -1,6 +1,10 @@
 from core.canonical import canonical_json
 from core.hashing import sha256_hex_str
 from core.spectre.fst.evaluator import evaluate_first_target
+from core.spectre.fst.receipt_schema import (
+    get_minimal_receipt_canonical,
+    get_minimal_receipt_hash,
+)
 from core.spectre.fst.rule_profiles import (
     get_first_target_rule_profile,
     get_first_target_rule_profile_hash,
@@ -96,6 +100,9 @@ def main() -> int:
     expected_rule_profile_hash = sha256_hex_str(canonical_json(rule_profile))
     assert get_first_target_rule_profile_hash() == expected_rule_profile_hash
 
+    assert get_minimal_receipt_canonical(receipt_one) == canonical_json(receipt_one)
+    assert get_minimal_receipt_hash(receipt_one) == sha256_hex_str(canonical_json(receipt_one))
+
     _assert_raises_value_error(
         lambda: evaluate_first_target(
             scenario_id="fst_first_target_scenario_001",
@@ -123,7 +130,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst three-scenario first-target evaluation verified")
+    print("PASS: fst three-scenario evaluation and receipt identity verified")
     return 0
 
 

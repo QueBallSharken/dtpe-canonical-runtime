@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
+from core.canonical import canonical_json
+from core.hashing import sha256_hex_str
+
 
 REQUIRED_MINIMAL_RECEIPT_FIELDS = (
     "fst_profile_id",
@@ -48,3 +51,12 @@ def validate_minimal_receipt(receipt: Dict[str, Any]) -> None:
             raise ValueError(f"receipt field must be a list: {field}")
         if not all(isinstance(item, str) for item in receipt[field]):
             raise ValueError(f"receipt field must contain only strings: {field}")
+
+
+def get_minimal_receipt_canonical(receipt: Dict[str, Any]) -> str:
+    validate_minimal_receipt(receipt)
+    return canonical_json(receipt)
+
+
+def get_minimal_receipt_hash(receipt: Dict[str, Any]) -> str:
+    return sha256_hex_str(get_minimal_receipt_canonical(receipt))
