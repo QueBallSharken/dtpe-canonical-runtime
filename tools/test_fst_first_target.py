@@ -15,6 +15,7 @@ from core.spectre.fst.runner import (
     run_second_category_suite,
     run_third_category_suite,
     run_fourth_category_suite,
+    run_fifth_category_suite,
 )
 from core.spectre.fst.scenarios import (
     get_all_supported_stress_categories,
@@ -22,6 +23,7 @@ from core.spectre.fst.scenarios import (
     get_second_category_scenario_ids,
     get_third_category_scenario_ids,
     get_fourth_category_scenario_ids,
+    get_fifth_category_scenario_ids,
 )
 
 
@@ -100,6 +102,12 @@ def main() -> int:
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
+    receipt_eight = evaluate_first_target(
+        scenario_id="fst_fifth_category_scenario_001",
+        stress_category="path_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
     _assert_minimal_receipt_shape(receipt_one)
     _assert_minimal_receipt_shape(receipt_two)
     _assert_minimal_receipt_shape(receipt_three)
@@ -107,6 +115,7 @@ def main() -> int:
     _assert_minimal_receipt_shape(receipt_five)
     _assert_minimal_receipt_shape(receipt_six)
     _assert_minimal_receipt_shape(receipt_seven)
+    _assert_minimal_receipt_shape(receipt_eight)
 
     assert receipt_one["stress_scenario_id"] == "fst_first_target_scenario_001"
     assert receipt_one["fst_result"] == "PARTIAL"
@@ -185,6 +194,19 @@ def main() -> int:
         "stronger state continuity claim exceeded what the evidenced path supports"
     ]
 
+    assert receipt_eight["stress_scenario_id"] == "fst_fifth_category_scenario_001"
+    assert receipt_eight["stress_category"] == "path_continuity_stress"
+    assert receipt_eight["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_eight["fst_findings"] == [
+        "local path binding remained live"
+    ]
+    assert receipt_eight["fst_gaps"] == [
+        "end-to-end path continuity not proven across translated execution route"
+    ]
+    assert receipt_eight["fst_contradictions"] == [
+        "stronger path continuity claim exceeded what the evidenced path supports"
+    ]
+
     first_category_scenario_ids = get_first_target_scenario_ids()
     assert first_category_scenario_ids == [
         "fst_first_target_scenario_001",
@@ -208,11 +230,17 @@ def main() -> int:
         "fst_fourth_category_scenario_001",
     ]
 
+    fifth_category_scenario_ids = get_fifth_category_scenario_ids()
+    assert fifth_category_scenario_ids == [
+        "fst_fifth_category_scenario_001",
+    ]
+
     assert get_all_supported_stress_categories() == [
         "boundary_continuity_stress",
         "authority_continuity_stress",
         "temporal_continuity_stress",
         "state_continuity_stress",
+        "path_continuity_stress",
     ]
 
     rule_profile = get_first_target_rule_profile()
@@ -269,6 +297,17 @@ def main() -> int:
         "fst_fourth_category_scenario_001": "CONTRADICTION_EXPOSED",
     }
 
+    fifth_suite = run_fifth_category_suite(
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+    assert fifth_suite["fst_suite_id"] == "spectre_fst_fifth_category_suite_v1"
+    assert fifth_suite["stress_category"] == "path_continuity_stress"
+    assert fifth_suite["scenario_ids"] == fifth_category_scenario_ids
+    assert len(fifth_suite["receipts"]) == 1
+    assert fifth_suite["results_by_scenario_id"] == {
+        "fst_fifth_category_scenario_001": "CONTRADICTION_EXPOSED",
+    }
+
     aggregate = run_all_known_suites(
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
@@ -280,12 +319,14 @@ def main() -> int:
         "authority_continuity_stress",
         "temporal_continuity_stress",
         "state_continuity_stress",
+        "path_continuity_stress",
     ]
     assert set(aggregate["suites_by_category"].keys()) == {
         "boundary_continuity_stress",
         "authority_continuity_stress",
         "temporal_continuity_stress",
         "state_continuity_stress",
+        "path_continuity_stress",
     }
 
     _assert_raises_value_error(
@@ -315,7 +356,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst four-category aggregate suite verified")
+    print("PASS: fst five-category aggregate suite verified")
     return 0
 
 
