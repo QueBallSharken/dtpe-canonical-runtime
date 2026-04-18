@@ -2,52 +2,47 @@
 
 ## Status
 
-This artifact is the entry-point index for the Sentinel future-integration package.
+This artifact is a parked index for the Sentinel future-integration package.
 
-It is index-only.
+It is retained for bounded navigation and later extraction or separate-repo handling.
 
-It does not broaden claims.
-It does not replace underlying canonical docs.
-It does not imply implementation completeness.
+It is not a primary entry point for the active repository architecture direction.
 
 ---
 
-## 1. Purpose
+## 1. Parked Position
 
-This artifact provides a single navigation point for the Sentinel future-integration package.
+This package is parked.
 
----
+Use the following docs first for active repository architecture direction:
 
-## 2. Package Reading Order
+- `docs/SPECTRE_FST_TRIKE_MODEL.md`
+- `docs/SENTINEL_PARKED_POSITION.md`
 
-Read in this order:
-
-1. `docs/SPECTRE_SENTINEL_FUTURE_INTEGRATION_SPEC.md`
-2. `docs/SPECTRE_SENTINEL_TO_IAL_SPECTRE_DTPE_MAPPING.md`
-3. `docs/SPECTRE_SENTINEL_CURRENT_PUBLIC_REPO_POSITION.md`
-4. `docs/SPECTRE_SENTINEL_FUTURE_INTEGRATION_POSITION.md`
-5. `docs/SPECTRE_SENTINEL_CANONICAL_OBJECT_MODEL.md`
-6. `docs/SPECTRE_SENTINEL_FUTURE_INTEGRATION_RULES.md`
-7. `docs/SPECTRE_SENTINEL_FUTURE_INTEGRATION_SOLVES.md`
-8. `docs/SPECTRE_SENTINEL_FUTURE_INTEGRATION_DOES_NOT_SOLVE.md`
-9. `docs/SPECTRE_SENTINEL_NON_GOALS.md`
-10. `docs/SPECTRE_SENTINEL_IMPLEMENTATION_NOTES.md`
-11. `docs/SPECTRE_SENTINEL_BOUNDARY_RECEIPT_VERIFIER_IMPACT_NOTES.md`
-12. `docs/SPECTRE_SENTINEL_DOCS_ALIGNMENT_PLAN.md`
-13. `docs/SPECTRE_SENTINEL_README_ALIGNMENT_PLAN.md`
+This index is secondary to those documents.
 
 ---
 
-## 3. Package Safety Rule
+## 2. Package Scope
 
-This package is safe only as:
-- future integration
-- subordinate to DTPE / IAL / SPECTRE
-- non-authorizing by implication
-- non-claiming for BBIS completion
+This index may still be used to:
+
+- locate older Sentinel package artifacts
+- preserve bounded package topology
+- support later extraction, archive, or separate-repo work
+
+It must not be used to imply:
+
+- current runtime normalization
+- active architecture priority
+- active implementation authorization
 
 ---
 
-## 4. Direct Rule
+## 3. Direct Rule
 
-Use this package as a bounded future-integration package only. Do not let the index itself be used to imply current runtime normalization.
+Use this package only as parked future-only material.
+
+If there is any conflict between this package and the active trike-model direction, the active trike-model direction governs.
+
+END OF FILE

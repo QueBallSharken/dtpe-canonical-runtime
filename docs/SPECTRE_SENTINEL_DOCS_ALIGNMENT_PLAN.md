@@ -2,84 +2,41 @@
 
 ## Status
 
-This artifact defines the required docs-alignment plan for future Sentinel integration.
+This artifact is a parked planning artifact from the earlier Sentinel future-integration package.
 
-It is mandatory planning, not optional cleanup.
+It is retained for provenance and later package cleanup or extraction work.
 
-It does not itself change repo docs.
-It defines what must be inspected and normalized before normative Sentinel wording is safe.
-
----
-
-## 1. Purpose
-
-This artifact defines the explicit docs-alignment plan required before Sentinel future-integration wording can be treated as normative.
+It is not an active planning authority for the current repository direction.
 
 ---
 
-## 2. Minimum Files To Inspect
+## 1. Current Interpretation Rule
 
-At minimum, inspect:
-- `README.md`
-- `docs/ARCHITECTURE_OVERVIEW.md`
-- `docs/EXECUTION_INTEGRITY_MODEL.md`
-- `docs/BOUNDARY_INTEGRITY_AND_MUTATION_AUTHORITY.md`
-- `docs/IAL_SPEC.md`
+This file must be interpreted through:
 
-Also inspect any other current public docs that:
-- describe DTPE / IAL / SPECTRE responsibilities
-- imply runtime authorization
-- describe semantic artifacts
-- describe mutation authority
-- describe verifier / receipt / replay semantics
+- `docs/SENTINEL_PARKED_POSITION.md`
+- `docs/SPECTRE_FST_TRIKE_MODEL.md`
+
+The active repository architecture direction no longer treats Sentinel package planning as the primary active path.
 
 ---
 
-## 3. Contradictions To Resolve
+## 2. Retained Value
 
-At minimum, resolve contradictions around:
-- whether Sentinel is current runtime or future integration only
-- whether IAL implies runtime authorization
-- whether SPECTRE remains the execution / mutation-bound evaluator
-- whether BBIS is being collapsed into ingress detection
-- whether DTPE evidence responsibilities remain distinct
-- whether public wording implies completion rather than proposal
+This file may still be useful for:
 
----
+- understanding prior cleanup intentions
+- identifying earlier contradiction categories
+- supporting later package quarantine, extraction, or archive work
 
-## 4. Wording To Normalize
-
-Normalize wording so that:
-- Sentinel = future integration profile
-- IAL = canonical semantic artifact layer
-- SPECTRE = execution / mutation-bound evaluation layer
-- DTPE = canonical receipt / ledger / offline verifier evidence path
-- BBIS = continuity / conformance requirement across the full mutation path
+It must not be treated as a current mandatory planning driver.
 
 ---
 
-## 5. Naming Mismatches To Address
+## 3. Direct Rule
 
-At minimum, address:
-- any visible mismatch around IAL naming
-- any wording that treats semantic ingress as execution-bound enforcement
-- any wording that implies Sentinel already exists as a current normalized public architecture layer
+If later Sentinel package cleanup occurs, this file may be consulted as historical planning context only.
 
----
+It does not override the active parked-position rule.
 
-## 6. Completion Rule
-
-Docs alignment is complete only when:
-- contradictory wording is resolved
-- Sentinel future-only posture is explicit
-- DTPE / IAL / SPECTRE responsibility boundaries are consistent
-- BBIS is preserved as the continuity requirement
-- no public doc implies runtime authorization by implication
-
----
-
-## 7. Direct Rule
-
-The direct docs-alignment rule is:
-
-Sentinel future-integration wording is not safe to publish as normative until the current public docs are inspected and normalized against the constrained DTPE / IAL / SPECTRE architecture mapping.
+END OF FILE
