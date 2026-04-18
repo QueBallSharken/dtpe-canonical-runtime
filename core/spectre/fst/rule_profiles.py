@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import Any, Dict, Tuple
 
+from core.canonical import canonical_json
+from core.hashing import sha256_hex_str
+
 
 _FIRST_TARGET_RULE_PROFILE_ID = "spectre_fst_first_target_rules_v1"
 _FIRST_TARGET_RULE_PROFILE_VERSION = "1.0"
@@ -44,3 +47,7 @@ def get_first_target_rule_profile() -> Dict[str, Any]:
         rule_profile_id=_FIRST_TARGET_RULE_PROFILE_ID,
         rule_profile_version=_FIRST_TARGET_RULE_PROFILE_VERSION,
     )
+
+
+def get_first_target_rule_profile_hash() -> str:
+    return sha256_hex_str(canonical_json(get_first_target_rule_profile()))

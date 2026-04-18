@@ -1,4 +1,10 @@
+from core.canonical import canonical_json
+from core.hashing import sha256_hex_str
 from core.spectre.fst.evaluator import evaluate_first_target
+from core.spectre.fst.rule_profiles import (
+    get_first_target_rule_profile,
+    get_first_target_rule_profile_hash,
+)
 
 
 def _assert_minimal_receipt_shape(receipt):
@@ -58,6 +64,10 @@ def main() -> int:
     ]
     assert receipt_one["fst_contradictions"] == []
 
+    rule_profile = get_first_target_rule_profile()
+    expected_rule_profile_hash = sha256_hex_str(canonical_json(rule_profile))
+    assert get_first_target_rule_profile_hash() == expected_rule_profile_hash
+
     _assert_raises_value_error(
         lambda: evaluate_first_target(
             scenario_id="fst_first_target_scenario_001",
@@ -85,7 +95,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst evaluator rule-profile enforcement and negative-path validation verified")
+    print("PASS: fst rule-profile hash, enforcement, and negative-path validation verified")
     return 0
 
 
