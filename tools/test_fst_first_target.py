@@ -47,14 +47,15 @@ def main() -> int:
     )
 
     receipt_two = evaluate_first_target(
-        scenario_id="fst_first_target_scenario_001",
+        scenario_id="fst_first_target_scenario_002",
         stress_category="boundary_continuity_stress",
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
-    assert receipt_one == receipt_two
     _assert_minimal_receipt_shape(receipt_one)
+    _assert_minimal_receipt_shape(receipt_two)
 
+    assert receipt_one["stress_scenario_id"] == "fst_first_target_scenario_001"
     assert receipt_one["fst_result"] == "PARTIAL"
     assert receipt_one["fst_findings"] == [
         "local refusal boundary remained live"
@@ -63,6 +64,18 @@ def main() -> int:
         "system-wide refusal continuity not proven under in-flight authority change"
     ]
     assert receipt_one["fst_contradictions"] == []
+
+    assert receipt_two["stress_scenario_id"] == "fst_first_target_scenario_002"
+    assert receipt_two["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_two["fst_findings"] == [
+        "local refusal boundary remained live"
+    ]
+    assert receipt_two["fst_gaps"] == [
+        "system-wide refusal continuity not proven under in-flight authority change"
+    ]
+    assert receipt_two["fst_contradictions"] == [
+        "stronger continuity claim exceeded what the evidenced path supports"
+    ]
 
     rule_profile = get_first_target_rule_profile()
     expected_rule_profile_hash = sha256_hex_str(canonical_json(rule_profile))
@@ -95,7 +108,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst rule-profile hash, enforcement, and negative-path validation verified")
+    print("PASS: fst multi-scenario first-target evaluation verified")
     return 0
 
 
