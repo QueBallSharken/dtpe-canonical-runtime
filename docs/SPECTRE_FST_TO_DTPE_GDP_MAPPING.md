@@ -1,12 +1,12 @@
-# SPECTRE-FST DOC INDEX
+# SPECTRE-FST TO DTPE / GDP MAPPING
 
 ## STATUS
 
-This document is the entry-point index for the bounded SPECTRE-FST documentation set.
+This document defines the bounded mapping between SPECTRE-FST, DTPE / IAL / SPECTRE, and GDP.
 
-It is index-only.
+It is architecture-facing only.
 
-It does not authorize implementation by itself.
+It does not authorize runtime implementation by itself.
 It does not broaden DTPE runtime state.
 It does not replace GDP.
 It does not redefine BBIS.
@@ -15,79 +15,112 @@ It does not redefine BBIS.
 
 ## 1. PURPOSE
 
-This index gives the repository a single navigation point for the bounded SPECTRE-FST package.
-
-Its purpose is to:
-
-- identify the canonical document set
-- define reading order
-- define usage order
-- keep FST bounded and non-sprawling
-- preserve subsystem separation from DTPE, GDP, and parked Sentinel material
+This document preserves subsystem separation while defining how SPECTRE-FST relates to the current trike-model architecture direction.
 
 ---
 
-## 2. PRIMARY READ ORDER
+## 2. GOVERNING SPLIT
 
-Read in this order:
+Use this exact split:
 
-1. `docs/SPECTRE_FST_MINIMAL_ARCHITECTURE_PROFILE.md`
-2. `docs/SPECTRE_FST_RESULT_VOCABULARY.md`
-3. `docs/SPECTRE_FST_MINIMAL_RECEIPT_SCHEMA.md`
-4. `docs/SPECTRE_FST_STRESS_CATEGORY_SET.md`
-5. `docs/SPECTRE_FST_SELECTOR_MINIMAL_PROFILE.md`
-6. `docs/SPECTRE_FST_UPGRADE_ANALYSIS_MINIMAL_PROFILE.md`
-7. `docs/SPECTRE_FST_FIRST_TARGET_ACCEPTANCE_RULES.md`
-8. `docs/SPECTRE_FST_FIRST_TARGET_IMPLEMENTATION_CHECKLIST.md`
-9. `docs/SPECTRE_FST_FIRST_TARGET_TEST_CASE_CATALOG.md`
-10. `docs/SPECTRE_FST_FIRST_TARGET_PROOF_HARNESS_OUTLINE.md`
-11. `docs/SPECTRE_FST_FIRST_TARGET_PHASED_IMPLEMENTATION_PLAN.md`
-12. `docs/SPECTRE_FST_FIRST_TARGET_SCENARIO.md`
-13. `docs/SPECTRE_FST_FIRST_TARGET_RULE_PROFILE.md`
+- DTPE / IAL / SPECTRE = core governed execution and proof engine
+- GDP = structural sufficiency sidecar
+- SPECTRE-FST + Upgrade Analysis = bounded third-wheel stress and hardening direction
+
+Do not collapse these roles.
 
 ---
 
-## 3. USAGE ORDER
+## 3. DTPE / IAL / SPECTRE ROLE
 
-Use this order when doing actual work:
+DTPE / IAL / SPECTRE owns:
 
-### 3.1 Architecture lock
-- `docs/SPECTRE_FST_MINIMAL_ARCHITECTURE_PROFILE.md`
-- `docs/SPECTRE_FST_RESULT_VOCABULARY.md`
-- `docs/SPECTRE_FST_MINIMAL_RECEIPT_SCHEMA.md`
+- execution-bound admissibility
+- canonical proof artifacts
+- receipt-bearing execution evidence
+- replay-verifiable proof of what execution actually did
 
-### 3.2 Evaluator structure
-- `docs/SPECTRE_FST_STRESS_CATEGORY_SET.md`
-- `docs/SPECTRE_FST_SELECTOR_MINIMAL_PROFILE.md`
-- `docs/SPECTRE_FST_UPGRADE_ANALYSIS_MINIMAL_PROFILE.md`
-
-### 3.3 First target package
-- `docs/SPECTRE_FST_FIRST_TARGET_ACCEPTANCE_RULES.md`
-- `docs/SPECTRE_FST_FIRST_TARGET_IMPLEMENTATION_CHECKLIST.md`
-- `docs/SPECTRE_FST_FIRST_TARGET_TEST_CASE_CATALOG.md`
-- `docs/SPECTRE_FST_FIRST_TARGET_PROOF_HARNESS_OUTLINE.md`
-- `docs/SPECTRE_FST_FIRST_TARGET_PHASED_IMPLEMENTATION_PLAN.md`
-- `docs/SPECTRE_FST_FIRST_TARGET_SCENARIO.md`
-- `docs/SPECTRE_FST_FIRST_TARGET_RULE_PROFILE.md`
+SPECTRE-FST does not replace this role.
 
 ---
 
-## 4. DIRECT RULE
+## 4. GDP ROLE
 
-SPECTRE-FST must remain:
+GDP owns:
 
-- bounded
-- receipt-bearing
-- category-driven
-- result-disciplined
-- separate from GDP structural sufficiency evaluation
-- separate from DTPE execution-bound evaluation
-- separate from parked Sentinel material
+- structural sufficiency evaluation
+- proof-to-structure comparison through the bridge position
+- classification of whether DTPE proof matches, is insufficient for, or contradicts GDP structural claims
+
+SPECTRE-FST does not replace this role.
 
 ---
 
-## 5. FINAL RULE
+## 5. SPECTRE-FST ROLE
 
-This index is the canonical entry point for the bounded SPECTRE-FST document set.
+SPECTRE-FST owns:
+
+- bounded architecture stress
+- bounded result classification
+- bounded findings / gaps / contradictions
+- downstream upgrade-analysis direction grounded in stress results
+
+SPECTRE-FST asks whether architecture truth survives pressure.
+
+---
+
+## 6. RECEIPT RELATION
+
+DTPE receipts and FST receipts are not identical.
+
+Safe current direction is:
+
+- DTPE receipts = proof of execution-bound governance behavior
+- FST receipts = proof of bounded stress evaluation outcome
+
+A later integration layer may correlate them, but they must remain conceptually separate.
+
+---
+
+## 7. GDP RELATION
+
+GDP and SPECTRE-FST are complementary.
+
+Safe distinction:
+
+- GDP asks whether the structure appears sufficient in principle
+- SPECTRE-FST asks whether the claim survives bounded deformation classes
+- DTPE asks what execution-bound proof actually occurred
+
+---
+
+## 8. UPGRADE ANALYSIS RELATION
+
+Upgrade Analysis sits downstream of SPECTRE-FST results.
+
+It may later inform:
+- hardening priorities
+- architecture repair direction
+- proof-surface strengthening
+
+It must remain grounded in bounded stress outputs.
+
+---
+
+## 9. NON-CLAIMS
+
+This mapping does not claim:
+
+- completed runtime integration
+- completed receipt correlation
+- completed GDP bridge fusion
+- completed DTPE-FST combined evaluator
+- BBIS completion
+
+---
+
+## 10. FINAL RULE
+
+DTPE, GDP, and SPECTRE-FST must remain separate enough to preserve role clarity and honest claim discipline.
 
 END OF FILE
