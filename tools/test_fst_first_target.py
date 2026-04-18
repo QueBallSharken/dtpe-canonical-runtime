@@ -20,6 +20,19 @@ def _assert_minimal_receipt_shape(receipt):
     assert isinstance(receipt["fst_contradictions"], list)
 
 
+def _assert_raises_value_error(fn, expected_message_fragment: str) -> None:
+    try:
+        fn()
+    except ValueError as exc:
+        if expected_message_fragment not in str(exc):
+            raise AssertionError(
+                f"expected ValueError containing {expected_message_fragment!r}, got {str(exc)!r}"
+            ) from exc
+        return
+
+    raise AssertionError("expected ValueError but no exception was raised")
+
+
 def main() -> int:
     receipt_one = evaluate_first_target(
         scenario_id="fst_first_target_scenario_001",
@@ -45,7 +58,34 @@ def main() -> int:
     ]
     assert receipt_one["fst_contradictions"] == []
 
-    print("PASS: fst first target deterministic result and minimal receipt verified")
+    _assert_raises_value_error(
+        lambda: evaluate_first_target(
+            scenario_id="fst_first_target_scenario_001",
+            stress_category="boundary_continuity_stress",
+            rule_profile_id="wrong_rule_profile",
+        ),
+        "unsupported rule_profile_id",
+    )
+
+    _assert_raises_value_error(
+        lambda: evaluate_first_target(
+            scenario_id="wrong_scenario",
+            stress_category="boundary_continuity_stress",
+            rule_profile_id="spectre_fst_first_target_rules_v1",
+        ),
+        "unsupported scenario_id",
+    )
+
+    _assert_raises_value_error(
+        lambda: evaluate_first_target(
+            scenario_id="fst_first_target_scenario_001",
+            stress_category="wrong_stress_category",
+            rule_profile_id="spectre_fst_first_target_rules_v1",
+        ),
+        "unsupported stress_category",
+    )
+
+    print("PASS: fst first target deterministic result, minimal receipt, and negative-path validation verified")
     return 0
 
 
