@@ -16,6 +16,8 @@ from .scenarios import (
     get_fourth_category_stress_category,
     get_fifth_category_scenario_ids,
     get_fifth_category_stress_category,
+    get_sixth_category_scenario_ids,
+    get_sixth_category_stress_category,
     resolve_scenario,
 )
 
@@ -48,6 +50,8 @@ def evaluate_first_target(
         allowed_scenario_ids = set(get_fourth_category_scenario_ids())
     elif stress_category == get_fifth_category_stress_category():
         allowed_scenario_ids = set(get_fifth_category_scenario_ids())
+    elif stress_category == get_sixth_category_stress_category():
+        allowed_scenario_ids = set(get_sixth_category_scenario_ids())
     else:
         raise ValueError(f"unsupported stress_category: {stress_category}")
 
@@ -174,6 +178,29 @@ def evaluate_first_target(
             contradictions.append("stronger path continuity claim exceeded what the evidenced path supports")
             fst_result = "CONTRADICTION_EXPOSED"
         elif local_path_binding_live and not end_to_end_path_continuity_proven:
+            fst_result = "PARTIAL"
+        else:
+            fst_result = "UNVERIFIABLE"
+
+    elif stress_category == get_sixth_category_stress_category():
+        local_transport_binding_live = bool(scenario["local_transport_binding_live"])
+        end_to_end_transport_continuity_proven = bool(
+            scenario["end_to_end_transport_continuity_proven"]
+        )
+        stronger_transport_claim_asserted = bool(
+            scenario["stronger_transport_claim_asserted"]
+        )
+
+        if local_transport_binding_live:
+            findings.append("local transport binding remained live")
+
+        if not end_to_end_transport_continuity_proven:
+            gaps.append("end-to-end transport continuity not proven across delivery channel")
+
+        if stronger_transport_claim_asserted and not end_to_end_transport_continuity_proven:
+            contradictions.append("stronger transport continuity claim exceeded what the evidenced path supports")
+            fst_result = "CONTRADICTION_EXPOSED"
+        elif local_transport_binding_live and not end_to_end_transport_continuity_proven:
             fst_result = "PARTIAL"
         else:
             fst_result = "UNVERIFIABLE"

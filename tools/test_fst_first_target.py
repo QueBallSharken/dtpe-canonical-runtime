@@ -16,6 +16,7 @@ from core.spectre.fst.runner import (
     run_third_category_suite,
     run_fourth_category_suite,
     run_fifth_category_suite,
+    run_sixth_category_suite,
 )
 from core.spectre.fst.scenarios import (
     get_all_supported_stress_categories,
@@ -24,6 +25,7 @@ from core.spectre.fst.scenarios import (
     get_third_category_scenario_ids,
     get_fourth_category_scenario_ids,
     get_fifth_category_scenario_ids,
+    get_sixth_category_scenario_ids,
 )
 
 
@@ -108,6 +110,12 @@ def main() -> int:
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
+    receipt_nine = evaluate_first_target(
+        scenario_id="fst_sixth_category_scenario_001",
+        stress_category="transport_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
     _assert_minimal_receipt_shape(receipt_one)
     _assert_minimal_receipt_shape(receipt_two)
     _assert_minimal_receipt_shape(receipt_three)
@@ -116,6 +124,7 @@ def main() -> int:
     _assert_minimal_receipt_shape(receipt_six)
     _assert_minimal_receipt_shape(receipt_seven)
     _assert_minimal_receipt_shape(receipt_eight)
+    _assert_minimal_receipt_shape(receipt_nine)
 
     assert receipt_one["stress_scenario_id"] == "fst_first_target_scenario_001"
     assert receipt_one["fst_result"] == "PARTIAL"
@@ -207,6 +216,19 @@ def main() -> int:
         "stronger path continuity claim exceeded what the evidenced path supports"
     ]
 
+    assert receipt_nine["stress_scenario_id"] == "fst_sixth_category_scenario_001"
+    assert receipt_nine["stress_category"] == "transport_continuity_stress"
+    assert receipt_nine["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_nine["fst_findings"] == [
+        "local transport binding remained live"
+    ]
+    assert receipt_nine["fst_gaps"] == [
+        "end-to-end transport continuity not proven across delivery channel"
+    ]
+    assert receipt_nine["fst_contradictions"] == [
+        "stronger transport continuity claim exceeded what the evidenced path supports"
+    ]
+
     first_category_scenario_ids = get_first_target_scenario_ids()
     assert first_category_scenario_ids == [
         "fst_first_target_scenario_001",
@@ -235,12 +257,18 @@ def main() -> int:
         "fst_fifth_category_scenario_001",
     ]
 
+    sixth_category_scenario_ids = get_sixth_category_scenario_ids()
+    assert sixth_category_scenario_ids == [
+        "fst_sixth_category_scenario_001",
+    ]
+
     assert get_all_supported_stress_categories() == [
         "boundary_continuity_stress",
         "authority_continuity_stress",
         "temporal_continuity_stress",
         "state_continuity_stress",
         "path_continuity_stress",
+        "transport_continuity_stress",
     ]
 
     rule_profile = get_first_target_rule_profile()
@@ -308,6 +336,17 @@ def main() -> int:
         "fst_fifth_category_scenario_001": "CONTRADICTION_EXPOSED",
     }
 
+    sixth_suite = run_sixth_category_suite(
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+    assert sixth_suite["fst_suite_id"] == "spectre_fst_sixth_category_suite_v1"
+    assert sixth_suite["stress_category"] == "transport_continuity_stress"
+    assert sixth_suite["scenario_ids"] == sixth_category_scenario_ids
+    assert len(sixth_suite["receipts"]) == 1
+    assert sixth_suite["results_by_scenario_id"] == {
+        "fst_sixth_category_scenario_001": "CONTRADICTION_EXPOSED",
+    }
+
     aggregate = run_all_known_suites(
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
@@ -320,6 +359,7 @@ def main() -> int:
         "temporal_continuity_stress",
         "state_continuity_stress",
         "path_continuity_stress",
+        "transport_continuity_stress",
     ]
     assert set(aggregate["suites_by_category"].keys()) == {
         "boundary_continuity_stress",
@@ -327,6 +367,7 @@ def main() -> int:
         "temporal_continuity_stress",
         "state_continuity_stress",
         "path_continuity_stress",
+        "transport_continuity_stress",
     }
 
     _assert_raises_value_error(
@@ -356,7 +397,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst five-category aggregate suite verified")
+    print("PASS: fst six-category aggregate suite verified")
     return 0
 
 

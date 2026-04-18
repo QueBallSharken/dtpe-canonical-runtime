@@ -18,6 +18,7 @@ _FIRST_TARGET_RULE_PROFILE: Dict[str, Any] = {
         "temporal_continuity_stress",
         "state_continuity_stress",
         "path_continuity_stress",
+        "transport_continuity_stress",
     ],
     "allowed_primary_results": [
         "PARTIAL",
