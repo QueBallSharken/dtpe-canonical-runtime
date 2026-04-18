@@ -12,6 +12,9 @@ _FIRST_TARGET_STRESS_CATEGORY = "boundary_continuity_stress"
 _SECOND_CATEGORY_SCENARIO_ID = "fst_second_category_scenario_001"
 _SECOND_CATEGORY_STRESS_CATEGORY = "authority_continuity_stress"
 
+_THIRD_CATEGORY_SCENARIO_ID = "fst_third_category_scenario_001"
+_THIRD_CATEGORY_STRESS_CATEGORY = "temporal_continuity_stress"
+
 _FIRST_TARGET_SCENARIO: Dict[str, Any] = {
     "stress_scenario_id": _FIRST_TARGET_SCENARIO_ID,
     "scenario_name": "Boundary continuity claim with incomplete system-wide refusal continuity evidence",
@@ -57,12 +60,22 @@ _SECOND_CATEGORY_SCENARIO: Dict[str, Any] = {
     "stronger_authority_claim_asserted": True,
 }
 
+_THIRD_CATEGORY_SCENARIO: Dict[str, Any] = {
+    "stress_scenario_id": _THIRD_CATEGORY_SCENARIO_ID,
+    "scenario_name": "Temporal continuity claim with conflicting stronger timing/finality assertion",
+    "stress_category": _THIRD_CATEGORY_STRESS_CATEGORY,
+    "local_time_window_binding_live": True,
+    "end_to_end_temporal_continuity_proven": False,
+    "stronger_temporal_claim_asserted": True,
+}
+
 _SCENARIO_REGISTRY: Dict[Tuple[str, str], Dict[str, Any]] = {
     (_FIRST_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _FIRST_TARGET_SCENARIO,
     (_SECOND_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _SECOND_TARGET_SCENARIO,
     (_THIRD_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _THIRD_TARGET_SCENARIO,
     (_FOURTH_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _FOURTH_TARGET_SCENARIO,
     (_SECOND_CATEGORY_SCENARIO_ID, _SECOND_CATEGORY_STRESS_CATEGORY): _SECOND_CATEGORY_SCENARIO,
+    (_THIRD_CATEGORY_SCENARIO_ID, _THIRD_CATEGORY_STRESS_CATEGORY): _THIRD_CATEGORY_SCENARIO,
 }
 
 _FIRST_TARGET_SCENARIO_IDS = [
@@ -76,9 +89,14 @@ _SECOND_CATEGORY_SCENARIO_IDS = [
     _SECOND_CATEGORY_SCENARIO_ID,
 ]
 
+_THIRD_CATEGORY_SCENARIO_IDS = [
+    _THIRD_CATEGORY_SCENARIO_ID,
+]
+
 _ALL_SUPPORTED_STRESS_CATEGORIES = [
     _FIRST_TARGET_STRESS_CATEGORY,
     _SECOND_CATEGORY_STRESS_CATEGORY,
+    _THIRD_CATEGORY_STRESS_CATEGORY,
 ]
 
 
@@ -126,6 +144,18 @@ def get_second_category_scenario_id() -> str:
 
 def get_second_category_scenario_ids() -> List[str]:
     return list(_SECOND_CATEGORY_SCENARIO_IDS)
+
+
+def get_third_category_stress_category() -> str:
+    return _THIRD_CATEGORY_STRESS_CATEGORY
+
+
+def get_third_category_scenario_id() -> str:
+    return _THIRD_CATEGORY_SCENARIO_ID
+
+
+def get_third_category_scenario_ids() -> List[str]:
+    return list(_THIRD_CATEGORY_SCENARIO_IDS)
 
 
 def get_all_supported_stress_categories() -> List[str]:

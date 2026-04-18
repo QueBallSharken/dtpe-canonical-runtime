@@ -9,6 +9,8 @@ from .scenarios import (
     get_first_target_stress_category,
     get_second_category_scenario_ids,
     get_second_category_stress_category,
+    get_third_category_scenario_ids,
+    get_third_category_stress_category,
 )
 
 
@@ -63,15 +65,28 @@ def run_second_category_suite(
     )
 
 
+def run_third_category_suite(
+    rule_profile_id: str,
+) -> Dict[str, Any]:
+    return _run_suite_for_category(
+        rule_profile_id=rule_profile_id,
+        stress_category=get_third_category_stress_category(),
+        scenario_ids=get_third_category_scenario_ids(),
+        suite_id="spectre_fst_third_category_suite_v1",
+    )
+
+
 def run_all_known_suites(
     rule_profile_id: str,
 ) -> Dict[str, Any]:
     first_suite = run_first_target_suite(rule_profile_id=rule_profile_id)
     second_suite = run_second_category_suite(rule_profile_id=rule_profile_id)
+    third_suite = run_third_category_suite(rule_profile_id=rule_profile_id)
 
     suites_by_category = {
         first_suite["stress_category"]: first_suite,
         second_suite["stress_category"]: second_suite,
+        third_suite["stress_category"]: third_suite,
     }
 
     return {

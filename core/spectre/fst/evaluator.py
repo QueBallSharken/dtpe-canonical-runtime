@@ -10,6 +10,8 @@ from .scenarios import (
     get_first_target_stress_category,
     get_second_category_scenario_ids,
     get_second_category_stress_category,
+    get_third_category_scenario_ids,
+    get_third_category_stress_category,
     resolve_scenario,
 )
 
@@ -36,6 +38,8 @@ def evaluate_first_target(
         allowed_scenario_ids = set(get_first_target_scenario_ids())
     elif stress_category == get_second_category_stress_category():
         allowed_scenario_ids = set(get_second_category_scenario_ids())
+    elif stress_category == get_third_category_stress_category():
+        allowed_scenario_ids = set(get_third_category_scenario_ids())
     else:
         raise ValueError(f"unsupported stress_category: {stress_category}")
 
@@ -93,6 +97,29 @@ def evaluate_first_target(
             contradictions.append("stronger authority continuity claim exceeded what the evidenced path supports")
             fst_result = "CONTRADICTION_EXPOSED"
         elif local_authority_binding_live and not end_to_end_authority_continuity_proven:
+            fst_result = "PARTIAL"
+        else:
+            fst_result = "UNVERIFIABLE"
+
+    elif stress_category == get_third_category_stress_category():
+        local_time_window_binding_live = bool(scenario["local_time_window_binding_live"])
+        end_to_end_temporal_continuity_proven = bool(
+            scenario["end_to_end_temporal_continuity_proven"]
+        )
+        stronger_temporal_claim_asserted = bool(
+            scenario["stronger_temporal_claim_asserted"]
+        )
+
+        if local_time_window_binding_live:
+            findings.append("local temporal binding remained live")
+
+        if not end_to_end_temporal_continuity_proven:
+            gaps.append("end-to-end temporal continuity not proven across delayed execution path")
+
+        if stronger_temporal_claim_asserted and not end_to_end_temporal_continuity_proven:
+            contradictions.append("stronger temporal continuity claim exceeded what the evidenced path supports")
+            fst_result = "CONTRADICTION_EXPOSED"
+        elif local_time_window_binding_live and not end_to_end_temporal_continuity_proven:
             fst_result = "PARTIAL"
         else:
             fst_result = "UNVERIFIABLE"

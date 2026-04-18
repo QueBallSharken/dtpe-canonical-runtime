@@ -13,11 +13,13 @@ from core.spectre.fst.runner import (
     run_all_known_suites,
     run_first_target_suite,
     run_second_category_suite,
+    run_third_category_suite,
 )
 from core.spectre.fst.scenarios import (
     get_all_supported_stress_categories,
     get_first_target_scenario_ids,
     get_second_category_scenario_ids,
+    get_third_category_scenario_ids,
 )
 
 
@@ -84,11 +86,18 @@ def main() -> int:
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
+    receipt_six = evaluate_first_target(
+        scenario_id="fst_third_category_scenario_001",
+        stress_category="temporal_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
     _assert_minimal_receipt_shape(receipt_one)
     _assert_minimal_receipt_shape(receipt_two)
     _assert_minimal_receipt_shape(receipt_three)
     _assert_minimal_receipt_shape(receipt_four)
     _assert_minimal_receipt_shape(receipt_five)
+    _assert_minimal_receipt_shape(receipt_six)
 
     assert receipt_one["stress_scenario_id"] == "fst_first_target_scenario_001"
     assert receipt_one["fst_result"] == "PARTIAL"
@@ -141,6 +150,19 @@ def main() -> int:
         "stronger authority continuity claim exceeded what the evidenced path supports"
     ]
 
+    assert receipt_six["stress_scenario_id"] == "fst_third_category_scenario_001"
+    assert receipt_six["stress_category"] == "temporal_continuity_stress"
+    assert receipt_six["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_six["fst_findings"] == [
+        "local temporal binding remained live"
+    ]
+    assert receipt_six["fst_gaps"] == [
+        "end-to-end temporal continuity not proven across delayed execution path"
+    ]
+    assert receipt_six["fst_contradictions"] == [
+        "stronger temporal continuity claim exceeded what the evidenced path supports"
+    ]
+
     first_category_scenario_ids = get_first_target_scenario_ids()
     assert first_category_scenario_ids == [
         "fst_first_target_scenario_001",
@@ -154,9 +176,15 @@ def main() -> int:
         "fst_second_category_scenario_001",
     ]
 
+    third_category_scenario_ids = get_third_category_scenario_ids()
+    assert third_category_scenario_ids == [
+        "fst_third_category_scenario_001",
+    ]
+
     assert get_all_supported_stress_categories() == [
         "boundary_continuity_stress",
         "authority_continuity_stress",
+        "temporal_continuity_stress",
     ]
 
     rule_profile = get_first_target_rule_profile()
@@ -191,6 +219,17 @@ def main() -> int:
         "fst_second_category_scenario_001": "CONTRADICTION_EXPOSED",
     }
 
+    third_suite = run_third_category_suite(
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+    assert third_suite["fst_suite_id"] == "spectre_fst_third_category_suite_v1"
+    assert third_suite["stress_category"] == "temporal_continuity_stress"
+    assert third_suite["scenario_ids"] == third_category_scenario_ids
+    assert len(third_suite["receipts"]) == 1
+    assert third_suite["results_by_scenario_id"] == {
+        "fst_third_category_scenario_001": "CONTRADICTION_EXPOSED",
+    }
+
     aggregate = run_all_known_suites(
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
@@ -200,10 +239,12 @@ def main() -> int:
     assert aggregate["stress_categories"] == [
         "boundary_continuity_stress",
         "authority_continuity_stress",
+        "temporal_continuity_stress",
     ]
     assert set(aggregate["suites_by_category"].keys()) == {
         "boundary_continuity_stress",
         "authority_continuity_stress",
+        "temporal_continuity_stress",
     }
 
     _assert_raises_value_error(
@@ -233,7 +274,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst multi-category aggregate suite verified")
+    print("PASS: fst three-category aggregate suite verified")
     return 0
 
 
