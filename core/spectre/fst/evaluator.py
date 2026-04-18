@@ -12,6 +12,8 @@ from .scenarios import (
     get_second_category_stress_category,
     get_third_category_scenario_ids,
     get_third_category_stress_category,
+    get_fourth_category_scenario_ids,
+    get_fourth_category_stress_category,
     resolve_scenario,
 )
 
@@ -40,6 +42,8 @@ def evaluate_first_target(
         allowed_scenario_ids = set(get_second_category_scenario_ids())
     elif stress_category == get_third_category_stress_category():
         allowed_scenario_ids = set(get_third_category_scenario_ids())
+    elif stress_category == get_fourth_category_stress_category():
+        allowed_scenario_ids = set(get_fourth_category_scenario_ids())
     else:
         raise ValueError(f"unsupported stress_category: {stress_category}")
 
@@ -120,6 +124,29 @@ def evaluate_first_target(
             contradictions.append("stronger temporal continuity claim exceeded what the evidenced path supports")
             fst_result = "CONTRADICTION_EXPOSED"
         elif local_time_window_binding_live and not end_to_end_temporal_continuity_proven:
+            fst_result = "PARTIAL"
+        else:
+            fst_result = "UNVERIFIABLE"
+
+    elif stress_category == get_fourth_category_stress_category():
+        local_state_binding_live = bool(scenario["local_state_binding_live"])
+        end_to_end_state_continuity_proven = bool(
+            scenario["end_to_end_state_continuity_proven"]
+        )
+        stronger_state_claim_asserted = bool(
+            scenario["stronger_state_claim_asserted"]
+        )
+
+        if local_state_binding_live:
+            findings.append("local state binding remained live")
+
+        if not end_to_end_state_continuity_proven:
+            gaps.append("end-to-end state continuity not proven across persisted mutation path")
+
+        if stronger_state_claim_asserted and not end_to_end_state_continuity_proven:
+            contradictions.append("stronger state continuity claim exceeded what the evidenced path supports")
+            fst_result = "CONTRADICTION_EXPOSED"
+        elif local_state_binding_live and not end_to_end_state_continuity_proven:
             fst_result = "PARTIAL"
         else:
             fst_result = "UNVERIFIABLE"

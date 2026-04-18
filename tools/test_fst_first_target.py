@@ -14,12 +14,14 @@ from core.spectre.fst.runner import (
     run_first_target_suite,
     run_second_category_suite,
     run_third_category_suite,
+    run_fourth_category_suite,
 )
 from core.spectre.fst.scenarios import (
     get_all_supported_stress_categories,
     get_first_target_scenario_ids,
     get_second_category_scenario_ids,
     get_third_category_scenario_ids,
+    get_fourth_category_scenario_ids,
 )
 
 
@@ -92,12 +94,19 @@ def main() -> int:
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
+    receipt_seven = evaluate_first_target(
+        scenario_id="fst_fourth_category_scenario_001",
+        stress_category="state_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
     _assert_minimal_receipt_shape(receipt_one)
     _assert_minimal_receipt_shape(receipt_two)
     _assert_minimal_receipt_shape(receipt_three)
     _assert_minimal_receipt_shape(receipt_four)
     _assert_minimal_receipt_shape(receipt_five)
     _assert_minimal_receipt_shape(receipt_six)
+    _assert_minimal_receipt_shape(receipt_seven)
 
     assert receipt_one["stress_scenario_id"] == "fst_first_target_scenario_001"
     assert receipt_one["fst_result"] == "PARTIAL"
@@ -163,6 +172,19 @@ def main() -> int:
         "stronger temporal continuity claim exceeded what the evidenced path supports"
     ]
 
+    assert receipt_seven["stress_scenario_id"] == "fst_fourth_category_scenario_001"
+    assert receipt_seven["stress_category"] == "state_continuity_stress"
+    assert receipt_seven["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_seven["fst_findings"] == [
+        "local state binding remained live"
+    ]
+    assert receipt_seven["fst_gaps"] == [
+        "end-to-end state continuity not proven across persisted mutation path"
+    ]
+    assert receipt_seven["fst_contradictions"] == [
+        "stronger state continuity claim exceeded what the evidenced path supports"
+    ]
+
     first_category_scenario_ids = get_first_target_scenario_ids()
     assert first_category_scenario_ids == [
         "fst_first_target_scenario_001",
@@ -181,10 +203,16 @@ def main() -> int:
         "fst_third_category_scenario_001",
     ]
 
+    fourth_category_scenario_ids = get_fourth_category_scenario_ids()
+    assert fourth_category_scenario_ids == [
+        "fst_fourth_category_scenario_001",
+    ]
+
     assert get_all_supported_stress_categories() == [
         "boundary_continuity_stress",
         "authority_continuity_stress",
         "temporal_continuity_stress",
+        "state_continuity_stress",
     ]
 
     rule_profile = get_first_target_rule_profile()
@@ -230,6 +258,17 @@ def main() -> int:
         "fst_third_category_scenario_001": "CONTRADICTION_EXPOSED",
     }
 
+    fourth_suite = run_fourth_category_suite(
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+    assert fourth_suite["fst_suite_id"] == "spectre_fst_fourth_category_suite_v1"
+    assert fourth_suite["stress_category"] == "state_continuity_stress"
+    assert fourth_suite["scenario_ids"] == fourth_category_scenario_ids
+    assert len(fourth_suite["receipts"]) == 1
+    assert fourth_suite["results_by_scenario_id"] == {
+        "fst_fourth_category_scenario_001": "CONTRADICTION_EXPOSED",
+    }
+
     aggregate = run_all_known_suites(
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
@@ -240,11 +279,13 @@ def main() -> int:
         "boundary_continuity_stress",
         "authority_continuity_stress",
         "temporal_continuity_stress",
+        "state_continuity_stress",
     ]
     assert set(aggregate["suites_by_category"].keys()) == {
         "boundary_continuity_stress",
         "authority_continuity_stress",
         "temporal_continuity_stress",
+        "state_continuity_stress",
     }
 
     _assert_raises_value_error(
@@ -274,7 +315,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst three-category aggregate suite verified")
+    print("PASS: fst four-category aggregate suite verified")
     return 0
 
 
