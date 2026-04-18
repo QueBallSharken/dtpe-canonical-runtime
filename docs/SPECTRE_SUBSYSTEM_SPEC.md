@@ -4,7 +4,7 @@
 
 This document defines SPECTRE as the execution-boundary evaluation subsystem inside DTPE.
 
-It also positions SPECTRE_SENTINEL as future direction within SPECTRE rather than a replacement for DTPE.
+It also records the relationship between SPECTRE, IAL, SPECTRE-FST, and parked future-only Sentinel material.
 
 ---
 
@@ -67,7 +67,7 @@ SPECTRE does not own:
 - global architecture identity
 - mutation authority by naming alone
 - Phase 10 runtime authority by implication
-- Sentinel runtime authority by implication
+- Sentinel activation or runtime authority by implication
 
 ---
 
@@ -82,15 +82,33 @@ SPECTRE evaluates.
 
 ---
 
-## SPECTRE_SENTINEL
+## RELATION TO SPECTRE-FST
 
-SPECTRE_SENTINEL is a prospective future enforcement mode within SPECTRE.
+SPECTRE-FST is the bounded fundamental stress evaluation direction attached to the current repository architecture framing.
 
 Safe current wording is:
 
-- SPECTRE_SENTINEL is future-only direction
+- SPECTRE evaluates admissibility at the execution boundary
+- SPECTRE-FST stress-tests whether claimed governing truth survives bounded deformation classes
+- SPECTRE-FST is architecture direction only unless separately implemented
+- SPECTRE-FST does not replace SPECTRE boundary evaluation
+
+---
+
+## FUTURE-ONLY SENTINEL POSITION
+
+Sentinel is parked future-only material in the current repository.
+
+Safe current wording is:
+
+- Sentinel remains future-only direction
 - this document does not create a current Sentinel runtime surface
+- Sentinel is not part of the active trike-model direction
 - no Sentinel package, module, or enforcement layer is authorized merely because this document exists
+
+See:
+
+- `docs/SENTINEL_PARKED_POSITION.md`
 
 ---
 
@@ -112,7 +130,7 @@ This document does not broaden that bounded phase position.
 SPECTRE is the DTPE execution-boundary evaluation subsystem.
 
 SPECTRE evaluates admissibility at the boundary.
-
-SPECTRE_SENTINEL is future enforcement direction only and is not current runtime surface.
+SPECTRE-FST is the current bounded stress-direction companion to that framing.
+Sentinel remains parked future-only material and is not current runtime surface.
 
 END OF FILE

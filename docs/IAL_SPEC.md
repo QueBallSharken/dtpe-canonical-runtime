@@ -94,8 +94,9 @@ In particular, this document does not authorize:
 - Phase 8 structure changes
 - Phase 9 runtime expansion by implication
 - Phase 10 runtime work
-- Sentinel runtime work
+- Sentinel activation or runtime work by implication
 
 IAL remains the semantic layer that makes DTPE governance more explicit, replayable, and eventually reconstructable without semantic guesswork.
 
 END OF FILE
+
