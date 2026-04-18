@@ -80,6 +80,25 @@ Identity
 
 ---
 
+
+## Architecture Framing
+
+The current working architecture direction is:
+
+- **DTPE / IAL / SPECTRE** = core governed execution and proof engine
+- **GDP** = structural sufficiency sidecar
+- **SPECTRE-FST plus Upgrade Analysis** = bounded third-wheel direction for targeted fundamental stress testing, receipt-bound classification, weak-point detection, and evidence-grounded hardening guidance
+
+This framing is architecture direction only.
+It does not claim SPECTRE-FST runtime implementation.
+It does not make GDP runtime execution proof.
+It does not normalize Sentinel into the active runtime direction.
+
+For the locked architecture framing, see:
+
+- `docs/SPECTRE_FST_TRIKE_MODEL.md`
+
+---
 ## Overview
 
 DTPE is a deterministic governance runtime that produces cryptographic evidence
@@ -287,3 +306,4 @@ profile support.
 ---
 
 ## License
+

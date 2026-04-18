@@ -51,7 +51,7 @@ The next repository-authoritative target is:
 Align implementation-state and roadmap documents with the committed runtime surface.
 
 ### Step 2
-Align architecture-positioning documents so DTPE, IAL, and SPECTRE use one consistent repository-authoritative description.
+Align architecture-positioning documents so DTPE, IAL, SPECTRE, GDP bridge positioning, and SPECTRE-FST use one consistent repository-authoritative description.
 
 ### Step 3
 Preserve the distinction between:
@@ -59,6 +59,8 @@ Preserve the distinction between:
 - committed runtime surface
 - bounded design lock
 - future direction
+- active trike-model architecture direction
+- future-only Sentinel direction
 
 ### Step 4
 Only after those documents align, define the next bounded implementation target.

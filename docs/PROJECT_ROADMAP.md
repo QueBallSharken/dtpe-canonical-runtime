@@ -68,10 +68,16 @@ Within DTPE:
 
 - IAL is the semantic / invariant artifact layer
 - SPECTRE is the execution-boundary evaluation subsystem
-- SPECTRE_SENTINEL is future direction only and is not current runtime surface
+- GDP is the structural sufficiency sidecar and bridge comparison position
+- SPECTRE-FST plus Upgrade Analysis is the current bounded third-wheel architecture direction
+- Sentinel remains future-only direction and is not current runtime surface
 
 The current committed runtime already includes `core/spectre` execution-boundary surfaces.
 That does not authorize future-direction runtime expansion by naming alone.
+
+For the locked architecture framing, see:
+
+- `docs/SPECTRE_FST_TRIKE_MODEL.md`
 
 ---
 

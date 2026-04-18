@@ -18,9 +18,11 @@ It positions the relationship between:
 - DTPE
 - IAL
 - SPECTRE
-- SPECTRE_SENTINEL
+- GDP bridge position
+- SPECTRE-FST
 - mutation authority
 - receipt / ledger / verifier evidence
+- future-only Sentinel direction
 
 This document is architectural positioning only.
 It must not be used to silently expand runtime scope.
@@ -99,20 +101,64 @@ It does not claim that the current repository already contains a separately name
 
 ---
 
-### SPECTRE_SENTINEL
+### GDP BRIDGE POSITION
 
-SPECTRE_SENTINEL is a prospective future enforcement mode within SPECTRE.
+GDP is not part of the DTPE execution-bound evaluator.
 
-Its intended direction is mutation-bound continuous governance.
+GDP is the structural sufficiency sidecar.
 
-It may eventually cover concerns such as:
+The GDP bridge position inside the current architecture direction is:
 
-- persistent accompaniment
-- live veto capability
-- continuity of admissibility up to the mutation boundary
+- GDP evaluates whether a governance model is structurally sufficient in principle
+- DTPE / IAL / SPECTRE substantiate execution-bound proof
+- the bridge determines whether DTPE proof matches, is insufficient for, or contradicts GDP structural claims
 
-SPECTRE_SENTINEL is future direction only in the current repository.
+This preserves the distinction between structural sufficiency and execution truth.
+
+---
+
+### SPECTRE-FST
+
+SPECTRE-FST is the bounded fundamental stress evaluation direction attached to the current architecture framing.
+
+Its intended role is to:
+
+- stress-test whether claimed governing truth survives deformation classes
+- emit bounded classification results
+- support receipt-bearing findings, gaps, and contradictions
+- feed evidence-grounded Upgrade Analysis
+
+SPECTRE-FST is current architecture direction only in the repository.
 No runtime implementation is authorized by this document.
+
+---
+
+### UPGRADE ANALYSIS
+
+Upgrade Analysis is a downstream architecture direction derived from SPECTRE-FST findings.
+
+Its intended role is to:
+
+- identify hardening opportunities
+- map factual weaknesses to bounded upgrade recommendations
+- remain grounded in observed findings rather than generic best practices
+
+Upgrade Analysis is architecture direction only in the current repository.
+
+---
+
+### FUTURE-ONLY SENTINEL POSITION
+
+Sentinel remains future-only direction in the current repository.
+
+Sentinel is not:
+
+- the current runtime direction
+- part of the active trike model
+- the current third-wheel answer
+- a normalized active runtime surface
+
+Any future Sentinel work must remain explicitly bounded and must not silently replace the DTPE / IAL / SPECTRE plus GDP plus SPECTRE-FST architecture direction.
 
 ---
 
@@ -160,9 +206,12 @@ Evidence alone is necessary but not sufficient for full mutation-bound governanc
 DTPE
 - IAL
 - SPECTRE
-  - SPECTRE_SENTINEL
+- GDP bridge position
+- SPECTRE-FST
+- Upgrade Analysis
 - Mutation Authority
 - Receipt / Ledger / Verifier
+- future-only Sentinel direction
 
 ---
 
@@ -203,7 +252,9 @@ DTPE is the umbrella governance architecture.
 
 IAL defines canonical semantic artifacts.
 SPECTRE evaluates admissibility at the execution boundary.
-SPECTRE_SENTINEL is a future enforcement direction within SPECTRE.
+GDP remains the structural sufficiency sidecar and bridge-comparison position.
+SPECTRE-FST plus Upgrade Analysis is the current bounded third-wheel architecture direction.
+Sentinel remains future-only direction and is not the active runtime direction.
 Mutation authority controls whether reality may change.
 Receipt, ledger, and verifier provide canonical evidence.
 
