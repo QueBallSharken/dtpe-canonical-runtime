@@ -8,6 +8,8 @@ from .rule_profiles import get_first_target_rule_profile
 from .scenarios import (
     get_first_target_scenario_ids,
     get_first_target_stress_category,
+    get_second_category_scenario_ids,
+    get_second_category_stress_category,
     resolve_scenario,
 )
 
@@ -30,44 +32,73 @@ def evaluate_first_target(
     if stress_category not in allowed_stress_categories:
         raise ValueError(f"stress_category not allowed by rule profile: {stress_category}")
 
-    allowed_scenario_ids = set(get_first_target_scenario_ids())
+    if stress_category == get_first_target_stress_category():
+        allowed_scenario_ids = set(get_first_target_scenario_ids())
+    elif stress_category == get_second_category_stress_category():
+        allowed_scenario_ids = set(get_second_category_scenario_ids())
+    else:
+        raise ValueError(f"unsupported stress_category: {stress_category}")
+
     if scenario_id not in allowed_scenario_ids:
         raise ValueError(f"unsupported scenario_id: {scenario_id}")
-
-    expected_stress_category = get_first_target_stress_category()
-    if stress_category != expected_stress_category:
-        raise ValueError(f"unsupported stress_category: {stress_category}")
 
     scenario = resolve_scenario(
         scenario_id=scenario_id,
         stress_category=stress_category,
     )
 
-    local_refusal_boundary_live = bool(scenario["local_refusal_boundary_live"])
-    system_wide_refusal_continuity_proven = bool(
-        scenario["system_wide_refusal_continuity_proven"]
-    )
-    stronger_continuity_claim_asserted = bool(
-        scenario["stronger_continuity_claim_asserted"]
-    )
-
     findings = []
     gaps = []
     contradictions = []
 
-    if local_refusal_boundary_live:
-        findings.append("local refusal boundary remained live")
+    if stress_category == get_first_target_stress_category():
+        local_refusal_boundary_live = bool(scenario["local_refusal_boundary_live"])
+        system_wide_refusal_continuity_proven = bool(
+            scenario["system_wide_refusal_continuity_proven"]
+        )
+        stronger_continuity_claim_asserted = bool(
+            scenario["stronger_continuity_claim_asserted"]
+        )
 
-    if not system_wide_refusal_continuity_proven:
-        gaps.append("system-wide refusal continuity not proven under in-flight authority change")
+        if local_refusal_boundary_live:
+            findings.append("local refusal boundary remained live")
 
-    if stronger_continuity_claim_asserted and not system_wide_refusal_continuity_proven:
-        contradictions.append("stronger continuity claim exceeded what the evidenced path supports")
-        fst_result = "CONTRADICTION_EXPOSED"
-    elif local_refusal_boundary_live and not system_wide_refusal_continuity_proven:
-        fst_result = "PARTIAL"
+        if not system_wide_refusal_continuity_proven:
+            gaps.append("system-wide refusal continuity not proven under in-flight authority change")
+
+        if stronger_continuity_claim_asserted and not system_wide_refusal_continuity_proven:
+            contradictions.append("stronger continuity claim exceeded what the evidenced path supports")
+            fst_result = "CONTRADICTION_EXPOSED"
+        elif local_refusal_boundary_live and not system_wide_refusal_continuity_proven:
+            fst_result = "PARTIAL"
+        else:
+            fst_result = "UNVERIFIABLE"
+
+    elif stress_category == get_second_category_stress_category():
+        local_authority_binding_live = bool(scenario["local_authority_binding_live"])
+        end_to_end_authority_continuity_proven = bool(
+            scenario["end_to_end_authority_continuity_proven"]
+        )
+        stronger_authority_claim_asserted = bool(
+            scenario["stronger_authority_claim_asserted"]
+        )
+
+        if local_authority_binding_live:
+            findings.append("local authority binding remained live")
+
+        if not end_to_end_authority_continuity_proven:
+            gaps.append("end-to-end authority continuity not proven across delegated mutation path")
+
+        if stronger_authority_claim_asserted and not end_to_end_authority_continuity_proven:
+            contradictions.append("stronger authority continuity claim exceeded what the evidenced path supports")
+            fst_result = "CONTRADICTION_EXPOSED"
+        elif local_authority_binding_live and not end_to_end_authority_continuity_proven:
+            fst_result = "PARTIAL"
+        else:
+            fst_result = "UNVERIFIABLE"
+
     else:
-        fst_result = "UNVERIFIABLE"
+        raise ValueError(f"unsupported stress_category: {stress_category}")
 
     if not is_valid_primary_result(fst_result):
         raise ValueError(f"invalid fst_result: {fst_result}")

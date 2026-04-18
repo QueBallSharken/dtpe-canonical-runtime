@@ -14,6 +14,7 @@ _FIRST_TARGET_RULE_PROFILE: Dict[str, Any] = {
     "fst_rule_profile_version": _FIRST_TARGET_RULE_PROFILE_VERSION,
     "allowed_stress_categories": [
         "boundary_continuity_stress",
+        "authority_continuity_stress",
     ],
     "allowed_primary_results": [
         "PARTIAL",

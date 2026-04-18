@@ -9,8 +9,16 @@ from core.spectre.fst.rule_profiles import (
     get_first_target_rule_profile,
     get_first_target_rule_profile_hash,
 )
-from core.spectre.fst.runner import run_first_target_suite
-from core.spectre.fst.scenarios import get_first_target_scenario_ids
+from core.spectre.fst.runner import (
+    run_all_known_suites,
+    run_first_target_suite,
+    run_second_category_suite,
+)
+from core.spectre.fst.scenarios import (
+    get_all_supported_stress_categories,
+    get_first_target_scenario_ids,
+    get_second_category_scenario_ids,
+)
 
 
 def _assert_minimal_receipt_shape(receipt):
@@ -70,10 +78,17 @@ def main() -> int:
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
+    receipt_five = evaluate_first_target(
+        scenario_id="fst_second_category_scenario_001",
+        stress_category="authority_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
     _assert_minimal_receipt_shape(receipt_one)
     _assert_minimal_receipt_shape(receipt_two)
     _assert_minimal_receipt_shape(receipt_three)
     _assert_minimal_receipt_shape(receipt_four)
+    _assert_minimal_receipt_shape(receipt_five)
 
     assert receipt_one["stress_scenario_id"] == "fst_first_target_scenario_001"
     assert receipt_one["fst_result"] == "PARTIAL"
@@ -113,12 +128,35 @@ def main() -> int:
     assert receipt_four["fst_gaps"] == []
     assert receipt_four["fst_contradictions"] == []
 
-    scenario_ids = get_first_target_scenario_ids()
-    assert scenario_ids == [
+    assert receipt_five["stress_scenario_id"] == "fst_second_category_scenario_001"
+    assert receipt_five["stress_category"] == "authority_continuity_stress"
+    assert receipt_five["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_five["fst_findings"] == [
+        "local authority binding remained live"
+    ]
+    assert receipt_five["fst_gaps"] == [
+        "end-to-end authority continuity not proven across delegated mutation path"
+    ]
+    assert receipt_five["fst_contradictions"] == [
+        "stronger authority continuity claim exceeded what the evidenced path supports"
+    ]
+
+    first_category_scenario_ids = get_first_target_scenario_ids()
+    assert first_category_scenario_ids == [
         "fst_first_target_scenario_001",
         "fst_first_target_scenario_002",
         "fst_first_target_scenario_003",
         "fst_first_target_scenario_004",
+    ]
+
+    second_category_scenario_ids = get_second_category_scenario_ids()
+    assert second_category_scenario_ids == [
+        "fst_second_category_scenario_001",
+    ]
+
+    assert get_all_supported_stress_categories() == [
+        "boundary_continuity_stress",
+        "authority_continuity_stress",
     ]
 
     rule_profile = get_first_target_rule_profile()
@@ -128,21 +166,44 @@ def main() -> int:
     assert get_minimal_receipt_canonical(receipt_one) == canonical_json(receipt_one)
     assert get_minimal_receipt_hash(receipt_one) == sha256_hex_str(canonical_json(receipt_one))
 
-    suite = run_first_target_suite(
+    first_suite = run_first_target_suite(
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
-
-    assert suite["fst_suite_id"] == "spectre_fst_first_target_suite_v1"
-    assert suite["fst_suite_version"] == "1.0"
-    assert suite["fst_rule_profile_id"] == "spectre_fst_first_target_rules_v1"
-    assert suite["stress_category"] == "boundary_continuity_stress"
-    assert suite["scenario_ids"] == scenario_ids
-    assert len(suite["receipts"]) == 4
-    assert suite["results_by_scenario_id"] == {
+    assert first_suite["fst_suite_id"] == "spectre_fst_first_target_suite_v1"
+    assert first_suite["stress_category"] == "boundary_continuity_stress"
+    assert first_suite["scenario_ids"] == first_category_scenario_ids
+    assert len(first_suite["receipts"]) == 4
+    assert first_suite["results_by_scenario_id"] == {
         "fst_first_target_scenario_001": "PARTIAL",
         "fst_first_target_scenario_002": "CONTRADICTION_EXPOSED",
         "fst_first_target_scenario_003": "UNVERIFIABLE",
         "fst_first_target_scenario_004": "UNVERIFIABLE",
+    }
+
+    second_suite = run_second_category_suite(
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+    assert second_suite["fst_suite_id"] == "spectre_fst_second_category_suite_v1"
+    assert second_suite["stress_category"] == "authority_continuity_stress"
+    assert second_suite["scenario_ids"] == second_category_scenario_ids
+    assert len(second_suite["receipts"]) == 1
+    assert second_suite["results_by_scenario_id"] == {
+        "fst_second_category_scenario_001": "CONTRADICTION_EXPOSED",
+    }
+
+    aggregate = run_all_known_suites(
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+    assert aggregate["fst_aggregate_id"] == "spectre_fst_multi_category_suite_v1"
+    assert aggregate["fst_aggregate_version"] == "1.0"
+    assert aggregate["fst_rule_profile_id"] == "spectre_fst_first_target_rules_v1"
+    assert aggregate["stress_categories"] == [
+        "boundary_continuity_stress",
+        "authority_continuity_stress",
+    ]
+    assert set(aggregate["suites_by_category"].keys()) == {
+        "boundary_continuity_stress",
+        "authority_continuity_stress",
     }
 
     _assert_raises_value_error(
@@ -172,7 +233,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst four-scenario suite, inventory, and receipt identity verified")
+    print("PASS: fst multi-category aggregate suite verified")
     return 0
 
 
