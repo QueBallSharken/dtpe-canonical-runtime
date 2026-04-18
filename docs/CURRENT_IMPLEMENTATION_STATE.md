@@ -7,6 +7,8 @@ This document records the current committed implementation state of the reposito
 It is a repository-authoritative status summary for the committed runtime surface.
 It does not describe transient local working-tree state.
 
+Architecture framing documents such as docs/SPECTRE_FST_TRIKE_MODEL.md do not, by themselves, change committed runtime implementation state.
+
 ---
 
 ## CURRENT COMMITTED BASELINE
