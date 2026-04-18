@@ -6,10 +6,8 @@ from .receipt_schema import validate_minimal_receipt
 from .result_vocabulary import is_valid_primary_result
 from .rule_profiles import get_first_target_rule_profile
 from .scenarios import (
-    get_first_target_scenario_id,
+    get_first_target_scenario_ids,
     get_first_target_stress_category,
-    get_second_target_scenario_id,
-    get_third_target_scenario_id,
     resolve_scenario,
 )
 
@@ -32,11 +30,7 @@ def evaluate_first_target(
     if stress_category not in allowed_stress_categories:
         raise ValueError(f"stress_category not allowed by rule profile: {stress_category}")
 
-    allowed_scenario_ids = {
-        get_first_target_scenario_id(),
-        get_second_target_scenario_id(),
-        get_third_target_scenario_id(),
-    }
+    allowed_scenario_ids = set(get_first_target_scenario_ids())
     if scenario_id not in allowed_scenario_ids:
         raise ValueError(f"unsupported scenario_id: {scenario_id}")
 

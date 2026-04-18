@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 _FIRST_TARGET_SCENARIO_ID = "fst_first_target_scenario_001"
 _SECOND_TARGET_SCENARIO_ID = "fst_first_target_scenario_002"
 _THIRD_TARGET_SCENARIO_ID = "fst_first_target_scenario_003"
+_FOURTH_TARGET_SCENARIO_ID = "fst_first_target_scenario_004"
 _FIRST_TARGET_STRESS_CATEGORY = "boundary_continuity_stress"
 
 _FIRST_TARGET_SCENARIO: Dict[str, Any] = {
@@ -35,11 +36,28 @@ _THIRD_TARGET_SCENARIO: Dict[str, Any] = {
     "stronger_continuity_claim_asserted": False,
 }
 
+_FOURTH_TARGET_SCENARIO: Dict[str, Any] = {
+    "stress_scenario_id": _FOURTH_TARGET_SCENARIO_ID,
+    "scenario_name": "Boundary continuity claim with system-wide refusal continuity already proven",
+    "stress_category": _FIRST_TARGET_STRESS_CATEGORY,
+    "local_refusal_boundary_live": True,
+    "system_wide_refusal_continuity_proven": True,
+    "stronger_continuity_claim_asserted": False,
+}
+
 _SCENARIO_REGISTRY: Dict[Tuple[str, str], Dict[str, Any]] = {
     (_FIRST_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _FIRST_TARGET_SCENARIO,
     (_SECOND_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _SECOND_TARGET_SCENARIO,
     (_THIRD_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _THIRD_TARGET_SCENARIO,
+    (_FOURTH_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _FOURTH_TARGET_SCENARIO,
 }
+
+_FIRST_TARGET_SCENARIO_IDS = [
+    _FIRST_TARGET_SCENARIO_ID,
+    _SECOND_TARGET_SCENARIO_ID,
+    _THIRD_TARGET_SCENARIO_ID,
+    _FOURTH_TARGET_SCENARIO_ID,
+]
 
 
 def resolve_scenario(
@@ -64,5 +82,13 @@ def get_third_target_scenario_id() -> str:
     return _THIRD_TARGET_SCENARIO_ID
 
 
+def get_fourth_target_scenario_id() -> str:
+    return _FOURTH_TARGET_SCENARIO_ID
+
+
 def get_first_target_stress_category() -> str:
     return _FIRST_TARGET_STRESS_CATEGORY
+
+
+def get_first_target_scenario_ids() -> List[str]:
+    return list(_FIRST_TARGET_SCENARIO_IDS)
