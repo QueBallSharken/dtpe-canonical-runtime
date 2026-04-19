@@ -141,12 +141,30 @@ def main() -> int:
     )
 
     receipt_fourteen = evaluate_first_target(
+        scenario_id="fst_fourth_category_scenario_002",
+        stress_category="state_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
+    receipt_fifteen = evaluate_first_target(
+        scenario_id="fst_fourth_category_scenario_003",
+        stress_category="state_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
+    receipt_sixteen = evaluate_first_target(
+        scenario_id="fst_fourth_category_scenario_004",
+        stress_category="state_continuity_stress",
+        rule_profile_id="spectre_fst_first_target_rules_v1",
+    )
+
+    receipt_seventeen = evaluate_first_target(
         scenario_id="fst_fifth_category_scenario_001",
         stress_category="path_continuity_stress",
         rule_profile_id="spectre_fst_first_target_rules_v1",
     )
 
-    receipt_fifteen = evaluate_first_target(
+    receipt_eighteen = evaluate_first_target(
         scenario_id="fst_sixth_category_scenario_001",
         stress_category="transport_continuity_stress",
         rule_profile_id="spectre_fst_first_target_rules_v1",
@@ -168,6 +186,9 @@ def main() -> int:
         receipt_thirteen,
         receipt_fourteen,
         receipt_fifteen,
+        receipt_sixteen,
+        receipt_seventeen,
+        receipt_eighteen,
     ]:
         _assert_minimal_receipt_shape(receipt)
 
@@ -306,29 +327,58 @@ def main() -> int:
         "stronger state continuity claim exceeded what the evidenced path supports"
     ]
 
-    assert receipt_fourteen["stress_scenario_id"] == "fst_fifth_category_scenario_001"
-    assert receipt_fourteen["stress_category"] == "path_continuity_stress"
-    assert receipt_fourteen["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_fourteen["stress_scenario_id"] == "fst_fourth_category_scenario_002"
+    assert receipt_fourteen["stress_category"] == "state_continuity_stress"
+    assert receipt_fourteen["fst_result"] == "PARTIAL"
     assert receipt_fourteen["fst_findings"] == [
-        "local path binding remained live"
+        "local state binding remained live"
     ]
     assert receipt_fourteen["fst_gaps"] == [
+        "end-to-end state continuity not proven across persisted mutation path"
+    ]
+    assert receipt_fourteen["fst_contradictions"] == []
+
+    assert receipt_fifteen["stress_scenario_id"] == "fst_fourth_category_scenario_003"
+    assert receipt_fifteen["stress_category"] == "state_continuity_stress"
+    assert receipt_fifteen["fst_result"] == "UNVERIFIABLE"
+    assert receipt_fifteen["fst_findings"] == []
+    assert receipt_fifteen["fst_gaps"] == [
+        "end-to-end state continuity not proven across persisted mutation path"
+    ]
+    assert receipt_fifteen["fst_contradictions"] == []
+
+    assert receipt_sixteen["stress_scenario_id"] == "fst_fourth_category_scenario_004"
+    assert receipt_sixteen["stress_category"] == "state_continuity_stress"
+    assert receipt_sixteen["fst_result"] == "UNVERIFIABLE"
+    assert receipt_sixteen["fst_findings"] == [
+        "local state binding remained live"
+    ]
+    assert receipt_sixteen["fst_gaps"] == []
+    assert receipt_sixteen["fst_contradictions"] == []
+
+    assert receipt_seventeen["stress_scenario_id"] == "fst_fifth_category_scenario_001"
+    assert receipt_seventeen["stress_category"] == "path_continuity_stress"
+    assert receipt_seventeen["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_seventeen["fst_findings"] == [
+        "local path binding remained live"
+    ]
+    assert receipt_seventeen["fst_gaps"] == [
         "end-to-end path continuity not proven across translated execution route"
     ]
-    assert receipt_fourteen["fst_contradictions"] == [
+    assert receipt_seventeen["fst_contradictions"] == [
         "stronger path continuity claim exceeded what the evidenced path supports"
     ]
 
-    assert receipt_fifteen["stress_scenario_id"] == "fst_sixth_category_scenario_001"
-    assert receipt_fifteen["stress_category"] == "transport_continuity_stress"
-    assert receipt_fifteen["fst_result"] == "CONTRADICTION_EXPOSED"
-    assert receipt_fifteen["fst_findings"] == [
+    assert receipt_eighteen["stress_scenario_id"] == "fst_sixth_category_scenario_001"
+    assert receipt_eighteen["stress_category"] == "transport_continuity_stress"
+    assert receipt_eighteen["fst_result"] == "CONTRADICTION_EXPOSED"
+    assert receipt_eighteen["fst_findings"] == [
         "local transport binding remained live"
     ]
-    assert receipt_fifteen["fst_gaps"] == [
+    assert receipt_eighteen["fst_gaps"] == [
         "end-to-end transport continuity not proven across delivery channel"
     ]
-    assert receipt_fifteen["fst_contradictions"] == [
+    assert receipt_eighteen["fst_contradictions"] == [
         "stronger transport continuity claim exceeded what the evidenced path supports"
     ]
 
@@ -359,6 +409,9 @@ def main() -> int:
     fourth_category_scenario_ids = get_fourth_category_scenario_ids()
     assert fourth_category_scenario_ids == [
         "fst_fourth_category_scenario_001",
+        "fst_fourth_category_scenario_002",
+        "fst_fourth_category_scenario_003",
+        "fst_fourth_category_scenario_004",
     ]
 
     fifth_category_scenario_ids = get_fifth_category_scenario_ids()
@@ -435,9 +488,12 @@ def main() -> int:
     assert fourth_suite["fst_suite_id"] == "spectre_fst_fourth_category_suite_v1"
     assert fourth_suite["stress_category"] == "state_continuity_stress"
     assert fourth_suite["scenario_ids"] == fourth_category_scenario_ids
-    assert len(fourth_suite["receipts"]) == 1
+    assert len(fourth_suite["receipts"]) == 4
     assert fourth_suite["results_by_scenario_id"] == {
         "fst_fourth_category_scenario_001": "CONTRADICTION_EXPOSED",
+        "fst_fourth_category_scenario_002": "PARTIAL",
+        "fst_fourth_category_scenario_003": "UNVERIFIABLE",
+        "fst_fourth_category_scenario_004": "UNVERIFIABLE",
     }
 
     fifth_suite = run_fifth_category_suite(
@@ -497,7 +553,7 @@ def main() -> int:
     _assert_raises_value_error(
         lambda: evaluate_first_target(
             scenario_id="wrong_scenario",
-            stress_category="temporal_continuity_stress",
+            stress_category="state_continuity_stress",
             rule_profile_id="spectre_fst_first_target_rules_v1",
         ),
         "unsupported scenario_id",
@@ -512,7 +568,7 @@ def main() -> int:
         "stress_category not allowed by rule profile",
     )
 
-    print("PASS: fst temporal category expanded to four scenarios")
+    print("PASS: fst state category expanded to four scenarios")
     return 0
 
 

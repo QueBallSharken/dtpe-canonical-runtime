@@ -22,6 +22,9 @@ _THIRD_CATEGORY_SCENARIO_ID_004 = "fst_third_category_scenario_004"
 _THIRD_CATEGORY_STRESS_CATEGORY = "temporal_continuity_stress"
 
 _FOURTH_CATEGORY_SCENARIO_ID = "fst_fourth_category_scenario_001"
+_FOURTH_CATEGORY_SCENARIO_ID_002 = "fst_fourth_category_scenario_002"
+_FOURTH_CATEGORY_SCENARIO_ID_003 = "fst_fourth_category_scenario_003"
+_FOURTH_CATEGORY_SCENARIO_ID_004 = "fst_fourth_category_scenario_004"
 _FOURTH_CATEGORY_STRESS_CATEGORY = "state_continuity_stress"
 
 _FIFTH_CATEGORY_SCENARIO_ID = "fst_fifth_category_scenario_001"
@@ -147,6 +150,33 @@ _FOURTH_CATEGORY_SCENARIO: Dict[str, Any] = {
     "stronger_state_claim_asserted": True,
 }
 
+_FOURTH_CATEGORY_SCENARIO_002: Dict[str, Any] = {
+    "stress_scenario_id": _FOURTH_CATEGORY_SCENARIO_ID_002,
+    "scenario_name": "State continuity claim with local state binding but incomplete end-to-end proof",
+    "stress_category": _FOURTH_CATEGORY_STRESS_CATEGORY,
+    "local_state_binding_live": True,
+    "end_to_end_state_continuity_proven": False,
+    "stronger_state_claim_asserted": False,
+}
+
+_FOURTH_CATEGORY_SCENARIO_003: Dict[str, Any] = {
+    "stress_scenario_id": _FOURTH_CATEGORY_SCENARIO_ID_003,
+    "scenario_name": "State continuity claim without live local state binding",
+    "stress_category": _FOURTH_CATEGORY_STRESS_CATEGORY,
+    "local_state_binding_live": False,
+    "end_to_end_state_continuity_proven": False,
+    "stronger_state_claim_asserted": False,
+}
+
+_FOURTH_CATEGORY_SCENARIO_004: Dict[str, Any] = {
+    "stress_scenario_id": _FOURTH_CATEGORY_SCENARIO_ID_004,
+    "scenario_name": "State continuity claim with end-to-end state continuity already proven",
+    "stress_category": _FOURTH_CATEGORY_STRESS_CATEGORY,
+    "local_state_binding_live": True,
+    "end_to_end_state_continuity_proven": True,
+    "stronger_state_claim_asserted": False,
+}
+
 _FIFTH_CATEGORY_SCENARIO: Dict[str, Any] = {
     "stress_scenario_id": _FIFTH_CATEGORY_SCENARIO_ID,
     "scenario_name": "Path continuity claim with conflicting stronger delegated-route assertion",
@@ -179,6 +209,9 @@ _SCENARIO_REGISTRY: Dict[Tuple[str, str], Dict[str, Any]] = {
     (_THIRD_CATEGORY_SCENARIO_ID_003, _THIRD_CATEGORY_STRESS_CATEGORY): _THIRD_CATEGORY_SCENARIO_003,
     (_THIRD_CATEGORY_SCENARIO_ID_004, _THIRD_CATEGORY_STRESS_CATEGORY): _THIRD_CATEGORY_SCENARIO_004,
     (_FOURTH_CATEGORY_SCENARIO_ID, _FOURTH_CATEGORY_STRESS_CATEGORY): _FOURTH_CATEGORY_SCENARIO,
+    (_FOURTH_CATEGORY_SCENARIO_ID_002, _FOURTH_CATEGORY_STRESS_CATEGORY): _FOURTH_CATEGORY_SCENARIO_002,
+    (_FOURTH_CATEGORY_SCENARIO_ID_003, _FOURTH_CATEGORY_STRESS_CATEGORY): _FOURTH_CATEGORY_SCENARIO_003,
+    (_FOURTH_CATEGORY_SCENARIO_ID_004, _FOURTH_CATEGORY_STRESS_CATEGORY): _FOURTH_CATEGORY_SCENARIO_004,
     (_FIFTH_CATEGORY_SCENARIO_ID, _FIFTH_CATEGORY_STRESS_CATEGORY): _FIFTH_CATEGORY_SCENARIO,
     (_SIXTH_CATEGORY_SCENARIO_ID, _SIXTH_CATEGORY_STRESS_CATEGORY): _SIXTH_CATEGORY_SCENARIO,
 }
@@ -206,6 +239,9 @@ _THIRD_CATEGORY_SCENARIO_IDS = [
 
 _FOURTH_CATEGORY_SCENARIO_IDS = [
     _FOURTH_CATEGORY_SCENARIO_ID,
+    _FOURTH_CATEGORY_SCENARIO_ID_002,
+    _FOURTH_CATEGORY_SCENARIO_ID_003,
+    _FOURTH_CATEGORY_SCENARIO_ID_004,
 ]
 
 _FIFTH_CATEGORY_SCENARIO_IDS = [
