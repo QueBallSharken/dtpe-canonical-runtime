@@ -10,6 +10,9 @@ _FOURTH_TARGET_SCENARIO_ID = "fst_first_target_scenario_004"
 _FIRST_TARGET_STRESS_CATEGORY = "boundary_continuity_stress"
 
 _SECOND_CATEGORY_SCENARIO_ID = "fst_second_category_scenario_001"
+_SECOND_CATEGORY_SCENARIO_ID_002 = "fst_second_category_scenario_002"
+_SECOND_CATEGORY_SCENARIO_ID_003 = "fst_second_category_scenario_003"
+_SECOND_CATEGORY_SCENARIO_ID_004 = "fst_second_category_scenario_004"
 _SECOND_CATEGORY_STRESS_CATEGORY = "authority_continuity_stress"
 
 _THIRD_CATEGORY_SCENARIO_ID = "fst_third_category_scenario_001"
@@ -69,6 +72,33 @@ _SECOND_CATEGORY_SCENARIO: Dict[str, Any] = {
     "stronger_authority_claim_asserted": True,
 }
 
+_SECOND_CATEGORY_SCENARIO_002: Dict[str, Any] = {
+    "stress_scenario_id": _SECOND_CATEGORY_SCENARIO_ID_002,
+    "scenario_name": "Authority continuity claim with local authority binding but incomplete end-to-end proof",
+    "stress_category": _SECOND_CATEGORY_STRESS_CATEGORY,
+    "local_authority_binding_live": True,
+    "end_to_end_authority_continuity_proven": False,
+    "stronger_authority_claim_asserted": False,
+}
+
+_SECOND_CATEGORY_SCENARIO_003: Dict[str, Any] = {
+    "stress_scenario_id": _SECOND_CATEGORY_SCENARIO_ID_003,
+    "scenario_name": "Authority continuity claim without live local authority binding",
+    "stress_category": _SECOND_CATEGORY_STRESS_CATEGORY,
+    "local_authority_binding_live": False,
+    "end_to_end_authority_continuity_proven": False,
+    "stronger_authority_claim_asserted": False,
+}
+
+_SECOND_CATEGORY_SCENARIO_004: Dict[str, Any] = {
+    "stress_scenario_id": _SECOND_CATEGORY_SCENARIO_ID_004,
+    "scenario_name": "Authority continuity claim with end-to-end authority continuity already proven",
+    "stress_category": _SECOND_CATEGORY_STRESS_CATEGORY,
+    "local_authority_binding_live": True,
+    "end_to_end_authority_continuity_proven": True,
+    "stronger_authority_claim_asserted": False,
+}
+
 _THIRD_CATEGORY_SCENARIO: Dict[str, Any] = {
     "stress_scenario_id": _THIRD_CATEGORY_SCENARIO_ID,
     "scenario_name": "Temporal continuity claim with conflicting stronger timing/finality assertion",
@@ -111,6 +141,9 @@ _SCENARIO_REGISTRY: Dict[Tuple[str, str], Dict[str, Any]] = {
     (_THIRD_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _THIRD_TARGET_SCENARIO,
     (_FOURTH_TARGET_SCENARIO_ID, _FIRST_TARGET_STRESS_CATEGORY): _FOURTH_TARGET_SCENARIO,
     (_SECOND_CATEGORY_SCENARIO_ID, _SECOND_CATEGORY_STRESS_CATEGORY): _SECOND_CATEGORY_SCENARIO,
+    (_SECOND_CATEGORY_SCENARIO_ID_002, _SECOND_CATEGORY_STRESS_CATEGORY): _SECOND_CATEGORY_SCENARIO_002,
+    (_SECOND_CATEGORY_SCENARIO_ID_003, _SECOND_CATEGORY_STRESS_CATEGORY): _SECOND_CATEGORY_SCENARIO_003,
+    (_SECOND_CATEGORY_SCENARIO_ID_004, _SECOND_CATEGORY_STRESS_CATEGORY): _SECOND_CATEGORY_SCENARIO_004,
     (_THIRD_CATEGORY_SCENARIO_ID, _THIRD_CATEGORY_STRESS_CATEGORY): _THIRD_CATEGORY_SCENARIO,
     (_FOURTH_CATEGORY_SCENARIO_ID, _FOURTH_CATEGORY_STRESS_CATEGORY): _FOURTH_CATEGORY_SCENARIO,
     (_FIFTH_CATEGORY_SCENARIO_ID, _FIFTH_CATEGORY_STRESS_CATEGORY): _FIFTH_CATEGORY_SCENARIO,
@@ -126,6 +159,9 @@ _FIRST_TARGET_SCENARIO_IDS = [
 
 _SECOND_CATEGORY_SCENARIO_IDS = [
     _SECOND_CATEGORY_SCENARIO_ID,
+    _SECOND_CATEGORY_SCENARIO_ID_002,
+    _SECOND_CATEGORY_SCENARIO_ID_003,
+    _SECOND_CATEGORY_SCENARIO_ID_004,
 ]
 
 _THIRD_CATEGORY_SCENARIO_IDS = [
