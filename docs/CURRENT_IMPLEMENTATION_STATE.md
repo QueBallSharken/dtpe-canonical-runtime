@@ -91,6 +91,46 @@ Safe wording is:
 
 ---
 
+## CURRENT ISOLATED FST IMPLEMENTATION STATE
+
+The committed repository also now contains a bounded isolated SPECTRE-FST category-expansion surface.
+
+Implemented isolated FST continuity-stress categories:
+
+- `boundary_continuity_stress`
+- `authority_continuity_stress`
+- `temporal_continuity_stress`
+- `state_continuity_stress`
+- `path_continuity_stress`
+- `transport_continuity_stress`
+
+Current explicit isolated FST scenario counts:
+
+- `boundary_continuity_stress`: 4 scenarios
+- `authority_continuity_stress`: 4 scenarios
+- `temporal_continuity_stress`: 4 scenarios
+- `state_continuity_stress`: 4 scenarios
+- `path_continuity_stress`: 1 scenario
+- `transport_continuity_stress`: 1 scenario
+
+Current explicit isolated FST scenario total:
+
+- 18 scenarios
+
+Current stopping point for this bounded isolated FST build-out:
+
+- boundary expanded to 4 scenarios
+- authority expanded to 4 scenarios
+- temporal expanded to 4 scenarios
+- state expanded to 4 scenarios
+- path remains at 1 scenario
+- transport remains at 1 scenario
+
+This is bounded isolated FST category-depth work.
+It is not yet DTPE integration work.
+
+---
+
 ## PQC / CRYPTO-AGILITY GUARDRAIL
 
 All repository-state and planning updates must preserve DTPE's crypto-agility posture.
