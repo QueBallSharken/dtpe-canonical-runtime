@@ -1,8 +1,8 @@
 # BBIS - GOVERNING REQUIREMENT
 ## Boundary-to-Boundary Invariant Survival
 
-**Author:** Stephen Kyle Hensley  
-**Alias:** Cueball Shark  
+**Author:** Steven Kyle Hensley  
+**Alias:** Stevil
 **GitHub:** QueBallSharken
 
 ## STATUS
