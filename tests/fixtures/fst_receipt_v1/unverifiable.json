@@ -1,0 +1,13 @@
+{
+  "fst_profile_id": "spectre_fst_minimal_v1",
+  "fst_profile_version": "1.0",
+  "fst_rule_profile_id": "spectre_fst_first_target_rules_v1",
+  "stress_scenario_id": "fst_first_target_scenario_003",
+  "stress_category": "boundary_continuity_stress",
+  "fst_result": "UNVERIFIABLE",
+  "fst_findings": [],
+  "fst_gaps": [
+    "The paper-token count is absent."
+  ],
+  "fst_contradictions": []
+}

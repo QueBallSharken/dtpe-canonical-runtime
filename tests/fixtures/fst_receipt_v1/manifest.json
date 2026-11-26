@@ -1,0 +1,21 @@
+{
+  "boundary": "Fictional paper-token workflow",
+  "fixtures": {
+    "contradiction.json": {
+      "native_canonical_sha256": "6ab5821e8214ffb3ee9e7790a84dddf9ac6d53dfcd85765c8d94c74fbaae3b96",
+      "outcome": "CONTRADICTION_EXPOSED",
+      "raw_sha256": "11d2df41366b53c239cf6a637417bb1516dc426d771a4ae4cb6a5e33faee5631"
+    },
+    "partial.json": {
+      "native_canonical_sha256": "f6e94aa66a20c8007acb0cb8d75f2ae5295e3cedf1c465e013d6742934406488",
+      "outcome": "PARTIAL",
+      "raw_sha256": "0b750e39d65639d56332f7a028974906df5cd1e32a33093010a1457a9922f5a7"
+    },
+    "unverifiable.json": {
+      "native_canonical_sha256": "d5776f2807ee8e8779cfd3e3fe8f5e13b46a3e465b5cc06b07bf6a9c9f60afb5",
+      "outcome": "UNVERIFIABLE",
+      "raw_sha256": "fb243af0bb8d0894c908db9cca318c1689fc75168b2c690681dd3015ada43521"
+    }
+  },
+  "origin": "FIXTURE"
+}
